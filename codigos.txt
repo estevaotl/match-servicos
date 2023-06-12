@@ -1,0 +1,686 @@
+----------  CODIGOS QUE PODEM SER UTEIS NO FUTURO DO TCC -----------------
+
+============================================================================================
+
+1. Card para colocar uma foto em react
+
+Aqui está um exemplo de como você pode criar um componente de card em React para colocar uma foto:
+
+`` codigo jsx
+    import React from 'react';
+
+    const Card = ({ imageSrc, altText }) => {
+        return (
+            <div className="card">
+            <img src={imageSrc} alt={altText} />
+            </div>
+        );
+    };
+
+    export default Card;
+`` codigo jsx
+
+Neste exemplo, o componente Card recebe duas propriedades: imageSrc e altText. A propriedade imageSrc é a URL da imagem que você deseja exibir, e altText é o texto alternativo para acessibilidade.
+
+Você pode estilizar o componente Card com CSS para atender às suas necessidades. Por exemplo:
+
+`` codigo css
+
+    .card {
+    width: 300px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    }
+
+    .card img {
+    width: 100%;
+    height: auto;
+    }
+`` codigo css
+
+Para usar o componente Card em outro componente React, você pode importá-lo e passar as propriedades necessárias, como a URL da imagem e o texto alternativo:
+
+`` codigo jsx
+    import React from 'react';
+    import Card from './Card';
+
+    const App = () => {
+        return (
+            <div>
+                <h1>Minha foto</h1>
+                <Card imageSrc="https://example.com/minha-foto.jpg" altText="Minha foto" />
+            </div>
+        );
+    };
+
+    export default App;
+`` codigo jsx
+
+Certifique-se de substituir "https://example.com/minha-foto.jpg" pela URL da sua própria imagem.
+
+============================================================================================
+
+2. Envio de foto do PHP para react 
+
+Para enviar uma foto do PHP para um aplicativo React, você pode seguir os seguintes passos:
+
+No lado do PHP:
+
+Certifique-se de ter um formulário HTML que permita ao usuário fazer o upload da foto. Por exemplo:
+
+`` codigo html
+    <form action="upload.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="photo" />
+        <input type="submit" value="Enviar" />
+    </form>
+`` codigo html
+
+No arquivo upload.php, você pode tratar o upload da foto e movê-la para uma pasta no servidor. Aqui está um exemplo simples:
+
+`` codigo php
+    <?php
+        if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            $tempFile = $_FILES['photo']['tmp_name'];
+            $targetPath = 'caminho/para/pasta/no/servidor/';
+            $targetFile = $targetPath . $_FILES['photo']['name'];
+
+            if (move_uploaded_file($tempFile, $targetFile)) {
+                echo "Upload de foto bem-sucedido.";
+            } else {
+                echo "Erro ao mover o arquivo.";
+            }
+        } else {
+            echo "Erro no upload da foto.";
+        }
+    ?>
+`` codigo php
+
+Certifique-se de substituir 'caminho/para/pasta/no/servidor/' pelo caminho real para a pasta onde você deseja salvar as fotos.
+
+No lado do React:
+
+Crie um componente React para exibir a foto enviada. Aqui está um exemplo:
+
+`` codigo jsx
+    import React, { useState } from 'react';
+
+    const PhotoUpload = () => {
+        const [photoURL, setPhotoURL] = useState(null);
+
+        const handlePhotoUpload = (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+            setPhotoURL(e.target.result);
+            };
+
+            reader.readAsDataURL(file);
+        };
+
+        return (
+            <div>
+                <h1>Enviar Foto</h1>
+                <input type="file" onChange={handlePhotoUpload} />
+                {photoURL && <img src={photoURL} alt="Foto enviada" />}
+            </div>
+        );
+    };
+
+    export default PhotoUpload;
+`` codigo jsx
+
+No componente React onde você deseja usar o PhotoUpload, importe-o e use-o:
+
+`` codigo jsx
+    import React from 'react';
+    import PhotoUpload from './PhotoUpload';
+
+    const App = () => {
+        return (
+            <div>
+                <h1>Meu Aplicativo</h1>
+                <PhotoUpload />
+            </div>
+        );
+    };
+
+    export default App;
+`` codigo jsx
+
+Ao selecionar uma foto no input do componente PhotoUpload, a foto será convertida em uma URL de dados (data URL) usando o FileReader. Em seguida, a foto é exibida usando a tag <img>.
+
+============================================================================================
+
+3. Menu de login e cadastro em react estilizado 
+
+Aqui está um exemplo de um menu de login e cadastro estilizado em React:
+
+`` codigo jsx
+    import React, { useState } from 'react';
+
+    const LoginSignupMenu = () => {
+        const [isLoginForm, setIsLoginForm] = useState(true);
+
+        const handleToggleForm = () => {
+            setIsLoginForm(!isLoginForm);
+        };
+
+        const handleSubmit = (event) => {
+            event.preventDefault();
+            // Lógica de autenticação ou cadastro aqui
+        };
+
+        return (
+            <div className="login-signup-menu">
+            <h1>{isLoginForm ? 'Login' : 'Cadastro'}</h1>
+            <form onSubmit={handleSubmit}>
+                {isLoginForm ? (
+                <div>
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" required />
+                </div>
+                ) : (
+                <div>
+                    <label htmlFor="name">Nome:</label>
+                    <input type="text" id="name" required />
+                </div>
+                )}
+                <div>
+                <label htmlFor="password">Senha:</label>
+                <input type="password" id="password" required />
+                </div>
+                <button type="submit">{isLoginForm ? 'Entrar' : 'Cadastrar'}</button>
+            </form>
+            <p onClick={handleToggleForm}>
+                {isLoginForm ? 'Criar uma conta' : 'Já tenho uma conta'}
+            </p>
+            </div>
+        );
+    };
+
+    export default LoginSignupMenu;
+`` codigo jsx
+
+Neste exemplo, o componente LoginSignupMenu exibe um formulário de login ou cadastro, dependendo do estado isLoginForm. O usuário pode alternar entre o formulário de login e o de cadastro clicando no texto "Criar uma conta" ou "Já tenho uma conta".
+
+Você pode estilizar o componente LoginSignupMenu com CSS para atender às suas necessidades. Por exemplo:
+
+`` codigo css
+    .login-signup-menu {
+    max-width: 300px;
+    margin: 0 auto;
+    }
+
+    h1 {
+    text-align: center;
+    }
+
+    form {
+    display: flex;
+    flex-direction: column;
+    }
+
+    label {
+    margin-bottom: 8px;
+    }
+
+    input {
+    padding: 8px;
+    margin-bottom: 16px;
+    }
+
+    button {
+    padding: 8px 16px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    }
+
+    p {
+    text-align: center;
+    cursor: pointer;
+    color: #888;
+    margin-top: 16px;
+    }
+`` codigo css
+
+Para usar o componente LoginSignupMenu em outro componente React, você pode importá-lo e colocá-lo no local desejado:
+
+`` codigo jsx
+    import React from 'react';
+    import LoginSignupMenu from './LoginSignupMenu';
+
+    const App = () => {
+        return (
+            <div>
+                <h1>Meu Aplicativo</h1>
+                <LoginSignupMenu />
+            </div>
+        );
+    };
+
+    export default App;
+`` codigo jsx
+
+Certifique-se de estilizar o componente e as classes CSS de acordo com suas preferências visuais.
+
+============================================================================================
+
+4. Envio de foto do PHP para um bucket na AWS 
+
+Para enviar uma foto do PHP para um bucket na AWS, você pode usar a biblioteca AWS SDK for PHP. Aqui está um exemplo básico de como fazer isso:
+
+Certifique-se de ter instalado a biblioteca AWS SDK for PHP em seu projeto PHP. Você pode instalá-la usando o Composer, executando o comando composer require aws/aws-sdk-php.
+
+`` codigo php
+    require 'vendor/autoload.php';
+
+    use Aws\S3\S3Client;
+
+    // Configuração do cliente do AWS S3
+    $bucketName = 'nome-do-seu-bucket';
+    $accessKeyId = 'sua-access-key-id';
+    $secretAccessKey = 'sua-secret-access-key';
+    $region = 'região-do-seu-bucket';
+
+    $s3 = new S3Client([
+        'version' => 'latest',
+        'region' => $region,
+        'credentials' => [
+            'key' => $accessKeyId,
+            'secret' => $secretAccessKey,
+        ],
+    ]);
+
+    // Caminho completo do arquivo local
+    $localFilePath = '/caminho/do/arquivo/foto.jpg';
+
+    // Nome do arquivo no bucket da AWS
+    $remoteFileName = 'foto.jpg';
+
+    // Envia o arquivo para o bucket da AWS
+    try {
+        $s3->putObject([
+            'Bucket' => $bucketName,
+            'Key' => $remoteFileName,
+            'SourceFile' => $localFilePath,
+        ]);
+
+        echo 'Foto enviada com sucesso para o bucket da AWS!';
+    } catch (Exception $e) {
+        echo 'Erro ao enviar a foto para o bucket da AWS: ' . $e->getMessage();
+    }
+`` codigo php
+
+Certifique-se de substituir os valores nome-do-seu-bucket, sua-access-key-id, sua-secret-access-key e região-do-seu-bucket pelas suas informações corretas.
+
+Além disso, defina o caminho completo do arquivo local que você deseja enviar para o bucket da AWS no $localFilePath, e o nome que você deseja atribuir ao arquivo no bucket no $remoteFileName.
+
+Ao executar o código acima, ele enviará o arquivo especificado para o bucket da AWS usando as credenciais fornecidas. Certifique-se de que o usuário/credenciais utilizados possuam as permissões adequadas para realizar essa operação.
+
+============================================================================================
+
+5. Faça uma aplicação que utilize react como front ent e contenha um filtro de proximidade como um input de range. Essa distância escolhida é enviada para uma api em PHP com slim que retorna os clientes ordenados pela distância passada
+
+
+Claro! Vou fornecer um exemplo de como você pode criar uma aplicação usando React como frontend, contendo um filtro de proximidade representado por um input de range. A distância escolhida será enviada para uma API em PHP com Slim, que retornará os clientes ordenados pela distância passada.
+
+Aqui está um exemplo básico:
+
+Crie um novo diretório para o projeto React e acesse-o no terminal.
+Execute o comando npx create-react-app filtro-proximidade para criar um novo projeto React chamado "filtro-proximidade".
+Acesse o diretório do projeto: cd filtro-proximidade.
+Agora, substitua o conteúdo do arquivo src/App.js com o seguinte código:
+
+`` codigo jsx
+    import React, { useState } from 'react';
+
+    function App() {
+    const [distancia, setDistancia] = useState(0);
+    const [clientes, setClientes] = useState([]);
+
+    const handleInputChange = (e) => {
+        setDistancia(e.target.value);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch(`/api/clientes?distancia=${distancia}`);
+            const data = await response.json();
+            setClientes(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return (
+        <div>
+        <form onSubmit={handleSubmit}>
+            <label htmlFor="distancia">Distância:</label>
+            <input
+            type="range"
+            id="distancia"
+            min="0"
+            max="100"
+            value={distancia}
+            onChange={handleInputChange}
+            />
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <ul>
+            {clientes.map((cliente) => (
+            <li key={cliente.id}>
+                Nome: {cliente.nome}, Distância: {cliente.distancia} km
+            </li>
+            ))}
+        </ul>
+        </div>
+    );
+    }
+
+    export default App;
+`` codigo jsx
+
+Em seguida, substitua o conteúdo do arquivo src/index.js com o seguinte código:
+
+`` codigo jsx
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    import App from './App';
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+`` codigo jsx
+
+Agora, crie um novo diretório chamado api na raiz do projeto e, dentro dele, crie um arquivo chamado index.php.
+
+No arquivo index.php, você pode usar o Slim para criar uma API que lidará com o filtro de proximidade. Aqui está um exemplo básico:
+
+`` codigo php
+    require '../vendor/autoload.php';
+
+    use Psr\Http\Message\ResponseInterface as Response;
+    use Psr\Http\Message\ServerRequestInterface as Request;
+    use Slim\Factory\AppFactory;
+
+    $app = AppFactory::create();
+
+    // Endpoint para lidar com a filtragem de clientes por proximidade
+    $app->get('/api/clientes', function (Request $request, Response $response) {
+        $distancia = $request->getQueryParams()['distancia'];
+
+        // Faça a lógica de filtro de clientes por proximidade aqui
+        // Substitua este exemplo com a sua lógica real
+
+        $clientes = [
+            ['id' => 1, 'nome' => 'Cliente A', 'distancia' => 10],
+            ['id' => 2, 'nome' => 'Cliente B', 'distancia' => 5],
+            ['id' => 3, 'nome' => 'Cliente C', 'distancia' => 8],
+        ];
+
+        // Filtrar os clientes com base na distância
+        $clientesFiltrados = array_filter($clientes, function ($cliente) use ($distancia) {
+            return $cliente['distancia'] <= $distancia;
+        });
+
+        // Ordenar os clientes pelo valor da distância
+        usort($clientesFiltrados, function ($a, $b) {
+            return $a['distancia'] <=> $b['distancia'];
+        });
+
+        // Retornar a resposta em formato JSON
+        $response->getBody()->write(json_encode($clientesFiltrados));
+        return $response->withHeader('Content-Type', 'application/json');
+    });
+
+    $app->run();
+`` codigo php
+
+Certifique-se de instalar o Slim usando o Composer (composer require slim/slim). Certifique-se também de que o diretório vendor e o arquivo index.php estejam no mesmo nível do diretório public gerado pelo create-react-app.
+
+Agora, você pode iniciar o servidor PHP localmente para lidar com as requisições da API. No terminal, vá para o diretório raiz do projeto e execute o seguinte comando:
+
+php -S localhost:8000 -t public
+
+Finalmente, inicie o servidor de desenvolvimento do React. Abra um novo terminal, vá para o diretório raiz do projeto e execute o seguinte comando:
+
+npm start
+
+Agora, você pode abrir seu navegador e acessar http://localhost:3000 para ver a aplicação React em ação. O filtro de proximidade irá enviar uma solicitação para a API em PHP usando Slim, que retornará os clientes ordenados pela distância passada. Os resultados serão exibidos na página React.
+
+============================================================================================
+
+6. Calcular a distância entre dois CEPs
+
+Para calcular a distância entre dois CEPs, você precisa obter as coordenadas geográficas (latitude e longitude) correspondentes a cada CEP. Em seguida, você pode usar a fórmula Haversine para calcular a distância entre essas coordenadas.
+
+Aqui está um exemplo de como calcular a distância entre dois CEPs usando a biblioteca geocode em PHP:
+
+`` codigo php
+    require 'vendor/autoload.php';
+
+    use Geocode\Geocode;
+
+    $geocode = new Geocode();
+
+    // Função para obter as coordenadas geográficas (latitude e longitude) de um CEP
+    function getCoordinates($cep)
+    {
+        $geocode = new Geocode();
+        $geocode->setAddress($cep);
+
+        return $geocode->getCoordinates();
+    }
+
+    // Função para calcular a distância entre duas coordenadas geográficas usando a fórmula Haversine
+    function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // Raio da Terra em quilômetros
+
+        $deltaLat = deg2rad($lat2 - $lat1);
+        $deltaLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($deltaLon / 2) * sin($deltaLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        $distance = $earthRadius * $c;
+
+        return $distance;
+    }
+
+    // Exemplo de uso
+    $cep1 = 'CEP1'; // Substitua pelo primeiro CEP
+    $cep2 = 'CEP2'; // Substitua pelo segundo CEP
+
+    $coordinates1 = getCoordinates($cep1);
+    $coordinates2 = getCoordinates($cep2);
+
+    $lat1 = $coordinates1['latitude'];
+    $lon1 = $coordinates1['longitude'];
+
+    $lat2 = $coordinates2['latitude'];
+    $lon2 = $coordinates2['longitude'];
+
+    $distance = calculateDistance($lat1, $lon1, $lat2, $lon2);
+
+    echo "A distância entre os CEPs $cep1 e $cep2 é de aproximadamente $distance km.";
+`` codigo php
+
+Certifique-se de substituir 'CEP1' e 'CEP2' pelos CEPs reais que você deseja calcular a distância.
+
+Observe que essa solução requer a biblioteca geocode, que pode ser instalada usando o Composer (composer require davidpiesse/geocode). Além disso, lembre-se de que nem todos os CEPs têm coordenadas geográficas disponíveis, portanto, pode haver casos em que você não consiga calcular a distância com base apenas no CEP.
+
+============================================================================================
+
+7. Como calcular a distância entre endereços em PHP?.
+
+Para calcular a distância entre dois endereços em PHP, você pode utilizar a API de geocodificação do Google Maps para obter as coordenadas geográficas (latitude e longitude) de cada endereço. Em seguida, você pode usar a fórmula Haversine para calcular a distância entre essas coordenadas.
+
+Aqui está um exemplo de função em PHP que calcula a distância entre dois endereços:
+
+`` codigo php
+    function getCoordinates($address)
+    {
+        $apiKey = 'SUA_CHAVE_DE_API'; // Substitua pela sua chave de API do Google Maps Geocoding
+
+        $address = urlencode($address);
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?address={$address}&key={$apiKey}";
+
+        $response = file_get_contents($url);
+
+        if ($response === false) {
+            die('Erro ao obter as coordenadas do endereço.');
+        }
+
+        $data = json_decode($response, true);
+
+        if ($data['status'] !== 'OK' || empty($data['results'])) {
+            die('Não foi possível obter as coordenadas para o endereço fornecido.');
+        }
+
+        $coordinates = $data['results'][0]['geometry']['location'];
+
+        return $coordinates;
+    }
+
+    function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // Raio da Terra em quilômetros
+
+        $deltaLat = deg2rad($lat2 - $lat1);
+        $deltaLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($deltaLat / 2) * sin($deltaLat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($deltaLon / 2) * sin($deltaLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        $distance = $earthRadius * $c;
+
+        return $distance;
+    }
+
+    // Exemplo de uso
+    $address1 = 'Endereço 1'; // Substitua pelo primeiro endereço
+    $address2 = 'Endereço 2'; // Substitua pelo segundo endereço
+
+    $coordinates1 = getCoordinates($address1);
+    $coordinates2 = getCoordinates($address2);
+
+    $lat1 = $coordinates1['lat'];
+    $lon1 = $coordinates1['lng'];
+
+    $lat2 = $coordinates2['lat'];
+    $lon2 = $coordinates2['lng'];
+
+    $distance = calculateDistance($lat1, $lon1, $lat2, $lon2);
+
+    echo "A distância entre os endereços {$address1} e {$address2} é de aproximadamente {$distance} km.";
+`` codigo php
+
+Certifique-se de substituir 'SUA_CHAVE_DE_API' pela sua chave de API válida do Google Maps Geocoding.
+
+Este exemplo usa a função getCoordinates() para obter as coordenadas geográficas de cada endereço usando a API de geocodificação do Google Maps. Em seguida, a função calculateDistance() calcula a distância entre as coordenadas usando a fórmula Haversine. Por fim, o resultado é exibido na tela.
+
+============================================================================================
+
+8. Pegar dois parametros ( distancia escolhida em input range no react e o cep do cliente obtido pela localização do google ) e enviar para o php para ser calculado a distancia
+
+
+Para obter a localização do cliente com base no Google Maps, você precisa usar a API de Geolocalização do navegador. Aqui está um exemplo de como você pode obter a localização do cliente no React e enviar a distância escolhida juntamente com a latitude e longitude para o PHP calcular a distância:
+
+No lado do frontend, no componente React, você pode ter um formulário com um input de range para a distância. Quando o formulário for enviado, você pode obter a localização do cliente usando a API de Geolocalização do navegador e, em seguida, fazer uma requisição HTTP para o PHP, passando a distância, a latitude e a longitude como parâmetros.
+
+Aqui está um exemplo de como isso pode ser feito:
+
+`` codigo jsx
+    import React, { useState } from 'react';
+
+    function App() {
+        const [distancia, setDistancia] = useState(0);
+        const [latitude, setLatitude] = useState(null);
+        const [longitude, setLongitude] = useState(null);
+        const [resultado, setResultado] = useState('');
+
+        const handleDistanciaChange = (e) => {
+            setDistancia(e.target.value);
+        };
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+            try {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        setLatitude(position.coords.latitude);
+                        setLongitude(position.coords.longitude);
+                    },
+                    (error) => {
+                        console.error(error);
+                    }
+                    );
+                } else {
+                    console.error('Geolocalização não suportada pelo navegador.');
+                }
+
+                const response = await fetch(`/calcular-distancia.php?distancia=${distancia}&latitude=${latitude}&longitude=${longitude}`);
+                const data = await response.json();
+                setResultado(data.resultado);
+            } catch (error) {
+            console.error(error);
+            }
+        };
+
+        return (
+            <div>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="distancia">Distância:</label>
+                <input
+                    type="range"
+                    id="distancia"
+                    min="0"
+                    max="100"
+                    value={distancia}
+                    onChange={handleDistanciaChange}
+                />
+
+                <button type="submit">Calcular Distância</button>
+            </form>
+
+            {resultado && (
+                <p>A distância calculada é de aproximadamente {resultado} km.</p>
+            )}
+            </div>
+        );
+    }
+
+    export default App;
+`` codigo jsx
+
+No exemplo acima, temos um componente React chamado App que possui um formulário com um input de range para a distância (handleDistanciaChange). Quando o formulário é enviado (handleSubmit), a localização do cliente é obtida usando a API de Geolocalização do navegador e, em seguida, uma requisição HTTP é feita para o arquivo PHP calcular-distancia.php, passando a distância, a latitude e a longitude como parâmetros.
+
+Agora, no lado do backend, você pode criar o arquivo calcular-distancia.php para receber esses parâmetros, calcular a distância e retornar o resultado. Aqui está um exemplo básico:
+
+`` codigo php
+    // Obter os parâmetros da distância, latitude e longitude
+    $distancia = $_GET['distancia'];
+    $latitude = $_GET['latitude'];
+    $longitude = $_GET['longitude'];
+
+    // Implementar a lógica para calcular a distância entre as coordenadas geográficas fornecidas
+
+    // Retornar o resultado em formato JSON
+    $response = [
+        'resultado' => $distancia * 2 // Exemplo: dobrar a distância recebida
+    ];
+
+    header('Content-Type: application/json');
+    echo json_encode($response);
+`` codigo php
+
+No exemplo acima, temos um arquivo PHP calcular-distancia.php que recebe os parâmetros da distância, latitude e longitude. Você pode implementar a lógica para calcular a distância entre as coordenadas geográficas fornecidas usando a fórmula Haversine ou outra abordagem de cálculo de distância. Por fim, o resultado é retornado em formato JSON.
+
+============================================================================================
