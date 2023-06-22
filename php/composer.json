@@ -1,0 +1,16 @@
+{
+    "name": "match_servicos/php",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "MatchServicos\\Php\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Estevao Leite",
+            "email": "estevaotlnf@gmail.com"
+        }
+    ],
+    "require": {}
+}
