@@ -1,0 +1,6 @@
+npx create-react-app meu-projeto
+composer init
+npm install react react-dom react-router-dom
+npm install react-responsive-carousel
+npm install bootstrap
+npm install react-input-mask
