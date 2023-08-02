@@ -10,7 +10,7 @@ const CardPrestadorServicos = ({ imageSrc, altText, profissao, idade, endereco, 
             <p>{endereco}</p>
             <p>Média Avaliação: {media_avaliacao}</p>
 
-            <button class="btn btn-success">Ver Perfil</button>
+            <button className="btn btn-success">Ver Perfil</button>
         </div>
     );
 };

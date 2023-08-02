@@ -1,0 +1,1 @@
+ALTER TABLE cliente ADD prestadorServico TINYINT DEFAULT 0;

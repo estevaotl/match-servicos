@@ -4,11 +4,12 @@ import '../css/card.css'; // Caminho relativo para o arquivo card.css
 
 const FooterPage = () => {
     const [emailNewsletter, setEmailNewsletter] = useState('');
+    const [nomeNewsletter, setNomeNewsletter] = useState('');
 
     const handleSubmitNewsletter = (event) => {
         event.preventDefault();
 
-        fetch('http://127.0.0.1:8000/match-servicos/api/newsletter/inscricao', {
+        fetch('http://localhost:8000/newsletter/criar', {
             method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
             headers: {
                 'Content-Type': 'application/json',
@@ -17,7 +18,8 @@ const FooterPage = () => {
             body: JSON.stringify({
                 // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
                 // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
-                email: emailNewsletter
+                email: emailNewsletter,
+                nome: nomeNewsletter
             })
         })
         .then(response => response.json())
@@ -53,7 +55,7 @@ const FooterPage = () => {
                         <p className="newsletter-text">Não perca novidades</p>
                         <div>
                             <input type="text" id="emailNewsletter" value={emailNewsletter} onChange={(e) => setEmailNewsletter(e.target.value)} />
-                            <button type="submit" className="btn btn-success">Subscribe</button>
+                            <input type="text" id="nomeNewsletter" value={nomeNewsletter} onChange={(e) => setNomeNewsletter(e.target.value)} />                            <button type="submit" className="btn btn-success">Subscribe</button>
                         </div>
                     </div>
                 </form>

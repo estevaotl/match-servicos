@@ -31,34 +31,46 @@ const CadastroPage = () => {
     };
 
     const renderCamposAdicionais = () => {
-        if (documento.length === 11) {
-          // CPF
-            return null;
-        } else if (documento.length === 14) {
+        if (documento.length === 14) {
             // CNPJ
             return (
                 <div>
-                <div className="mb-3">
-                    <label htmlFor="inscricaoEstadual" className="form-label">Inscrição Estadual:</label>
-                    <input type="text" className="form-control" id="inscricaoEstadual" value={inscricaoEstadual} onChange={(e) => setInscricaoEstadual(e.target.value)} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="razaoSocial" className="form-label">Razão Social:</label>
-                    <input type="text" className="form-control" id="razaoSocial" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="situacaoTributaria" className="form-label">Situação Tributária:</label>
-                    <select className="form-select" id="situacaoTributaria" value={situacaoTributaria} onChange={(e) => setSituacaoTributaria(e.target.value)}>
-                    <option value="">Selecione</option>
-                    <option value="contribuinte">Contribuinte</option>
-                    <option value="naoContribuinte">Não Contribuinte</option>
-                    <option value="isento">Isento</option>
-                    </select>
-                </div>
+                    <div className="col-md-6 mb-3">
+                        <label htmlFor="inscricaoEstadual" className="form-label">Inscrição Estadual:</label>
+                        <input type="text" className="form-control" id="inscricaoEstadual" value={inscricaoEstadual} onChange={(e) => setInscricaoEstadual(e.target.value)} />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label htmlFor="razaoSocial" className="form-label">Razão Social:</label>
+                        <input type="text" className="form-control" id="razaoSocial" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label htmlFor="situacaoTributaria" className="form-label">Situação Tributária:</label>
+                        <select className="form-select" id="situacaoTributaria" value={situacaoTributaria} onChange={(e) => setSituacaoTributaria(e.target.value)}>
+                        <option value="">Selecione</option>
+                        <option value="contribuinte">Contribuinte</option>
+                        <option value="naoContribuinte">Não Contribuinte</option>
+                        <option value="isento">Isento</option>
+                        </select>
+                    </div>
                 </div>
             );
         } else {
-            return null;
+            return (
+                <div>
+                    <div className="col-md-6 mb-3">
+                        <label htmlFor="dataNascimento" className="form-label">Data de Nascimento:</label>
+                        <input type="date" className="form-control" id="dataNascimento" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label htmlFor="genero" className="form-label">Gênero:</label>
+                        <select className="form-select" id="genero" value={genero} onChange={(e) => setGenero(e.target.value)}>
+                        <option value="">Selecione</option>
+                        <option value="feminino">Feminino</option>
+                        <option value="masculino">Masculino</option>
+                        </select>
+                    </div>
+                </div>
+            );
         }
     };
 
@@ -104,24 +116,12 @@ const CadastroPage = () => {
                         </div>
                         {renderCamposAdicionais()}
                         <div className="col-md-6 mb-3">
-                            <label htmlFor="dataNascimento" className="form-label">Data de Nascimento:</label>
-                            <input type="date" className="form-control" id="dataNascimento" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
-                        </div>
-                        <div className="col-md-6 mb-3">
                             <label htmlFor="telefone" className="form-label">Telefone:</label>
                             <input type="tel" className="form-control" id="telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
                         </div>
                         <div className="col-md-6 mb-3">
                             <label htmlFor="whatsapp" className="form-label">WhatsApp:</label>
                             <input type="tel" className="form-control" id="whatsapp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
-                        </div>
-                        <div className="col-md-6 mb-3">
-                            <label htmlFor="genero" className="form-label">Gênero:</label>
-                            <select className="form-select" id="genero" value={genero} onChange={(e) => setGenero(e.target.value)}>
-                            <option value="">Selecione</option>
-                            <option value="feminino">Feminino</option>
-                            <option value="masculino">Masculino</option>
-                            </select>
                         </div>
                         <div className="col-md-6 mb-3">
                             <label htmlFor="senha" className="form-label">Senha:</label>

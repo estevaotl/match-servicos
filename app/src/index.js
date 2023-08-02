@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Importa o arquivo CSS do Boots
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+      <App />
   </React.StrictMode>
 );
 
