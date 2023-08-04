@@ -1,12 +1,11 @@
 <?php
 
     class NewsletterDAO{
-
         private $bancoDados = null;
 
-        public function __construct() {
-            $this->bancoDados = (new BancoDados())->get();
-        }
+        public function __construct($bancoDados){
+			$this->bancoDados = $bancoDados;
+		}
 
         public function salvar(Newsletter &$newsletter){
             try {

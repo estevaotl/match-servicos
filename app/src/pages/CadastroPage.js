@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import InputMask from 'react-input-mask';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import '../css/cadastro-page.css';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
 import FooterPage from '../componentes/FooterPage';
@@ -24,10 +24,40 @@ const CadastroPage = () => {
         setDocumento(value);
     };
 
+    const navigate = useNavigate();
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Lógica para enviar os dados do formulário para o servidor
-        console.log('Dados do formulário enviados:', { nome, email, dataNascimento, telefone, whatsapp, genero, senha });
+
+        fetch('http://localhost:8000/clientes/criar', {
+            method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
+            headers: {
+                'Content-Type': 'application/json',
+                // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
+            },
+            body: JSON.stringify({
+                // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
+                // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
+                nome : nome,
+                email : email,
+                dataNascimento : dataNascimento,
+                whatsapp : whatsapp,
+                genero : genero,
+                senha : senha,
+                ehPrestadorDeServicos : prestadorDeServicos == "prestadorSim" ? true : false,
+                documento : documento
+            })
+        })
+        .then(response => response.json())
+            .then(data => {
+                sessionStorage.setItem('idCliente', JSON.stringify(data.cliente['id']));
+                sessionStorage.setItem('nomeCliente', JSON.stringify(data.cliente['nome']));
+                navigate('/'); // Use navigate('/') para redirecionar para a página inicial
+        })
+        .catch(error => {
+            // Aqui você pode lidar com erros de requisição
+            console.error(error);
+        });
     };
 
     const renderCamposAdicionais = () => {

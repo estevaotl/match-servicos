@@ -1,6 +1,16 @@
 <?php
     class NewsletterController{
-        public function __construct() { }
+        private $service = null;
+
+        public function __construct(BancoDados $conexao = null){
+			if(isset($conexao))
+				$bancoDados = $conexao;
+			else
+				$bancoDados = BDSingleton::get();
+
+			$newsletterDAO = new NewsletterDAO($bancoDados);
+			$this->service = new NewsletterService($newsletterDAO);
+		}
 
         public function salvar($dados){
             try {
@@ -16,10 +26,10 @@
                     $newsletter->$setter($dados[$campo]);
                 }
 
-                (new NewsletterService())->salvar($newsletter, $erro);
+                $this->service->salvar($newsletter, $erro);
             } catch (\Throwable $th) {
+                Util::logException($th);
                 throw new Exception($th->getMessage());
             }
-            
         }
     }

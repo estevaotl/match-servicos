@@ -6,7 +6,8 @@
         private $whatsapp = "";
         private $genero = "";
         private $prestadorDeServicos = false;
-        private $dadosEspecificos = "";
+        private $dadosEspecificos = array();
+        private $senha = "";
 
         public function __construct() {}
 
@@ -57,12 +58,19 @@
             $this->prestadorDeServicos = $prestadorDeServicos;
         }
 
-        public function getDadosEspecificos()
-        {
+        public function getDadosEspecificos(){
             return $this->dadosEspecificos;
         }
 
         public function setDadosEspecificos($dadosEspecificos){
             $this->dadosEspecificos = $dadosEspecificos;
+        }
+
+        public function getSenha(){
+            return $this->senha;
+        }
+
+        public function setSenha($senha){
+            $this->senha = $senha;
         }
     }

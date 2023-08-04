@@ -45,7 +45,7 @@
     width: 200px;
 }
 
-#sectionHomePage span{
+#sectionHomePage span {
     margin-right: auto;
     font-size: xxx-large;
     font-weight: bold;
@@ -69,7 +69,7 @@
     display: flex;
 }
 
-#footerHomePage{
+#footerHomePage {
     /* topo | direita | inferior | esquerda */
     margin: 80px 0 10px 0;
     background-color: burlywood;
@@ -105,7 +105,7 @@
     text-decoration: underline;
 }
 
-#footerHomePage{
+#footerHomePage {
     background-color: burlywood;
     max-width: 1320px;
     height: 200px;

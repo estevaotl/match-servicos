@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/home-page.css';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
@@ -9,18 +9,47 @@ import CardAvalicoesSite from '../componentes/CardAvaliacoesSite'; // Caminho re
 import FooterPage from '../componentes/FooterPage';
 
 const HomePage = () => {
+    const [idCliente, setIdCliente] = useState('');
+    const [nomeCliente, setNomeCliente] = useState('');
+
+    useEffect(() => {
+        // Verifica se o idCliente está salvo na sessionStorage
+        const idClienteStorage = sessionStorage.getItem('idCliente');
+        if (idClienteStorage) {
+            setIdCliente(JSON.parse(idClienteStorage));
+        }
+
+        const nomeCliente = sessionStorage.getItem('nomeCliente');
+        if (nomeCliente) {
+            setNomeCliente(JSON.parse(nomeCliente));
+        }
+    }, []);
+
     return (
         <div>
             <header id="headerHomePage">
                 <img src={logo} alt="Logo" />
                 <nav>
                     <ul>
-                        <li>
-                            <Link to="/cadastrar">Cadastrar-se</Link>
-                        </li>
-                        <li>
-                            <Link to="/login">Entrar na sua conta</Link>
-                        </li>
+                        {idCliente ? (
+                            <>
+                                <li>Olá, {nomeCliente}.</li>
+                                <li>
+                                    <Link to="/painel">Entrar na sua conta</Link>
+                                </li>
+                            </>
+                            
+                        ) : (
+                            // Renderiza o menu padrão quando idCliente não está presente
+                            <>
+                                <li>
+                                    <Link to="/cadastrar">Cadastrar-se</Link>
+                                </li>
+                                <li>
+                                    <Link to="/login">Entrar na sua conta</Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </nav>
             </header>

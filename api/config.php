@@ -1,4 +1,6 @@
 <?php
+    session_start();
+
     // Função de autoload
     function my_autoloader($class_name) {
         global $class_map;
@@ -19,12 +21,24 @@
 
     $class_map = array(
         'ClienteController' => '/cliente/ClienteController.php',
+        'ClienteService' => '/cliente/ClienteService.php',
+        'ClienteDAO' => '/cliente/ClienteDAO.php',
+        'Cliente' => '/cliente/Cliente.php',
+        'DadosClienteFisico' => '/cliente/DadosClienteFisico.php',
+        'DadosClienteJuridico' => '/cliente/DadosClienteJuridico.php',
+        'DBException' => '/exception/DBException.php',
         'NewsletterController' => '/newsletter/NewsletterController.php',
         'Newsletter' => '/newsletter/Newsletter.php',
         'NewsletterService' => '/newsletter/NewsletterService.php',
         'NewsletterDAO' => '/newsletter/NewsletterDAO.php',
         'BancoDados' => '/singleton/BancoDados.php',
         'PDOSingleton' => '/singleton/PDOSingleton.php',
+        'BDSingleton' => '/singleton/BDSingleton.php',
+        'Ops' => '/ops/Ops.php',
+        'OpsController' => '/ops/OpsController.php',
+        'OpsService' => '/ops/OpsService.php',
+        'OpsDAO' => '/ops/OpsDAO.php',
+
         // Adicione outros mapeamentos de classes aqui
     );
 ?>

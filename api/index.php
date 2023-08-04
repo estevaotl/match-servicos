@@ -1,8 +1,11 @@
 <?php
     try {
-        // Define os headers para permitir o acesso através de CORS
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Headers: *");
+        // Configuração do CORS
+        header('Access-Control-Allow-Origin: *'); 
+        header("Access-Control-Allow-Credentials: true");
+        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+        header('Access-Control-Max-Age: 1000');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
 
         require __DIR__ . '/vendor/autoload.php';
         require_once __DIR__ . '/php/classes/util/Util.php';
@@ -10,22 +13,18 @@
         // Incluindo o arquivo de configuração
         require_once 'config.php';
 
+
         // Cria a instância do Slim App
-        $app = new \Slim\App();
+        $app = new \Slim\App([]);
 
         // Defina uma rota de teste
-        $app->get('/', function ($request, $response, $args) {
-            $response->getBody()->write("Olá, Mundo!");
-            return $response;
-        });
+        // $app->get('/', function ($request, $response, $args) {
+        //     $response->getBody()->write("Olá, Mundo!");
+        //     return $response;
+        // });
 
         // Grupo de rotas para a rota '/clientes'
         $app->group('/clientes', function ($app) {
-
-            $app->get('/', function ($request, $response, $args) {
-                $response->getBody()->write("Rota /clientes");
-                return $response;
-            });
 
             $app->post('/criar', function ($request, $response, $args) {
 
@@ -35,11 +34,12 @@
                 $clienteController = new ClienteController();
 
                 // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-                $resultado = $clienteController->salvar($params);
+                $cliente = $clienteController->salvar($params);
 
-                // Use o resultado da função salvar como necessário
-                $response->getBody()->write("Rota /clientes/criar - Resultado: " . $resultado);
-                return $response;
+                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                $clienteController->logar($params['email'], $params['senha']);
+
+                return $response->withJson(['cliente' => ['id' => $cliente->getId(), 'nome' => $cliente->getNome()]]);
             });
         });
 

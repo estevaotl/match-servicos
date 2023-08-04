@@ -1,34 +1,25 @@
 <?php
-    class PDOSingleton{
-        private static $pdo = null;
+    require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
 
-        public function __construct() {
-            try {
-                if(!isset(self::$pdo) && !self::$pdo instanceof PDO){
-                    self::$pdo = new PDO("mysql:host=localhost;dbname=match_servicos;charset=utf8mb4", "root", "");
-                    self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                }
-
-                return self::$pdo;
-            } catch (PDOException $e) {
-                throw new Exception("Erro na conexão com o banco de dados: " . $e->getMessage());
+    abstract class PDOSingleton {
+        private static $pdo;
+        
+        // Instancia apenas uma vez
+        public static function get() {
+            if (!isset(self::$pdo)) {
+                self::$pdo = self::create();
+                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }
+
+            return self::$pdo;
         }
 
-        public function executar($comando, $parametros = array()){
-            try {
-                $this::$pdo->beginTransaction();
+        // Cria o objeto PDO
+        private static function create() {
+            $dsn = "mysql:dbname=match_servicos;host=localhost;charset=utf8mb4";
+            $usuario = "root";
+            $senha = "";
 
-                $ps = $this::$pdo->prepare($comando);
-                $ps->execute($parametros);
-
-                $this::$pdo->commit();
-            } catch (\Throwable $th) {
-                $this::$pdo->rollback();
-
-                throw new Exception($th->getMessage());
-            }
+            return new PDO($dsn, $usuario, $senha);
         }
     }
-
-?>
