@@ -1,75 +1,51 @@
-#articleHomePage {
+#articleMinhaContaPage {
     margin-top: 150px;
 }
 
-#headerHomePage nav {
+#articleMinhaContaPage div {
+    text-align: -webkit-center;
+}
+
+#headerMinhaContaPage nav {
     display: flex;
     justify-content: flex-end;
     margin-top: -185px;
 }
 
-#headerHomePage nav ul {
+#headerMinhaContaPage nav ul {
     list-style: none;
     display: flex;
     align-items: end;
     flex-direction: column;
 }
 
-#headerHomePage ul li {
+#headerMinhaContaPage ul li {
     margin-right: 10px;
     text-transform: uppercase;
 }
 
-#headerHomePage ul li a {
+#headerMinhaContaPage ul li a {
     text-decoration: none;
     color: #000;
     font-size: xxx-large;
     margin-top: -50px;
 }
 
-#headerHomePage ul li a:hover {
+#headerMinhaContaPage ul li a:hover {
     text-decoration: underline;
 }
 
-#headerHomePage img {
+#headerMinhaContaPage img {
     width: 200px;
 }
 
-#sectionHomePage {
-    /* topo | direita | inferior | esquerda */
-    margin: 80px 0 10px 0;
-    display: flex;
-}
-
-#sectionHomePage img {
-    width: 200px;
-}
-
-#sectionHomePage span{
-    margin-right: auto;
-    font-size: xxx-large;
-    font-weight: bold;
-}
-
-#articleCardAvaliacoesHomePage {
-    /* topo | direita | inferior | esquerda */
-    margin: 80px 0 10px 0;
+#articleHomePage {
     background-color: burlywood;
     max-width: 1320px;
-    height: 500px;
-    display: flex;
+    height: 200px;
 }
 
-#articleCardTrabalhadorHomePage {
-    /* topo | direita | inferior | esquerda */
-    margin: 80px 0 10px 0;
-    background-color: burlywood;
-    max-width: 1320px;
-    height: 500px;
-    display: flex;
-}
-
-#footerHomePage{
+#footerMinhaContaPage {
     /* topo | direita | inferior | esquerda */
     margin: 80px 0 10px 0;
     background-color: burlywood;
@@ -77,12 +53,12 @@
     height: 200px;
 }
 
-#footerHomePage nav {
+#footerMinhaContaPage nav {
     margin-inline-end: auto;
     margin-top: -52px;
 }
 
-#footerHomePage nav ul {
+#footerMinhaContaPage nav ul {
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -90,29 +66,29 @@
     padding: 40px;
 }
 
-#footerHomePage nav ul li {
+#footerMinhaContaPage nav ul li {
     margin-bottom: 10px;
 }
 
-#footerHomePage ul li a {
+#footerMinhaContaPage ul li a {
     text-decoration: none;
     color: #000;
     font-size: x-large;
     margin-top: -50px;
 }
 
-#footerHomePage ul li a:hover {
+#footerMinhaContaPage ul li a:hover {
     text-decoration: underline;
 }
 
-#footerHomePage{
+#footerMinhaContaPage {
     background-color: burlywood;
     max-width: 1320px;
     height: 200px;
     display: flex;
 }
 
-#footerHomePage div {
+#footerMinhaContaPage div {
     text-align: center;
     padding: 20px;
 }

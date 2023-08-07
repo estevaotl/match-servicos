@@ -8,6 +8,8 @@
         private $prestadorDeServicos = false;
         private $dadosEspecificos = array();
         private $senha = "";
+        private $dataCadastro = "";
+        private $ativo = true;
 
         public function __construct() {}
 
@@ -72,5 +74,45 @@
 
         public function setSenha($senha){
             $this->senha = $senha;
+        }
+
+        /**
+         * Get the value of dataCadastro
+         */ 
+        public function getDataCadastro()
+        {
+                return $this->dataCadastro;
+        }
+
+        /**
+         * Set the value of dataCadastro
+         *
+         * @return  self
+         */ 
+        public function setDataCadastro($dataCadastro)
+        {
+                $this->dataCadastro = $dataCadastro;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of ativo
+         */ 
+        public function getAtivo()
+        {
+                return $this->ativo;
+        }
+
+        /**
+         * Set the value of ativo
+         *
+         * @return  self
+         */ 
+        public function setAtivo($ativo)
+        {
+                $this->ativo = $ativo;
+
+                return $this;
         }
     }

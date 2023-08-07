@@ -50,8 +50,8 @@ const CadastroPage = () => {
         })
         .then(response => response.json())
             .then(data => {
-                sessionStorage.setItem('idCliente', JSON.stringify(data.cliente['id']));
-                sessionStorage.setItem('nomeCliente', JSON.stringify(data.cliente['nome']));
+                sessionStorage.setItem('idCliente', data.cliente['id']);
+                sessionStorage.setItem('nomeCliente', data.cliente['nome']);
                 navigate('/'); // Use navigate('/') para redirecionar para a página inicial
         })
         .catch(error => {

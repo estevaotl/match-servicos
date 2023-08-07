@@ -57,4 +57,12 @@
 		public function deslogar(){
 			$this->service->deslogar();
 		}
+
+        public function obterComEmail($email){
+			return $this->service->obterComEmail($email);
+		}
+
+        public function obterComId($id, $completo = true){
+            return $this->service->obterComId($id, $completo);
+        }
     }

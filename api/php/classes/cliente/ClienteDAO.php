@@ -55,6 +55,30 @@
             return count($linhas) > 0;
         }
 
+        public function transformarEmObjeto($l, $completo = true){
+			$cliente = new Cliente();
+
+			// if($this->getBancoDados()->existe('pessoafisica','idCliente',$l['id'],'',false)){ //Transformar em pessoa física
+			// 	$cliente = new PessoaFisica($l['id']);
+			// 	$this->preencherPF($cliente);
+			// }else{ //Transformar em pessoa jurídica
+			// 	$cliente = new PessoaJuridica($l['id']);
+			// 	$this->preencherPJ($cliente);
+			// }
+
+            $cliente->setId($l['id']);
+			$cliente->setNome($l['nome']);
+			$cliente->setEmail($l['email']);
+			$cliente->setWhatsapp($l['whatsapp']);
+            $cliente->setDataCadastro($l['dataCadastro']);
+            $cliente->setPrestadorDeServicos(filter_var($l['prestadorServico'], FILTER_VALIDATE_BOOLEAN));
+            $cliente->setGenero($l['genero']);
+            $cliente->setWhatsapp($l['whatsapp']);
+            $cliente->setAtivo(filter_var($l['ativo'], FILTER_VALIDATE_BOOLEAN));
+
+			return $cliente;
+		}
+
         public function adicionarDadosEspecificos(Cliente $cliente){
             if ($cliente->getDadosEspecificos() instanceof DadosClienteFisico) {
                 $comando = "INSERT INTO pessoafisica (idCliente, cpf, dataNascimento) VALUES (:idCliente, :cpf, :dataNascimento)";
@@ -112,5 +136,23 @@
             );
 
 			return $this->bancoDados->consultar($comando, $parametros, true);
+		}
+
+        public function obterComEmail($email){
+			$comando = "select * from cliente where email = :email and ativo = 1";
+			$parametros = array(
+				"email" => $email
+			);
+
+			return $this->bancoDados->obterObjeto($comando, array($this, 'transformarEmObjeto'), $parametros);
+		}
+
+        public function obterComId($id, $completo = true){
+			$comando = "select * from cliente where id = :id";
+			$parametros = array(
+				"id" => $id
+			);
+
+			return $this->bancoDados->obterObjeto($comando, array($this, 'transformarEmObjeto'), $parametros, $completo);
 		}
     }

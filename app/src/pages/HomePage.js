@@ -16,12 +16,12 @@ const HomePage = () => {
         // Verifica se o idCliente está salvo na sessionStorage
         const idClienteStorage = sessionStorage.getItem('idCliente');
         if (idClienteStorage) {
-            setIdCliente(JSON.parse(idClienteStorage));
+            setIdCliente(idClienteStorage);
         }
 
         const nomeCliente = sessionStorage.getItem('nomeCliente');
         if (nomeCliente) {
-            setNomeCliente(JSON.parse(nomeCliente));
+            setNomeCliente(nomeCliente);
         }
     }, []);
 
@@ -35,7 +35,7 @@ const HomePage = () => {
                             <>
                                 <li>Olá, {nomeCliente}.</li>
                                 <li>
-                                    <Link to="/painel">Entrar na sua conta</Link>
+                                    <Link to="/minha-conta">Entrar na sua conta</Link>
                                 </li>
                             </>
                             

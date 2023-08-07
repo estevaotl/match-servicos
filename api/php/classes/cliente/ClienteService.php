@@ -45,4 +45,12 @@
 			if(isset($_SESSION['idCliente']))
 				unset($_SESSION['idCliente']);
 		}
+
+		public function obterComEmail($email){
+			return $this->dao->obterComEmail($email);
+		}
+
+		public function obterComId($id, $completo = true){
+            return $this->dao->obterComId($id, $completo);
+        }
     }

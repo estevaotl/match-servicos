@@ -4,3 +4,4 @@ npm install react react-dom react-router-dom
 npm install react-responsive-carousel
 npm install bootstrap
 npm install react-input-mask
+npm install react-tabs

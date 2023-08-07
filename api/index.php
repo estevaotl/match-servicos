@@ -15,7 +15,7 @@
 
 
         // Cria a instância do Slim App
-        $app = new \Slim\App([]);
+        $app = new \Slim\App(array());
 
         // Defina uma rota de teste
         // $app->get('/', function ($request, $response, $args) {
@@ -40,6 +40,42 @@
                 $clienteController->logar($params['email'], $params['senha']);
 
                 return $response->withJson(['cliente' => ['id' => $cliente->getId(), 'nome' => $cliente->getNome()]]);
+            });
+
+            $app->post('/logar', function ($request, $response, $args) {
+
+                $params = $request->getParsedBody(); // Retorna um array com os dados do POST
+
+                // Cria uma instância da classe ClienteController
+                $clienteController = new ClienteController();
+
+                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                $clienteController->logar($params['email'], $params['senha']);
+                $cliente = $clienteController->obterComEmail($params['email']);
+
+                if(!$cliente instanceof Cliente){
+                    throw new Exception("Cliente não encontrado.");
+                }
+
+                return $response->withJson(['cliente' => ['id' => $cliente->getId(), 'nome' => $cliente->getNome()]]);
+            });
+
+            // Rota para obter um cliente por ID
+            $app->get('/obter/{id}', function ($request, $response, $args) {
+
+                $clienteId = $args['id']; // Obtém o ID do cliente a partir dos argumentos da URL
+
+                // Cria uma instância da classe ClienteController
+                $clienteController = new ClienteController();
+
+                // Chama a função 'obterPorId' da classe ClienteController, passando o ID do cliente
+                $cliente = $clienteController->obterComId($clienteId);
+
+                if (!$cliente instanceof Cliente) {
+                    throw new Exception("Cliente não encontrado.");
+                }
+
+                return $response->withJson(['cliente' => ['cliente' => $cliente]]);
             });
         });
 
