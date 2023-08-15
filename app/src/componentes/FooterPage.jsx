@@ -9,7 +9,7 @@ const FooterPage = () => {
     const handleSubmitNewsletter = (event) => {
         event.preventDefault();
 
-        fetch('http://localhost:8000/newsletter/criar', {
+        fetch('http://localhost/match-servicos/api/newsletter/criar', {
             method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
             headers: {
                 'Content-Type': 'application/json',

@@ -29,7 +29,7 @@ const CadastroPage = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        fetch('http://localhost:8000/clientes/criar', {
+        fetch('http://localhost/match-servicos/api/clientes/criar', {
             method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
             headers: {
                 'Content-Type': 'application/json',

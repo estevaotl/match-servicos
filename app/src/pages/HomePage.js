@@ -25,6 +25,13 @@ const HomePage = () => {
         }
     }, []);
 
+    const handleLogout = () => {
+        sessionStorage.removeItem('idCliente'); // Supondo que 'idCliente' é o item que você deseja limpar
+        sessionStorage.removeItem('nomeCliente');
+        setIdCliente(false); // Atualizar o estado para indicar que o cliente não está mais logado
+        setNomeCliente(false);
+    };
+
     return (
         <div>
             <header id="headerHomePage">
@@ -36,6 +43,9 @@ const HomePage = () => {
                                 <li>Olá, {nomeCliente}.</li>
                                 <li>
                                     <Link to="/minha-conta">Entrar na sua conta</Link>
+                                </li>
+                                <li>
+                                    <button onClick={handleLogout}>Logout</button>
                                 </li>
                             </>
                             

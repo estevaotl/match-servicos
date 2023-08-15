@@ -1,4 +1,7 @@
-<?php
+<?php 
+    // Incluindo o arquivo de configuração
+    require_once __DIR__ . '/config.php';
+
     try {
         // Configuração do CORS
         header('Access-Control-Allow-Origin: *'); 
@@ -8,17 +11,12 @@
         header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
 
         require __DIR__ . '/vendor/autoload.php';
-        require_once __DIR__ . '/php/classes/util/Util.php';
-
-        // Incluindo o arquivo de configuração
-        require_once 'config.php';
-
 
         // Cria a instância do Slim App
         $app = new \Slim\App(array());
 
-        // Defina uma rota de teste
-        // $app->get('/', function ($request, $response, $args) {
+        // // Defina uma rota de teste
+        // $app->get('/clientes/teste', function ($request, $response, $args) {
         //     $response->getBody()->write("Olá, Mundo!");
         //     return $response;
         // });
@@ -43,7 +41,6 @@
             });
 
             $app->post('/logar', function ($request, $response, $args) {
-
                 $params = $request->getParsedBody(); // Retorna um array com os dados do POST
 
                 // Cria uma instância da classe ClienteController
@@ -62,7 +59,6 @@
 
             // Rota para obter um cliente por ID
             $app->get('/obter/{id}', function ($request, $response, $args) {
-
                 $clienteId = $args['id']; // Obtém o ID do cliente a partir dos argumentos da URL
 
                 // Cria uma instância da classe ClienteController
@@ -75,7 +71,7 @@
                     throw new Exception("Cliente não encontrado.");
                 }
 
-                return $response->withJson(['cliente' => ['cliente' => $cliente]]);
+                return $response->withJson(['cliente' => $cliente->jsonSerialize()]);
             });
         });
 
@@ -95,8 +91,31 @@
             });
         });
 
+        $app->group('/imagem', function ($app) {
+            $app->post('/upload', function ($request, $response) {
+                $uploadedFile = $request->getUploadedFiles()['image'];
+                $params = $request->getParsedBody(); // Retorna um array com os dados do POST
+
+                $fileName = ImagemFactory::saveImage($uploadedFile, $params['idCliente']);
+            });
+
+            $app->get('/ler/{nomeArquivo}', function ($request, $response, $args) {
+                $nomeArquivo = $args['nomeArquivo'];
+                $caminhoImagem = __DIR__ . '/public/dinamica/' . $nomeArquivo;
+
+                if (file_exists($caminhoImagem)) {
+                    $image = file_get_contents($caminhoImagem);
+                    $response->getBody()->write($image);
+                    return $response->withHeader('Content-Type', 'image/jpeg'); // ou o tipo de imagem apropriado
+                } else {
+                    return $response->withStatus(404); // Retorne um erro, se a imagem não existir
+                }
+            });
+        });
+
         $app->run();
     }catch (\Throwable $th) {
+        Util::logException($th);
         $response->getBody()->write($th->getMessage());
         return $response;
     }

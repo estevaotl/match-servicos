@@ -75,9 +75,18 @@
             $cliente->setGenero($l['genero']);
             $cliente->setWhatsapp($l['whatsapp']);
             $cliente->setAtivo(filter_var($l['ativo'], FILTER_VALIDATE_BOOLEAN));
-
+            $cliente->setImagem($this->obterImagens($l['id']));
 			return $cliente;
 		}
+
+        private function obterImagens($idCliente){
+            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto";
+            $parametros = array(
+                "idObjeto" => $idCliente
+            );
+
+            return $this->bancoDados->consultar($comando, $parametros, true);
+        }
 
         public function adicionarDadosEspecificos(Cliente $cliente){
             if ($cliente->getDadosEspecificos() instanceof DadosClienteFisico) {

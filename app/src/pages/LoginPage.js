@@ -13,7 +13,7 @@ const LoginPage = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        fetch('http://localhost:8000/clientes/logar', {
+        fetch('http://localhost/match-servicos/api/clientes/logar', {
             method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
             headers: {
                 'Content-Type': 'application/json',

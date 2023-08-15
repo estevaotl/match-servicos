@@ -1,0 +1,6 @@
+CREATE TABLE ops (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    arquivo VARCHAR(255) DEFAULT NULL,
+    trace VARCHAR(255) DEFAULT NULL,
+    horario DATETIME DEFAULT CURRENT_TIMESTAMP -- Definindo o valor padrão como horário atual
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

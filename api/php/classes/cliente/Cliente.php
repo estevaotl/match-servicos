@@ -10,6 +10,7 @@
         private $senha = "";
         private $dataCadastro = "";
         private $ativo = true;
+        private $imagem = array();
 
         public function __construct() {}
 
@@ -76,43 +77,38 @@
             $this->senha = $senha;
         }
 
-        /**
-         * Get the value of dataCadastro
-         */ 
-        public function getDataCadastro()
-        {
-                return $this->dataCadastro;
+        public function getDataCadastro(){
+            return $this->dataCadastro;
         }
 
-        /**
-         * Set the value of dataCadastro
-         *
-         * @return  self
-         */ 
-        public function setDataCadastro($dataCadastro)
-        {
-                $this->dataCadastro = $dataCadastro;
-
-                return $this;
+        public function setDataCadastro($dataCadastro){
+            $this->dataCadastro = $dataCadastro;
         }
 
-        /**
-         * Get the value of ativo
-         */ 
-        public function getAtivo()
-        {
-                return $this->ativo;
+        public function getAtivo(){
+            return $this->ativo;
         }
 
-        /**
-         * Set the value of ativo
-         *
-         * @return  self
-         */ 
-        public function setAtivo($ativo)
-        {
-                $this->ativo = $ativo;
+        public function setAtivo($ativo){
+            $this->ativo = $ativo;
+        }
 
-                return $this;
+        public function jsonSerialize() {
+            return [
+                'nome' => $this->nome,
+                'email' => $this->email,
+                'prestadorDeServicos' => $this->prestadorDeServicos,
+                'genero' => $this->genero,
+                'whatsapp' => $this->whatsapp,
+                'imagem' => $this->imagem
+            ];
+        }
+
+        public function getImagem(){
+            return $this->imagem;
+        }
+
+        public function setImagem($imagem){
+            $this->imagem = $imagem;
         }
     }

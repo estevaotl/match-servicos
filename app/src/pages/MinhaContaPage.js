@@ -5,6 +5,7 @@ import '../css/minha-conta-page.css';
 import FooterPage from '../componentes/FooterPage';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
 import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
+import CardPrestadorServicos from '../componentes/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
 
 function App() {
     const [email, setEmail] = useState('');
@@ -18,24 +19,41 @@ function App() {
 
     const [cliente, setCliente] = useState('');
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
     };
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Aqui você pode enviar os dados do formulário e do arquivo para o servidor
-        console.log('Dados do formulário:', { email });
-        console.log('Arquivo:', file);
+    const handleSubmit = async () => {
+        const idCliente = sessionStorage.getItem('idCliente');
+
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('idCliente', idCliente);
+
+        fetch('http://localhost/match-servicos/api/imagem/upload', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na requisição');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data); // Certifique-se de que você está vendo a resposta aqui
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
     };
 
     useEffect(() => {
-        console.log(sessionStorage);
         const idCliente = sessionStorage.getItem('idCliente');
 
-        fetch(`http://localhost:8000/clientes/obter/${idCliente}`, {
+        fetch(`http://localhost/match-servicos/api/clientes/obter/${idCliente}`, {
             method: 'GET', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
             headers: {
                 'Content-Type': 'application/json',
@@ -44,6 +62,7 @@ function App() {
         })
         .then(response => response.json())
             .then(data => {
+                console.log(data);
                 setCliente(data.cliente); // Não é necessário usar JSON.stringify aqui
         })
         .catch(error => {
@@ -79,34 +98,34 @@ function App() {
                         <form onSubmit={handleSubmit}>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="nome" className="form-label">Nome:</label>
-                                <input type="text" className="form-control" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+                                <input type="text" className="form-control" id="nome" value={cliente.nome} onChange={(e) => setNome(e.target.value)} />
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="email" className="form-label">Email:</label>
-                                <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                <input type="email" className="form-control" id="email" value={cliente.email} onChange={(e) => setEmail(e.target.value)} />
                             </div>
 
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="prestadorDeServicos" className="form-label">Prestador de Serviços:</label>
-                                <select className="form-select" id="prestadorDeServicos" value={prestadorDeServicos} onChange={(e) => setPrestadorDeServicos(e.target.value)}>
+                                <select className="form-select" id="prestadorDeServicos" value={cliente.prestadorDeServicos} onChange={(e) => setPrestadorDeServicos(e.target.value)}>
                                 <option value="">Selecione</option>
-                                <option value="prestadorSim">Sim</option>
-                                <option value="prestadorNao">Não</option>
+                                <option value="true">Sim</option>
+                                <option value="false">Não</option>
                                 </select>
                             </div>
 
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="telefone" className="form-label">Telefone:</label>
-                                <input type="tel" className="form-control" id="telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
+                                <input type="tel" className="form-control" id="telefone" value={cliente.telefone} onChange={(e) => setTelefone(e.target.value)} />
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="whatsapp" className="form-label">WhatsApp:</label>
-                                <input type="tel" className="form-control" id="whatsapp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
+                                <input type="tel" className="form-control" id="whatsapp" value={cliente.whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
                             </div>
 
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="genero" className="form-label">Gênero:</label>
-                                <select className="form-select" id="genero" value={genero} onChange={(e) => setGenero(e.target.value)}>
+                                <select className="form-select" id="genero" value={cliente.genero} onChange={(e) => setGenero(e.target.value)}>
                                 <option value="">Selecione</option>
                                 <option value="feminino">Feminino</option>
                                 <option value="masculino">Masculino</option>
@@ -125,6 +144,12 @@ function App() {
                             </label>
                             <button type="submit">Enviar</button>
                         </form>
+
+                        {cliente.imagem && cliente.imagem.length > 0 && (
+                            <article id="articleCardTrabalhadorHomePage">
+                                <CardPrestadorServicos imageSrc={`http://localhost/match-servicos/api/imagem/ler/${cliente.imagem[0].nomeArquivo}`} altText="Descrição da imagem" />
+                            </article>
+                        )}
                     </TabPanel>
                 </Tabs>
             </article>

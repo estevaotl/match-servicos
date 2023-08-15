@@ -1,6 +1,6 @@
 <?php
-    session_start();
 
+    session_start();
     // Função de autoload
     function my_autoloader($class_name) {
         global $class_map;
@@ -38,6 +38,12 @@
         'OpsController' => '/ops/OpsController.php',
         'OpsService' => '/ops/OpsService.php',
         'OpsDAO' => '/ops/OpsDAO.php',
+        'Util' => '/util/Util.php',
+        'ImagemFactory' => '/imagem/ImagemFactory.php',
+        'ImagemLocal' => '/imagem/ImagemLocal.php',
+        'ImagemLocalService' => '/imagem/ImagemLocalService.php',
+        'ImagemLocalController' => '/imagem/ImagemLocalController.php',
+        'ImagemLocalDAO' => '/imagem/ImagemLocalDAO.php'
 
         // Adicione outros mapeamentos de classes aqui
     );
