@@ -28,8 +28,8 @@ const LoginPage = () => {
         })
         .then(response => response.json())
             .then(data => {
-                sessionStorage.setItem('idCliente', data.cliente['id']);
-                sessionStorage.setItem('nomeCliente', data.cliente['nome']);
+                sessionStorage.setItem('idCliente', data.id);
+                sessionStorage.setItem('nomeCliente', data.nome);
                 navigate('/'); // Use navigate('/') para redirecionar para a página inicial
         })
         .catch(error => {

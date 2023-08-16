@@ -1,4 +1,8 @@
 <?php 
+    use Slim\Factory\AppFactory;
+    use Psr\Http\Message\ResponseInterface as Response;
+    use Psr\Http\Message\ServerRequestInterface as Request;
+
     // Incluindo o arquivo de configuração
     require_once __DIR__ . '/config.php';
 
@@ -12,8 +16,7 @@
 
         require __DIR__ . '/vendor/autoload.php';
 
-        // Cria a instância do Slim App
-        $app = new \Slim\App(array());
+        $app = AppFactory::create();
 
         // // Defina uma rota de teste
         // $app->get('/clientes/teste', function ($request, $response, $args) {
@@ -22,43 +25,69 @@
         // });
 
         // Grupo de rotas para a rota '/clientes'
-        $app->group('/clientes', function ($app) {
+        $app->group('/match-servicos/api/clientes', function ($app) {
 
-            $app->post('/criar', function ($request, $response, $args) {
+            $app->post('/criar', function (Request $request, Response $response, $args) {
 
-                $params = $request->getParsedBody(); // Retorna um array com os dados do POST
+                // Obter o corpo da requisição
+                $body = $request->getBody()->getContents();
+
+                // Transformar o JSON em array (caso o corpo seja JSON)
+                $data = json_decode($body, true);
 
                 // Cria uma instância da classe ClienteController
                 $clienteController = new ClienteController();
 
                 // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-                $cliente = $clienteController->salvar($params);
+                $cliente = $clienteController->salvar($data);
 
                 // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-                $clienteController->logar($params['email'], $params['senha']);
+                $clienteController->logar($data['email'], $data['senha']);
 
-                return $response->withJson(['cliente' => ['id' => $cliente->getId(), 'nome' => $cliente->getNome()]]);
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'id' => $cliente->getId(), 
+                    'nome' => $cliente->getNome()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
             });
 
-            $app->post('/logar', function ($request, $response, $args) {
-                $params = $request->getParsedBody(); // Retorna um array com os dados do POST
+            $app->post('/logar', function (Request $request, Response $response, $args) {
+                // Obter o corpo da requisição
+                $body = $request->getBody()->getContents();
+
+                // Transformar o JSON em array (caso o corpo seja JSON)
+                $data = json_decode($body, true);
 
                 // Cria uma instância da classe ClienteController
                 $clienteController = new ClienteController();
 
                 // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-                $clienteController->logar($params['email'], $params['senha']);
-                $cliente = $clienteController->obterComEmail($params['email']);
+                $clienteController->logar($data['email'], $data['senha']);
+                $cliente = $clienteController->obterComEmail($data['email']);
 
                 if(!$cliente instanceof Cliente){
                     throw new Exception("Cliente não encontrado.");
                 }
 
-                return $response->withJson(['cliente' => ['id' => $cliente->getId(), 'nome' => $cliente->getNome()]]);
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'id' => $cliente->getId(), 
+                    'nome' => $cliente->getNome()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
             });
 
             // Rota para obter um cliente por ID
-            $app->get('/obter/{id}', function ($request, $response, $args) {
+            $app->get('/obter/{id}', function (Request $request, Response $response, $args) {
                 $clienteId = $args['id']; // Obtém o ID do cliente a partir dos argumentos da URL
 
                 // Cria uma instância da classe ClienteController
@@ -71,19 +100,26 @@
                     throw new Exception("Cliente não encontrado.");
                 }
 
-                return $response->withJson(['cliente' => $cliente->jsonSerialize()]);
+                // Responder com JSON
+                $response->getBody()->write(json_encode(['cliente' => $cliente->jsonSerialize()]));
+
+                return $response->withHeader('Content-Type', 'application/json');
             });
         });
 
-        $app->group('/newsletter', function ($app) {
-            $app->post('/criar', function ($request, $response, $args) {
-                $params = $request->getParsedBody(); // Retorna um array com os dados do POST
+        $app->group('/match-servicos/api/newsletter', function ($app) {
+            $app->post('/criar', function (Request $request, Response $response, $args) {
+                // Obter o corpo da requisição
+                $body = $request->getBody()->getContents();
+
+                // Transformar o JSON em array (caso o corpo seja JSON)
+                $data = json_decode($body, true);
 
                 // Cria uma instância da classe ClienteController
                 $newsletterController = new NewsletterController();
 
                 // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-                $resultado = $newsletterController->salvar($params);
+                $resultado = $newsletterController->salvar($data);
 
                 // Use o resultado da função salvar como necessário
                 $response->getBody()->write("Rota /newletter/criar - Resultado: " . $resultado);
@@ -91,8 +127,8 @@
             });
         });
 
-        $app->group('/imagem', function ($app) {
-            $app->post('/upload', function ($request, $response) {
+        $app->group('/match-servicos/api/imagem', function ($app) {
+            $app->post('/upload', function (Request $request, Response $response, $args) {
                 $uploadedFile = $request->getUploadedFiles()['image'];
                 $params = $request->getParsedBody(); // Retorna um array com os dados do POST
 
@@ -115,6 +151,7 @@
 
         $app->run();
     }catch (\Throwable $th) {
+        var_dump($th); die();
         Util::logException($th);
         $response->getBody()->write($th->getMessage());
         return $response;

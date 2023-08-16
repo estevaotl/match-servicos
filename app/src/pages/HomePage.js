@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../css/home-page.css';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
 import icone_engenharia from '../imagens/icone_engenharia.png'; // Importe o caminho da imagem corretamente
@@ -11,6 +11,8 @@ import FooterPage from '../componentes/FooterPage';
 const HomePage = () => {
     const [idCliente, setIdCliente] = useState('');
     const [nomeCliente, setNomeCliente] = useState('');
+    const [searchValue, setSearchValue] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Verifica se o idCliente está salvo na sessionStorage
@@ -32,6 +34,12 @@ const HomePage = () => {
         setNomeCliente(false);
     };
 
+    const handleSearch = () => {
+        if (searchValue) {
+            navigate(`/busca?q=${searchValue}`);
+        }
+    };
+
     return (
         <div>
             <header id="headerHomePage">
@@ -48,7 +56,7 @@ const HomePage = () => {
                                     <button onClick={handleLogout}>Logout</button>
                                 </li>
                             </>
-                            
+
                         ) : (
                             // Renderiza o menu padrão quando idCliente não está presente
                             <>
@@ -72,6 +80,19 @@ const HomePage = () => {
                 </span>
                 <img src={icone_engenharia} alt="Logo" />
             </section>
+
+            <div className="d-flex">
+                <input
+                    type="text"
+                    className="form-control me-2"
+                    placeholder="Digite o serviço desejado"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                />
+                <button className="btn btn-primary" type="button" onClick={handleSearch}>
+                    Buscar
+                </button>
+            </div>
 
             <article id="articleCardTrabalhadorHomePage">
                 <CardPrestadorServicos imageSrc={icone_personagem} altText="Descrição da imagem" profissao="Pedreiro" idade="40 anos" endereco="Rua Campos Salles numero 157 Perissê, Nova Friburgo - RJ" media_avaliacao="5.9" />
