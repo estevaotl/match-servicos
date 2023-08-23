@@ -16,16 +16,22 @@ function App() {
     const [whatsapp, setWhatsapp] = useState('');
     const [genero, setGenero] = useState('');
     const [prestadorDeServicos, setPrestadorDeServicos] = useState('');
-
+    const [showServicosPrestados, setShowServicosPrestados] = useState(false);
+    const [servicosPrestados, setServicosPrestados] = useState(false);
     const [cliente, setCliente] = useState('');
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
 
+    const handleSelectChange = (e) => {
+        setPrestadorDeServicos(e.target.value);
+        setServicosPrestados(""); // Reinicia os serviços prestados ao trocar a opção
+    };
+
     const navigate = useNavigate();
 
-    const handleSubmit = async () => {
+    const handleSubmitImage = async () => {
         const idCliente = sessionStorage.getItem('idCliente');
 
         const formData = new FormData();
@@ -36,18 +42,47 @@ function App() {
             method: 'POST',
             body: formData,
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro na requisição');
-            }
-            return response.json();
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data); // Certifique-se de que você está vendo a resposta aqui
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+            });
+    };
+
+    const handleSubmitDados = async () => {
+        const idCliente = sessionStorage.getItem('idCliente');
+
+        fetch('http://localhost/match-servicos/api/clientes/atualizar', {
+            method: 'POST',
+            body: JSON.stringify({
+                id: idCliente,
+                nome: (nome ? nome: cliente.nome),
+                email: (email ? email : cliente.email),
+                whatsapp: (whatsapp ? whatsapp : cliente.whatsapp),
+                genero: (genero ? genero : cliente.genero),
+                servicosPrestados: (servicosPrestados ? servicosPrestados : cliente.servicosPrestados),
+                prestadorDeServicos: (prestadorDeServicos ? prestadorDeServicos : cliente.prestadorDeServicos)
+            })
         })
-        .then(data => {
-            console.log(data); // Certifique-se de que você está vendo a resposta aqui
-        })
-        .catch(error => {
-            console.error('Erro na requisição:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data); // Certifique-se de que você está vendo a resposta aqui
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+            });
     };
 
     useEffect(() => {
@@ -60,14 +95,14 @@ function App() {
                 // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
             }
         })
-        .then(response => response.json())
+            .then(response => response.json())
             .then(data => {
-                console.log(data);
                 setCliente(data.cliente); // Não é necessário usar JSON.stringify aqui
-        })
-        .catch(error => {
-            navigate('/'); // Use navigate('/') para redirecionar para a página inicial
-        });
+                setShowServicosPrestados(data.cliente.prestadorDeServicos);
+            })
+            .catch(error => {
+                navigate('/'); // Use navigate('/') para redirecionar para a página inicial
+            });
     }, []);
 
     return (
@@ -95,7 +130,7 @@ function App() {
 
                     <TabPanel>
                         <h2>Editar Dados</h2>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmitDados}>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="nome" className="form-label">Nome:</label>
                                 <input type="text" className="form-control" id="nome" value={cliente.nome} onChange={(e) => setNome(e.target.value)} />
@@ -107,12 +142,31 @@ function App() {
 
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="prestadorDeServicos" className="form-label">Prestador de Serviços:</label>
-                                <select className="form-select" id="prestadorDeServicos" value={cliente.prestadorDeServicos} onChange={(e) => setPrestadorDeServicos(e.target.value)}>
-                                <option value="">Selecione</option>
-                                <option value="true">Sim</option>
-                                <option value="false">Não</option>
+                                <select
+                                    className="form-select"
+                                    id="prestadorDeServicos"
+                                    value={cliente.prestadorDeServicos}
+                                    onChange={handleSelectChange}
+                                >
+                                    <option value="">Selecione</option>
+                                    <option value="true">Sim</option>
+                                    <option value="false">Não</option>
                                 </select>
                             </div>
+
+                            {showServicosPrestados && (
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="servicosPrestados" className="form-label">Serviços Prestados:</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="servicosPrestados"
+                                        placeholder="Digite os serviços prestados separados por vírgula (pedreiro, eletricista, etc)"
+                                        value={cliente.servicosPrestados}
+                                        onChange={(e) => setServicosPrestados(e.target.value)}
+                                    />
+                                </div>
+                            )}
 
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="telefone" className="form-label">Telefone:</label>
@@ -126,9 +180,9 @@ function App() {
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="genero" className="form-label">Gênero:</label>
                                 <select className="form-select" id="genero" value={cliente.genero} onChange={(e) => setGenero(e.target.value)}>
-                                <option value="">Selecione</option>
-                                <option value="feminino">Feminino</option>
-                                <option value="masculino">Masculino</option>
+                                    <option value="">Selecione</option>
+                                    <option value="feminino">Feminino</option>
+                                    <option value="masculino">Masculino</option>
                                 </select>
                             </div>
                             <button type="submit">Salvar</button>
@@ -137,7 +191,7 @@ function App() {
 
                     <TabPanel>
                         <h2>Enviar Fotos/Vídeos</h2>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmitImage}>
                             <label>
                                 Selecionar arquivo:
                                 <input type="file" onChange={handleFileChange} />

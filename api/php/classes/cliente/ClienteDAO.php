@@ -32,14 +32,15 @@
         }
 
         public function atualizar(Cliente $cliente){
-            $comando = " UPDATE cliente SET email = :email, whatsapp = :whatsapp, genero = :genero, prestadorServico = :prestadorServico WHERE cliente.id = :idCliente ";
+            $comando = " UPDATE cliente SET email = :email, whatsapp = :whatsapp, genero = :genero, prestadorServico = :prestadorServico, servicosPrestados = :servicosPrestados WHERE cliente.id = :idCliente ";
 
             $parametros = array(
                 "idCliente" => $cliente->getId(),
                 "email" => $cliente->getEmail(),
                 "genero" => $cliente->getGenero(),
                 "whatsapp" => $cliente->getWhatsapp(),
-                "prestadorServico" => $cliente->getPrestadorDeServicos() ? 1 : 0
+                "prestadorServico" => $cliente->getPrestadorDeServicos() ? 1 : 0,
+                "servicosPrestados" => $cliente->getServicosPrestados()
             );
 
             $this->bancoDados->executar($comando, $parametros);
@@ -51,8 +52,8 @@
                 "idCliente" => $cliente->getId()
             );
 
-            $linhas = $this->bancoDados->consultar($comando, $parametros)["qtdRegistros"];
-            return count($linhas) > 0;
+            $linhas = $this->bancoDados->consultar($comando, $parametros)[0]["qtdRegistros"];
+            return $linhas > 0;
         }
 
         public function transformarEmObjeto($l, $completo = true){
@@ -76,6 +77,7 @@
             $cliente->setWhatsapp($l['whatsapp']);
             $cliente->setAtivo(filter_var($l['ativo'], FILTER_VALIDATE_BOOLEAN));
             $cliente->setImagem($this->obterImagens($l['id']));
+            $cliente->setServicosPrestados($l['servicosPrestados']);
 			return $cliente;
 		}
 
@@ -164,4 +166,19 @@
 
 			return $this->bancoDados->obterObjeto($comando, array($this, 'transformarEmObjeto'), $parametros, $completo);
 		}
+
+        public function obterComRestricoes($restricoes = array()){
+            $comando = "SELECT * FROM cliente ";
+            $where = " WHERE ativo = 1 ";
+            $parametros = array();
+
+            if(isset($restricoes['profissao'])){
+                $where .= " AND cliente.servicosPrestados LIKE :profissao ";
+                $parametros['profissao'] = '%' . $restricoes['profissao'] . '%';
+            }
+
+            $comando = $comando . $where;
+
+            return $this->bancoDados->obterObjeto($comando, array($this, 'transformarEmObjeto'), $parametros);
+        }
     }

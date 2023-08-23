@@ -18,10 +18,16 @@ const CadastroPage = () => {
     const [inscricaoEstadual, setInscricaoEstadual] = useState('');
     const [razaoSocial, setRazaoSocial] = useState('');
     const [situacaoTributaria, setSituacaoTributaria] = useState('');
+    const [servicosPrestados, setServicosPrestados] = useState("");
 
     const handleChangeDocumento = (event) => {
         const { value } = event.target;
         setDocumento(value);
+    };
+
+    const handleSelectChange = (e) => {
+        setPrestadorDeServicos(e.target.value);
+        setServicosPrestados(""); // Reinicia os serviços prestados ao trocar a opção
     };
 
     const navigate = useNavigate();
@@ -134,12 +140,32 @@ const CadastroPage = () => {
                         </div>
                         <div className="col-md-6 mb-3">
                             <label htmlFor="prestadorDeServicos" className="form-label">Prestador de Serviços:</label>
-                            <select className="form-select" id="prestadorDeServicos" value={prestadorDeServicos} onChange={(e) => setPrestadorDeServicos(e.target.value)}>
-                            <option value="">Selecione</option>
-                            <option value="prestadorSim">Sim</option>
-                            <option value="prestadorNao">Não</option>
+                            <select
+                                className="form-select"
+                                id="prestadorDeServicos"
+                                value={prestadorDeServicos}
+                                onChange={handleSelectChange}
+                            >
+                                <option value="">Selecione</option>
+                                <option value="prestadorSim">Sim</option>
+                                <option value="prestadorNao">Não</option>
                             </select>
                         </div>
+
+                        {prestadorDeServicos === "prestadorSim" && (
+                            <div className="col-md-6 mb-3">
+                                <label htmlFor="servicosPrestados" className="form-label">Serviços Prestados:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="servicosPrestados"
+                                    placeholder="Digite os serviços prestados separados por vírgula (pedreiro, eletricista, etc)"
+                                    value={servicosPrestados}
+                                    onChange={(e) => setServicosPrestados(e.target.value)}
+                                />
+                            </div>
+                        )}
+
                         <div className="col-md-6 mb-3">
                             <label htmlFor="documento" className="form-label">CPF/CNPJ:</label>
                             <InputMask mask="999.999.999-99" maskChar={null} className="form-control" id="documento" value={documento} onChange={handleChangeDocumento} />

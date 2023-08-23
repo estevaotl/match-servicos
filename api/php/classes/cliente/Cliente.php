@@ -11,6 +11,7 @@
         private $dataCadastro = "";
         private $ativo = true;
         private $imagem = array();
+        private $servicosPrestados = "";
 
         public function __construct() {}
 
@@ -95,12 +96,14 @@
 
         public function jsonSerialize() {
             return [
+                'id' => $this->id,
                 'nome' => $this->nome,
                 'email' => $this->email,
                 'prestadorDeServicos' => $this->prestadorDeServicos,
                 'genero' => $this->genero,
                 'whatsapp' => $this->whatsapp,
-                'imagem' => $this->imagem
+                'imagem' => $this->imagem,
+                'servicosPrestados' => $this->servicosPrestados
             ];
         }
 
@@ -110,5 +113,13 @@
 
         public function setImagem($imagem){
             $this->imagem = $imagem;
+        }
+
+        public function getServicosPrestados(){
+            return $this->servicosPrestados;
+        }
+
+        public function setServicosPrestados($servicosPrestados){
+            $this->servicosPrestados = $servicosPrestados;
         }
     }

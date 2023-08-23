@@ -4,6 +4,8 @@ import HomePage from './pages/HomePage';
 import CadastroPage from './pages/CadastroPage';
 import LoginPage from './pages/LoginPage';
 import MinhaContaPage from './pages/MinhaContaPage';
+import BuscaPage from './pages/BuscaPage';
+
 import "./App.css";
 
 const App = () => {
@@ -15,6 +17,7 @@ const App = () => {
           <Route path="/cadastrar" element={<CadastroPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/minha-conta" element={<MinhaContaPage />} />
+          <Route path="/busca" element={<BuscaPage />} />
         </Routes>
       </Router>
     </div>

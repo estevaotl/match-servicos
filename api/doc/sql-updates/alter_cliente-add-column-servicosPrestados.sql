@@ -1,0 +1,1 @@
+ALTER TABLE `cliente` ADD `servicosPrestados` VARCHAR(255) NULL DEFAULT NULL AFTER `prestadorServico`;

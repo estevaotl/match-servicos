@@ -53,4 +53,8 @@
 		public function obterComId($id, $completo = true){
             return $this->dao->obterComId($id, $completo);
         }
+
+		public function obterComRestricoes($restricoes = array()){
+            return $this->dao->obterComRestricoes($restricoes);
+        }
     }

@@ -86,6 +86,57 @@
                 return $response->withHeader('Content-Type', 'application/json');
             });
 
+            $app->post('/atualizar', function (Request $request, Response $response, $args) {
+                // Obter o corpo da requisição
+                $body = $request->getBody()->getContents();
+
+                // Transformar o JSON em array (caso o corpo seja JSON)
+                $data = json_decode($body, true);
+
+                // Cria uma instância da classe ClienteController
+                $clienteController = new ClienteController();
+
+
+                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                $clienteController->salvar($data);
+                $cliente = $clienteController->obterComEmail($data['email']);
+
+                if(!$cliente instanceof Cliente){
+                    throw new Exception("Cliente não encontrado.");
+                }
+
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'id' => $cliente->getId(), 
+                    'nome' => $cliente->getNome()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            });
+
+            // Rota para obter um cliente por ID
+            $app->get('/busca', function (Request $request, Response $response, $args) {
+                $params = $request->getQueryParams();
+
+                // Cria uma instância da classe ClienteController
+                $clienteController = new ClienteController();
+
+                // Chama a função 'obterPorId' da classe ClienteController, passando o ID do cliente
+                $cliente = $clienteController->obterComRestricoes($params);
+
+                if (!$cliente instanceof Cliente) {
+                    throw new Exception("Cliente não encontrado.");
+                }
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode(['cliente' => $cliente->jsonSerialize()]));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            });
+
             // Rota para obter um cliente por ID
             $app->get('/obter/{id}', function (Request $request, Response $response, $args) {
                 $clienteId = $args['id']; // Obtém o ID do cliente a partir dos argumentos da URL
@@ -151,7 +202,6 @@
 
         $app->run();
     }catch (\Throwable $th) {
-        var_dump($th); die();
         Util::logException($th);
         $response->getBody()->write($th->getMessage());
         return $response;
