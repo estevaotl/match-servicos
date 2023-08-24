@@ -16,11 +16,11 @@ const SearchPage = () => {
         // Define o estado de busca com base no parâmetro da URL
         setSearchQuery(query || '');
 
-        // Função para buscar os trabalhadores com base nos filtros
         const buscarTrabalhadores = async () => {
             try {
                 const response = await fetch(`http://localhost/match-servicos/api/clientes/busca?q=${query}`);
                 const data = await response.json();
+
                 setFilteredWorkers(data.cliente);
             } catch (error) {
                 console.error('Erro na requisição:', error);
@@ -36,7 +36,7 @@ const SearchPage = () => {
 
             <div className="d-flex">
                 <div className="flex-grow-1 d-flex flex-wrap">
-                    {filteredWorkers.map(worker => (
+                    {[filteredWorkers].map(worker => (
                         <TrabalhadorCard key={worker.id} worker={worker} />
                     ))}
                 </div>

@@ -29,31 +29,43 @@
 
             $app->post('/criar', function (Request $request, Response $response, $args) {
 
-                // Obter o corpo da requisição
-                $body = $request->getBody()->getContents();
+                try {
+                     // Obter o corpo da requisição
+                    $body = $request->getBody()->getContents();
 
-                // Transformar o JSON em array (caso o corpo seja JSON)
-                $data = json_decode($body, true);
+                    // Transformar o JSON em array (caso o corpo seja JSON)
+                    $data = json_decode($body, true);
 
-                // Cria uma instância da classe ClienteController
-                $clienteController = new ClienteController();
+                    // Cria uma instância da classe ClienteController
+                    $clienteController = new ClienteController();
 
-                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-                $cliente = $clienteController->salvar($data);
+                    // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                    $cliente = $clienteController->salvar($data);
 
-                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-                $clienteController->logar($data['email'], $data['senha']);
+                    // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                    $clienteController->logar($data['email'], $data['senha']);
 
-                // Preparar uma resposta JSON
-                $responseData = [
-                    'id' => $cliente->getId(), 
-                    'nome' => $cliente->getNome()
-                ];
+                    // Preparar uma resposta JSON
+                    $responseData = [
+                        'id' => $cliente->getId(), 
+                        'nome' => $cliente->getNome()
+                    ];
 
-                // Responder com JSON
-                $response->getBody()->write(json_encode($responseData));
+                    // Responder com JSON
+                    $response->getBody()->write(json_encode($responseData));
 
-                return $response->withHeader('Content-Type', 'application/json');
+                    return $response->withHeader('Content-Type', 'application/json');
+                } catch (\Throwable $th) {
+                    // Preparar uma resposta JSON
+                    $responseData = [
+                        'excecao' => $th->getMessage() 
+                    ];
+
+                    // Responder com JSON
+                    $response->getBody()->write(json_encode($responseData));
+
+                    return $response->withHeader('Content-Type', 'application/json');
+                }
             });
 
             $app->post('/logar', function (Request $request, Response $response, $args) {
@@ -199,6 +211,27 @@
                 }
             });
         });
+
+        $app->group('/match-servicos/api/ordemServico', function ($app) {
+            $app->post('/criar', function (Request $request, Response $response, $args) {
+                // Obter o corpo da requisição
+                $body = $request->getBody()->getContents();
+
+                // Transformar o JSON em array (caso o corpo seja JSON)
+                $data = json_decode($body, true);
+
+                // Cria uma instância da classe ClienteController
+                $ordemServicoController = new OrdemServicoController();
+
+                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                $resultado = $ordemServicoController->salvar($data);
+
+                // Use o resultado da função salvar como necessário
+                $response->getBody()->write("Rota /newletter/criar - Resultado: " . $resultado);
+                return $response;
+            });
+        });
+
 
         $app->run();
     }catch (\Throwable $th) {

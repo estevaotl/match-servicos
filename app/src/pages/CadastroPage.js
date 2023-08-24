@@ -19,10 +19,19 @@ const CadastroPage = () => {
     const [razaoSocial, setRazaoSocial] = useState('');
     const [situacaoTributaria, setSituacaoTributaria] = useState('');
     const [servicosPrestados, setServicosPrestados] = useState("");
+    const [errors, setErrors] = useState([]);
 
-    const handleChangeDocumento = (event) => {
-        const { value } = event.target;
-        setDocumento(value);
+    const handleChangeDocumento = (value) => {
+        // Remove caracteres não numéricos
+        const numericValue = value.replace(/\D/g, '');
+    
+        if (numericValue.length <= 11) {
+            // CPF
+            setDocumento(numericValue.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'));
+        } else if (numericValue.length <= 14) {
+            // CNPJ
+            setDocumento(numericValue.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5'));
+        }
     };
 
     const handleSelectChange = (e) => {
@@ -44,30 +53,53 @@ const CadastroPage = () => {
             body: JSON.stringify({
                 // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
                 // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
-                nome : nome,
-                email : email,
-                dataNascimento : dataNascimento,
-                whatsapp : whatsapp,
-                genero : genero,
-                senha : senha,
-                ehPrestadorDeServicos : prestadorDeServicos == "prestadorSim" ? true : false,
-                documento : documento
+                nome: nome,
+                email: email,
+                dataNascimento: dataNascimento,
+                whatsapp: whatsapp,
+                genero: genero,
+                senha: senha,
+                ehPrestadorDeServicos: prestadorDeServicos == "prestadorSim" ? true : false,
+                documento: documento,
+                servicosPrestados: servicosPrestados
             })
         })
-        .then(response => response.json())
+            .then(response => response.json())
             .then(data => {
-                sessionStorage.setItem('idCliente', data.cliente['id']);
-                sessionStorage.setItem('nomeCliente', data.cliente['nome']);
-                navigate('/'); // Use navigate('/') para redirecionar para a página inicial
-        })
-        .catch(error => {
-            // Aqui você pode lidar com erros de requisição
-            console.error(error);
-        });
+                if (data.excecao) {
+                    setErrors(data.excecao.split('\n'));
+                } else {
+                    sessionStorage.setItem('idCliente', data['id']);
+                    sessionStorage.setItem('nomeCliente', data['nome']);
+                    navigate('/');
+                }
+            })
+            .catch(error => {
+                // Aqui você pode lidar com erros de requisição
+                console.error(error);
+            });
     };
 
     const renderCamposAdicionais = () => {
         if (documento.length === 14) {
+            // CPF
+            return (
+                <div>
+                    <div className="col-md-6 mb-3">
+                        <label htmlFor="dataNascimento" className="form-label">Data de Nascimento:</label>
+                        <input type="date" className="form-control" id="dataNascimento" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label htmlFor="genero" className="form-label">Gênero:</label>
+                        <select className="form-select" id="genero" value={genero} onChange={(e) => setGenero(e.target.value)}>
+                            <option value="">Selecione</option>
+                            <option value="feminino">Feminino</option>
+                            <option value="masculino">Masculino</option>
+                        </select>
+                    </div>
+                </div>
+            );
+        } else if (documento.length === 18) {
             // CNPJ
             return (
                 <div>
@@ -82,27 +114,10 @@ const CadastroPage = () => {
                     <div className="col-md-6 mb-3">
                         <label htmlFor="situacaoTributaria" className="form-label">Situação Tributária:</label>
                         <select className="form-select" id="situacaoTributaria" value={situacaoTributaria} onChange={(e) => setSituacaoTributaria(e.target.value)}>
-                        <option value="">Selecione</option>
-                        <option value="contribuinte">Contribuinte</option>
-                        <option value="naoContribuinte">Não Contribuinte</option>
-                        <option value="isento">Isento</option>
-                        </select>
-                    </div>
-                </div>
-            );
-        } else {
-            return (
-                <div>
-                    <div className="col-md-6 mb-3">
-                        <label htmlFor="dataNascimento" className="form-label">Data de Nascimento:</label>
-                        <input type="date" className="form-control" id="dataNascimento" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                        <label htmlFor="genero" className="form-label">Gênero:</label>
-                        <select className="form-select" id="genero" value={genero} onChange={(e) => setGenero(e.target.value)}>
-                        <option value="">Selecione</option>
-                        <option value="feminino">Feminino</option>
-                        <option value="masculino">Masculino</option>
+                            <option value="">Selecione</option>
+                            <option value="contribuinte">Contribuinte</option>
+                            <option value="naoContribuinte">Não Contribuinte</option>
+                            <option value="isento">Isento</option>
                         </select>
                     </div>
                 </div>
@@ -129,6 +144,13 @@ const CadastroPage = () => {
             <article id="articleCadastroPage">
                 <div>
                     <h1>CADASTRO</h1> <br />
+                    {errors.length > 0 && (
+                        <div className="alert alert-danger mt-3">
+                            {errors.map((error, index) => (
+                                <div key={index}>{error}</div>
+                            ))}
+                        </div>
+                    )}
                     <form onSubmit={handleSubmit}>
                         <div className="col-md-6 mb-3">
                             <label htmlFor="nome" className="form-label">Nome:</label>
@@ -168,7 +190,13 @@ const CadastroPage = () => {
 
                         <div className="col-md-6 mb-3">
                             <label htmlFor="documento" className="form-label">CPF/CNPJ:</label>
-                            <InputMask mask="999.999.999-99" maskChar={null} className="form-control" id="documento" value={documento} onChange={handleChangeDocumento} />
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="documento"
+                                value={documento}
+                                onChange={(e) => handleChangeDocumento(e.target.value)}
+                            />
                         </div>
                         {renderCamposAdicionais()}
                         <div className="col-md-6 mb-3">

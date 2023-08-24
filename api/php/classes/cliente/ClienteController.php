@@ -43,22 +43,22 @@
                 $cliente->setSenha($dados['senha']);
             }
 
-            // if(isset($dados['documento']) && isset($dados['dataNascimento'])){
-            //     $dadosClienteFisico = new DadosClienteFisico();
-            //     $dadosClienteFisico->setCpf($dados['documento']);
-            //     $dadosClienteFisico->setDataNascimento($dados['dataNascimento']);
+            if(isset($dados['documento']) && isset($dados['dataNascimento'])){
+                $dadosClienteFisico = new DadosClienteFisico();
+                $dadosClienteFisico->setCpf($dados['documento']);
+                $dadosClienteFisico->setDataNascimento($dados['dataNascimento']);
 
-            //     $cliente->setDadosEspecificos($dadosClienteFisico);
-            // } else {
-            //     $dadosClienteJuridico = new DadosClienteJuridico();
-            //     $dadosClienteJuridico->setCnpj($dados['documento']);
-            //     $dadosClienteJuridico->setInscricaoEstadual($dados['inscricaoEstadual']);
-            //     $dadosClienteJuridico->setRazaoSocial($dados['razaoSocial']);
+                $cliente->setDadosEspecificos($dadosClienteFisico);
+            } else {
+                $dadosClienteJuridico = new DadosClienteJuridico();
+                $dadosClienteJuridico->setCnpj($dados['documento']);
+                $dadosClienteJuridico->setInscricaoEstadual($dados['inscricaoEstadual']);
+                $dadosClienteJuridico->setRazaoSocial($dados['razaoSocial']);
 
-            //     $cliente->setDadosEspecificos($dadosClienteJuridico);
-            // }
+                $cliente->setDadosEspecificos($dadosClienteJuridico);
+            }
 
-            if(isset($dados['prestadorDeServicos'])){
+            if(isset($dados['ehPrestadorDeServicos']) && $dados['ehPrestadorDeServicos'] == true){
                 $cliente->setPrestadorDeServicos(true);
                 if(isset($dados['servicosPrestados'])){
                     $cliente->setServicosPrestados($dados['servicosPrestados']);

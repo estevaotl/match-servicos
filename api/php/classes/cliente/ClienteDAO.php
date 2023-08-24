@@ -20,13 +20,13 @@
         }
 
         public function adicionarNovo(Cliente $cliente){
-            $comando = "INSERT INTO cliente (nome, email, dataCadastro, whatsapp, genero, prestadorServico, senha) VALUES (:nome, :email, :dataCadastro, :whatsapp, :genero, :prestadorServico, :senha)";
+            $comando = "INSERT INTO cliente (nome, email, dataCadastro, whatsapp, genero, prestadorServico, servicosPrestados, senha) VALUES (:nome, :email, :dataCadastro, :whatsapp, :genero, :prestadorServico, :servicosPrestados, :senha)";
             $parametros = $this->parametros($cliente);
 
             $this->bancoDados->executar($comando, $parametros);
             $cliente->setId($this->bancoDados->ultimoIdInserido());
 
-            // $this->adicionarDadosEspecificos($cliente);
+            $this->adicionarDadosEspecificos($cliente);
 
             return $cliente;
         }
@@ -102,7 +102,7 @@
             $this->bancoDados->executar($comando, $parametros);
         }
 
-        private function parametros(Cliente $cliente){
+        private function parametros($cliente){
             $parametros = array(
                 "nome" => $cliente->getNome(),
                 "dataCadastro" => (new DateTime())->format("Y-m-d H:i:s"),
@@ -110,13 +110,14 @@
                 "genero" => $cliente->getGenero(),
                 "whatsapp" => $cliente->getWhatsapp(),
                 "prestadorServico" => $cliente->getPrestadorDeServicos() ? 1 : 0,
+                "servicosPrestados" => $cliente->getServicosPrestados(),
                 "senha" => Util::encripta($cliente->getSenha())
             );
 
             return $parametros;
         }
 
-        private function parametrosClienteFisico(Cliente $cliente){
+        private function parametrosClienteFisico($cliente){
             $parametros = array(
                 "idCliente" => $cliente->getId(),
                 "cpf" => $cliente->getDadosEspecificos()->getCpf(),
@@ -126,7 +127,7 @@
             return $parametros;
         }
 
-        private function parametrosClienteJuridico(Cliente $cliente){
+        private function parametrosClienteJuridico($cliente){
             $parametros = array(
                 "idCliente" => $cliente->getId(),
                 "cnpj" => $cliente->getDadosEspecificos()->getCnpj(), 
@@ -181,4 +182,51 @@
 
             return $this->bancoDados->obterObjeto($comando, array($this, 'transformarEmObjeto'), $parametros);
         }
+
+        public function existeEmail($cliente){
+			if($this->bancoDados->existe("cliente", "email", $cliente->getEmail(), $cliente->getId()))
+				return true;
+
+			return false;
+		}
+
+        public function existeCpf($cliente){
+			$comando = "select * from cliente join pessoafisica on pessoafisica.idCliente = cliente.id and pessoafisica.cpf = :cpf and cliente.ativo = 1 and cliente.id <> :idCliente and cliente.ativo = 1";
+			$parametros = array(
+					"cpf" => $cliente->getCPF(),
+					"idCliente" => $cliente->getId()
+				);
+
+			$result = $this->bancoDados->consultar($comando, $parametros);
+			if(count($result) > 0){
+				return true;
+			}
+			return false;
+		}
+
+		public function existeCnpj($cliente){
+			$comando = "select * from cliente join pessoajuridica on pessoajuridica.idCliente = cliente.id and pessoajuridica.cnpj = :cnpj and cliente.ativo = 1 and cliente.id <> :idCliente and cliente.ativo = 1";
+			$parametros = array(
+					"cnpj" => $cliente->getDadosEspecificos()->getCNPJ(),
+					"idCliente" => $cliente->getDadosEspecificos()->getId()
+				);
+			$result = $this->bancoDados->consultar($comando, $parametros);
+			if(count($result) > 0){
+				return true;
+			}
+			return false;
+		}
+
+		public function existeInscricaoEstadual($cliente){
+			$comando = "select * from cliente join pessoajuridica on pessoajuridica.idCliente = cliente.id and pessoajuridica.inscricaoEstadual = :inscricaoEstadual and cliente.ativo = 1 and cliente.id <> :idCliente and cliente.ativo = 1";
+			$parametros = array(
+					"inscricaoEstadual" => $cliente->getDadosEspecificos()->getInscricaoEstadual(),
+					"idCliente" => $cliente->getDadosEspecificos()->getId()
+				);
+			$result = $this->bancoDados->consultar($comando, $parametros);
+			if(count($result) > 0){
+				return true;
+			}
+			return false;
+		}
     }
