@@ -5,6 +5,7 @@ import CadastroPage from './pages/CadastroPage';
 import LoginPage from './pages/LoginPage';
 import MinhaContaPage from './pages/MinhaContaPage';
 import BuscaPage from './pages/BuscaPage';
+import ProfilePage from './pages/ProfilePage';
 
 import "./App.css";
 
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/minha-conta" element={<MinhaContaPage />} />
           <Route path="/busca" element={<BuscaPage />} />
+          <Route path="/profile/:id" element={<ProfilePage />} />
         </Routes>
       </Router>
     </div>

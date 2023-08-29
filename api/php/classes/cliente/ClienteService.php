@@ -9,9 +9,9 @@
         public function salvar($cliente){
             $erro = array();
 
-            $this->validar($cliente, $erro);
-
             try {
+				$this->validar($cliente, $erro);
+
                 return $this->dao->salvar($cliente);
             } catch (\Throwable $th) {
                 throw new ControllerException($th->getMessage());

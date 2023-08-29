@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate  } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
@@ -8,7 +8,16 @@ const TrabalhadorCard = ({ worker }) => {
     const whatsappLink = `https://api.whatsapp.com/send?phone=${worker.whatsapp}&text=${whatsappMessage}`;
     const clienteId = sessionStorage.getItem('idCliente');
 
+    const [isLogged, setIsLogged] = useState(sessionStorage.getItem('idCliente') !== null);
+    const navigate = useNavigate();
+
     const enviarRequisicao = async () => {
+        if (!isLogged) {
+            alert("Faça login para entrar em contato");
+            navigate('/login'); // Usando navigate para redirecionar
+            return;
+        }
+
         try {
             const response = await fetch('http://localhost/match-servicos/api/ordemServico/criar', {
                 method: 'POST',
@@ -16,8 +25,8 @@ const TrabalhadorCard = ({ worker }) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    workerId: worker.id,
-                    clienteId: clienteId
+                    idTrabalhador: worker.id,
+                    idCliente: clienteId
                 })
             });
 
@@ -27,6 +36,20 @@ const TrabalhadorCard = ({ worker }) => {
             console.error('Erro na requisição:', error);
         }
     };
+
+    const handleWhatsappClick = (event) => {
+        if (!isLogged) {
+            event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
+            alert("Faça login para entrar em contato");
+            navigate('/login');
+        } else {
+            // Abre o link do WhatsApp em uma nova aba
+            window.open(whatsappLink, '_blank');
+
+            enviarRequisicao();
+        }
+    };
+
 
     return (
         <div className="card m-2">
@@ -38,7 +61,13 @@ const TrabalhadorCard = ({ worker }) => {
                     Ver Perfil
                 </Link>
 
-                <a href={whatsappLink} className="btn btn-success contact-button" onClick={enviarRequisicao}>
+                <a
+                    href={whatsappLink} // Mantém o atributo href para o link do WhatsApp
+                    className="btn btn-success contact-button"
+                    onClick={handleWhatsappClick} // Usa a função de tratamento de clique personalizada
+                    target='_blank'
+                    rel='noopener noreferrer'
+                >
                     <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
                     Entrar em Contato
                 </a>

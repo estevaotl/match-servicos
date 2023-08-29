@@ -1,0 +1,6 @@
+CREATE TABLE log_cliques_contato (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    idTrabalhador INT NOT NULL DEFAULT 0,
+    idSolicitante INT NOT NULL DEFAULT 0,
+    datahora DATETIME DEFAULT CURRENT_TIMESTAMP
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

@@ -46,8 +46,11 @@
         'ImagemLocal' => '/imagem/ImagemLocal.php',
         'ImagemLocalService' => '/imagem/ImagemLocalService.php',
         'ImagemLocalController' => '/imagem/ImagemLocalController.php',
-        'ImagemLocalDAO' => '/imagem/ImagemLocalDAO.php'
-
+        'ImagemLocalDAO' => '/imagem/ImagemLocalDAO.php',
+        'OrdemServicoDAO' => '/ordemServico/OrdemServicoDAO.php',
+        'OrdemServicoController' => '/ordemServico/OrdemServicoController.php',
+        'OrdemServicoService' => '/ordemServico/OrdemServicoService.php',
+        'OrdemServico' => '/ordemServico/OrdemServico.php',
+        'StatusOrdemServico' => '/ordemServico/StatusOrdemServico.php'
         // Adicione outros mapeamentos de classes aqui
     );
-?>

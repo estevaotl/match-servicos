@@ -3,7 +3,6 @@ import TrabalhadorCard from '../componentes/TrabalhadorCard';
 
 const SearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [profissao, setProfissao] = useState('');
     const [idade, setIdade] = useState('');
     const [distancia, setDistancia] = useState('');
     const [filteredWorkers, setFilteredWorkers] = useState([]);
@@ -43,28 +42,14 @@ const SearchPage = () => {
 
                 <div className="flex-grow">
                     <input
-                        type="text"
-                        className="form-control me-2"
-                        placeholder="Busca"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        className="form-control me-2"
-                        placeholder="Profissão"
-                        value={profissao}
-                        onChange={(e) => setProfissao(e.target.value)}
-                    />
-                    <input
-                        type="text"
+                        type="range"
                         className="form-control me-2"
                         placeholder="Idade"
                         value={idade}
                         onChange={(e) => setIdade(e.target.value)}
                     />
                     <input
-                        type="text"
+                        type="range"
                         className="form-control me-2"
                         placeholder="Distância"
                         value={distancia}

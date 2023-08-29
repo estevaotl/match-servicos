@@ -88,7 +88,7 @@
             $restricoes = array();
 
             if(isset($parametros['q'])){
-                $restricoes['q'] = $parametros['profissao'];
+                $restricoes['q'] = $parametros['q'];
             }
 
             return $this->service->obterComRestricoes($restricoes);

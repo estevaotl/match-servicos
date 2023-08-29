@@ -19,6 +19,7 @@ function App() {
     const [showServicosPrestados, setShowServicosPrestados] = useState(false);
     const [servicosPrestados, setServicosPrestados] = useState(false);
     const [cliente, setCliente] = useState('');
+    const [ordensDeServico, setOrdensDeServico] = useState(''); // Estado para armazenar as ordens de serviço
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -63,7 +64,7 @@ function App() {
             method: 'POST',
             body: JSON.stringify({
                 id: idCliente,
-                nome: (nome ? nome: cliente.nome),
+                nome: (nome ? nome : cliente.nome),
                 email: (email ? email : cliente.email),
                 whatsapp: (whatsapp ? whatsapp : cliente.whatsapp),
                 genero: (genero ? genero : cliente.genero),
@@ -99,11 +100,29 @@ function App() {
             .then(data => {
                 setCliente(data.cliente); // Não é necessário usar JSON.stringify aqui
                 setShowServicosPrestados(data.cliente.prestadorDeServicos);
+
+                // Se o usuário for um prestador de serviços, carrega as ordens de serviço
+                if (data.cliente.prestadorDeServicos) {
+                    fetchOrdensDeServico();
+                }
             })
             .catch(error => {
                 navigate('/'); // Use navigate('/') para redirecionar para a página inicial
             });
     }, []);
+
+    // Função para buscar ordens de serviço da API
+    const fetchOrdensDeServico = async () => {
+        const idCliente = sessionStorage.getItem('idCliente');
+
+        try {
+            const response = await fetch(`http://localhost/match-servicos/api/ordemServico/obter/${idCliente}`);
+            const data = await response.json();
+            setOrdensDeServico(data.cliente);
+        } catch (error) {
+            console.error('Erro ao obter as ordens de serviço:', error);
+        }
+    };
 
     return (
         <div className="App">
@@ -126,6 +145,7 @@ function App() {
                     <TabList>
                         <Tab>Editar Dados</Tab>
                         <Tab>Enviar Fotos/Vídeos</Tab>
+                        {cliente.prestadorDeServicos && <Tab>Ordens de Serviço</Tab>}
                     </TabList>
 
                     <TabPanel>
@@ -201,9 +221,25 @@ function App() {
 
                         {cliente.imagem && cliente.imagem.length > 0 && (
                             <article id="articleCardTrabalhadorHomePage">
-                                <CardPrestadorServicos imageSrc={`http://localhost/match-servicos/api/imagem/ler/${cliente.imagem[0].nomeArquivo}`} altText="Descrição da imagem" />
+                                {cliente.imagem.map((imagem, index) => (
+                                    <CardPrestadorServicos imageSrc={`http://localhost/match-servicos/api/imagem/ler/${imagem.nomeArquivo}`} alt={`Descrição da imagem ${index + 1}`} key={index} />
+                                ))}
                             </article>
                         )}
+                    </TabPanel>
+
+                    <TabPanel>
+                        <h2>Ordens de Serviço</h2>
+                        {/* Renderiza as ordens de serviço se houver */}
+                        {ordensDeServico && ordensDeServico.map((ordem, index) => (
+                            <div key={index}>
+                                <p>ID da Ordem: {ordem.id}</p>
+                                <p>Id Solicitante: {ordem.idSolicitante}</p>
+                                <p>Data Criação: {ordem.dataCriacao}</p>
+                                <p>Status: {ordem.status}</p>
+                                {/* Renderize outras informações da ordem aqui */}
+                            </div>
+                        ))}
                     </TabPanel>
                 </Tabs>
             </article>

@@ -227,8 +227,28 @@
                 $resultado = $ordemServicoController->salvar($data);
 
                 // Use o resultado da função salvar como necessário
-                $response->getBody()->write("Rota /newletter/criar - Resultado: " . $resultado);
+                $response->getBody()->write("Ordem de Serviço criada.");
                 return $response;
+            });
+
+            // Rota para obter um cliente por ID
+            $app->get('/obter/{id}', function (Request $request, Response $response, $args) {
+                $idTrabalhador = $args['id']; // Obtém o ID do cliente a partir dos argumentos da URL
+
+                // Cria uma instância da classe ClienteController
+                $ordemServicoController = new OrdemServicoController();
+
+                // Chama a função 'obterPorId' da classe ClienteController, passando o ID do cliente
+                $ordemServico = $ordemServicoController->obterComId($idTrabalhador);
+
+                // if (!$ordemServico instanceof OrdemServico) {
+                //     throw new Exception("Ordem de Serviço não encontrada.");
+                // }
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode(['cliente' => $ordemServico]));
+
+                return $response->withHeader('Content-Type', 'application/json');
             });
         });
 
