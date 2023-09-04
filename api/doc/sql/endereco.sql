@@ -1,0 +1,11 @@
+CREATE TABLE endereco(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    rua VARCHAR(255) DEFAULT NULL,
+    numero INT DEFAULT NULL,
+    complemento VARCHAR(255) DEFAULT NULL,
+    cep VARCHAR(255) DEFAULT NULL,
+    cidade varchar(255) DEFAULT NULL, 
+    estado varchar(255) DEFAULT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `endereco` ADD `bairro` VARCHAR(255) NULL DEFAULT NULL AFTER `estado`;

@@ -51,6 +51,11 @@
         'OrdemServicoController' => '/ordemServico/OrdemServicoController.php',
         'OrdemServicoService' => '/ordemServico/OrdemServicoService.php',
         'OrdemServico' => '/ordemServico/OrdemServico.php',
-        'StatusOrdemServico' => '/ordemServico/StatusOrdemServico.php'
+        'StatusOrdemServico' => '/ordemServico/StatusOrdemServico.php',
+        'Endereco' => '/endereco/Endereco.php',
+        'EnderecoController' => '/endereco/EnderecoController.php',
+        'EnderecoService' => '/endereco/EnderecoService.php',
+        'EnderecoDAO' => '/endereco/EnderecoDAO.php',
+        'ControllerException' => '/exception/ControllerException.php',
         // Adicione outros mapeamentos de classes aqui
     );

@@ -35,8 +35,8 @@
 				if($this->dao->existeCpf($cliente->getDadosEspecificos()))
 					$erro['cpfcnpj'] = "CPF já cadastrado";
 
-				if(!strtotime($cliente->getDadosEspecificos()->getDataNascimento()) || strtotime($cliente->getDadosEspecificos()->getDataNascimento()) >= strtotime(date("d-m-Y")))
-					$erro['dataNascimento'] = "Informe uma data de nascimento válida";
+				// if(!strtotime($cliente->getDadosEspecificos()->getDataNascimento()) || strtotime($cliente->getDadosEspecificos()->getDataNascimento()) >= strtotime(date("d-m-Y")))
+				// 	$erro['dataNascimento'] = "Informe uma data de nascimento válida";
 			} else if($cliente->getDadosEspecificos() instanceof DadosClienteJuridico){
 				if(mb_strlen($cliente->getDadosEspecificos()->getRazaoSocial()) < 1)
 					$erro['razaoSocial'] = "Preencha a razão social";

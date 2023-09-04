@@ -28,6 +28,9 @@
 
             $this->adicionarDadosEspecificos($cliente);
 
+            if($cliente->getEndereco() instanceof Endereco){
+                $this->salvarEndereco($cliente);
+            }
             return $cliente;
         }
 
@@ -58,14 +61,6 @@
 
         public function transformarEmObjeto($l, $completo = true){
 			$cliente = new Cliente();
-
-			// if($this->getBancoDados()->existe('pessoafisica','idCliente',$l['id'],'',false)){ //Transformar em pessoa física
-			// 	$cliente = new PessoaFisica($l['id']);
-			// 	$this->preencherPF($cliente);
-			// }else{ //Transformar em pessoa jurídica
-			// 	$cliente = new PessoaJuridica($l['id']);
-			// 	$this->preencherPJ($cliente);
-			// }
 
             $cliente->setId($l['id']);
 			$cliente->setNome($l['nome']);
@@ -229,4 +224,23 @@
 			}
 			return false;
 		}
+
+        public function salvarEndereco(Cliente $cliente){
+            if($cliente->getEndereco() instanceof Endereco){
+                $enderecoCliente = $cliente->getEndereco();
+
+                $comando = "INSERT INTO endereco (rua, numero, complemento, bairro, cidade, estado, cep) VALUES (:rua, :numero, :complemento, :bairro, :cidade, :estado, :cep)";
+                $parametros = array(
+                    "rua"         => $enderecoCliente->getRua(), 
+                    "numero"      => $enderecoCliente->getNumero(),  
+                    "complemento" => $enderecoCliente->getComplemento(),  
+                    "bairro"      => $enderecoCliente->getBairro(),  
+                    "cidade"      => $enderecoCliente->getCidade(),  
+                    "estado"      => $enderecoCliente->getEstado(),  
+                    "cep"         => $enderecoCliente->getCep()                 
+                );
+
+                $this->bancoDados->executar($comando, $parametros);
+            }
+        }
     }

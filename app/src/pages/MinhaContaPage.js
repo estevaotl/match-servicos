@@ -210,6 +210,25 @@ function App() {
                     </TabPanel>
 
                     <TabPanel>
+                        <h2>Meu Endereço</h2>
+                        <form onSubmit={handleSubmitImage}>
+                            <label>
+                                Selecionar arquivo:
+                                <input type="file" onChange={handleFileChange} />
+                            </label>
+                            <button type="submit">Enviar</button>
+                        </form>
+
+                        {cliente.imagem && cliente.imagem.length > 0 && (
+                            <article id="articleCardTrabalhadorHomePage">
+                                {cliente.imagem.map((imagem, index) => (
+                                    <CardPrestadorServicos imageSrc={`http://localhost/match-servicos/api/imagem/ler/${imagem.nomeArquivo}`} alt={`Descrição da imagem ${index + 1}`} key={index} />
+                                ))}
+                            </article>
+                        )}
+                    </TabPanel>
+
+                    <TabPanel>
                         <h2>Enviar Fotos/Vídeos</h2>
                         <form onSubmit={handleSubmitImage}>
                             <label>

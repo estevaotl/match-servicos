@@ -65,6 +65,38 @@
                 }
             }
 
+            if(isset($dados['cep'])){
+                $endereco = new Endereco();
+
+                $endereco->setCEP($dados['cep']);
+
+                if(isset($dados['rua'])){
+                    $endereco->setRua($dados['rua']);
+                }
+
+                if(isset($dados['complemento'])){
+                    $endereco->setComplemento($dados['complemento']);
+                }
+
+                if(isset($dados['cidade'])){
+                    $endereco->setCidade($dados['cidade']);
+                }
+
+                if(isset($dados['bairro'])){
+                    $endereco->setBairro($dados['bairro']);
+                }
+
+                if(isset($dados['estado'])){
+                    $endereco->setEstado($dados['estado']);
+                }
+
+                if(isset($dados['numero'])){
+                    $endereco->setNumero($dados['numero']);
+                }
+
+                $cliente->setEndereco($endereco);
+            }
+
             return $this->service->salvar($cliente, $erro);
         }
 

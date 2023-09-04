@@ -13,6 +13,8 @@
         private $imagem = array();
         private $servicosPrestados = "";
 
+        private $endereco = array();
+
         public function __construct() {}
 
         public function getId(){
@@ -121,5 +123,13 @@
 
         public function setServicosPrestados($servicosPrestados){
             $this->servicosPrestados = $servicosPrestados;
+        }
+
+        public function getEndereco(){
+            return $this->endereco;
+        }
+
+        public function setEndereco($endereco){
+            $this->endereco = $endereco;
         }
     }
