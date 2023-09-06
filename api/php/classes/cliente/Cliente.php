@@ -98,14 +98,15 @@
 
         public function jsonSerialize() {
             return [
-                'id' => $this->id,
-                'nome' => $this->nome,
-                'email' => $this->email,
-                'prestadorDeServicos' => $this->prestadorDeServicos,
-                'genero' => $this->genero,
-                'whatsapp' => $this->whatsapp,
-                'imagem' => $this->imagem,
-                'servicosPrestados' => $this->servicosPrestados
+                'id' => $this->getId(),
+                'nome' => $this->getNome(),
+                'email' => $this->getEmail(),
+                'prestadorDeServicos' => $this->getPrestadorDeServicos(),
+                'genero' => $this->getGenero(),
+                'whatsapp' => $this->getWhatsapp(),
+                'imagem' => $this->getImagem(),
+                'servicosPrestados' => $this->getServicosPrestados(),
+                'endereco' => $this->getEndereco()
             ];
         }
 

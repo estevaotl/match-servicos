@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import TrabalhadorCard from '../componentes/TrabalhadorCard';
+import FooterPage from '../componentes/FooterPage';
+import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
+import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
+import '../css/busca-page.css';
 
 const SearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [idade, setIdade] = useState('');
     const [distancia, setDistancia] = useState('');
     const [filteredWorkers, setFilteredWorkers] = useState([]);
+    const [searchValue, setSearchValue] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Obtém os parâmetros da URL
@@ -29,34 +35,68 @@ const SearchPage = () => {
         buscarTrabalhadores();
     }, [searchQuery]);
 
+    const handleSearch = () => {
+        if (searchValue) {
+            navigate(`/busca?q=${searchValue}`);
+        }
+    };
+
     return (
-        <div>
-            <h2>Resultados da Busca</h2>
+        <div className="App">
+            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
+                <div className="text-white title-logo">
+                    Match Serviços
+                </div>
+                <nav>
+                    <ul className="list-unstyled">
+                        <li className="mb-2">
+                            <Link className="text-decoration-none text-dark d-block" to="/">Página Inicial | Match Serviços</Link>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
 
-            <div className="d-flex">
-                <div className="flex-grow-1 d-flex flex-wrap">
-                    {[filteredWorkers].map(worker => (
-                        <TrabalhadorCard key={worker.id} worker={worker} />
-                    ))}
+            <article id="articleMinhaContaPage">
+                <div className="d-flex">
+                    <input
+                        type="text"
+                        className="form-control me-2"
+                        placeholder="Digite o serviço desejado"
+                        value={searchQuery}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                    <button className="btn btn-primary" type="button" onClick={handleSearch}>
+                        Buscar
+                    </button>
                 </div>
 
-                <div className="flex-grow">
-                    <input
-                        type="range"
-                        className="form-control me-2"
-                        placeholder="Idade"
-                        value={idade}
-                        onChange={(e) => setIdade(e.target.value)}
-                    />
-                    <input
-                        type="range"
-                        className="form-control me-2"
-                        placeholder="Distância"
-                        value={distancia}
-                        onChange={(e) => setDistancia(e.target.value)}
-                    />
+                <div className="d-flex">
+                    <div className="flex-grow-1 d-flex flex-wrap">
+                        {[filteredWorkers].map(worker => (
+                            <TrabalhadorCard key={worker.id} worker={worker} />
+                        ))}
+                    </div>
+
+                    {/* <div className="flex-grow">
+                        <input
+                            type="range"
+                            className="form-control me-2"
+                            placeholder="Idade"
+                            value={idade}
+                            onChange={(e) => setIdade(e.target.value)}
+                        />
+                        <input
+                            type="range"
+                            className="form-control me-2"
+                            placeholder="Distância"
+                            value={distancia}
+                            onChange={(e) => setDistancia(e.target.value)}
+                        />
+                    </div> */}
                 </div>
-            </div>
+            </article>
+
+            <FooterPage></FooterPage>
         </div>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate  } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
@@ -54,9 +54,14 @@ const TrabalhadorCard = ({ worker }) => {
     return (
         <div className="card m-2">
             <div className="card-body">
-                <h5 className="card-title">{worker.nome}</h5>
+                <h4 className="card-title">{worker.nome}</h4>
                 <p className="card-text">Email: {worker.email}</p>
-                <p className="card-text">Idade: {worker.idade}</p>
+                {worker.endereco && worker.endereco.length > 0 && (
+                    <>
+                        <p className="card-text">Cep: {worker.endereco[0].cep}</p>
+                        <p className="card-text">Endereço: {worker.endereco[0].rua}  {worker.endereco[0].numero} {worker.endereco[0].bairro} {worker.endereco[0].cidade}</p>
+                    </>
+                )}
                 <Link to={`/profile/${worker.id}`} className="btn btn-primary">
                     Ver Perfil
                 </Link>
@@ -71,6 +76,7 @@ const TrabalhadorCard = ({ worker }) => {
                     <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
                     Entrar em Contato
                 </a>
+
             </div>
         </div>
     );

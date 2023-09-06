@@ -136,3 +136,20 @@
 .newsletter-container p {
     font-size: x-large;
 }
+
+.header-background {
+    background-color: burlywood;
+    /* Cor de fundo desejada */
+    color: #fff;
+    /* Cor do texto */
+    font-size: 24px;
+    /* Tamanho da fonte desejado */
+    text-align: center;
+    /* Centraliza o texto horizontalmente */
+    padding: 10px;
+}
+
+.title-logo{
+    font-family: fantasy;
+    font-size: 50px;
+}

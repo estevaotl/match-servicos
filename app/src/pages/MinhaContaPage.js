@@ -6,13 +6,14 @@ import FooterPage from '../componentes/FooterPage';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
 import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import CardPrestadorServicos from '../componentes/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
+import InputMask from 'react-input-mask';
 
 function App() {
     const [email, setEmail] = useState('');
     const [file, setFile] = useState(null);
-
+    const [idCliente, setIdCliente] = useState('');
+    const [nomeCliente, setNomeCliente] = useState('');
     const [nome, setNome] = useState('');
-    const [telefone, setTelefone] = useState('');
     const [whatsapp, setWhatsapp] = useState('');
     const [genero, setGenero] = useState('');
     const [prestadorDeServicos, setPrestadorDeServicos] = useState('');
@@ -55,6 +56,15 @@ function App() {
             .catch(error => {
                 console.error('Erro na requisição:', error);
             });
+    };
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('idCliente'); // Supondo que 'idCliente' é o item que você deseja limpar
+        sessionStorage.removeItem('nomeCliente');
+        setIdCliente(false); // Atualizar o estado para indicar que o cliente não está mais logado
+        setNomeCliente(false);
+
+        navigate("/");
     };
 
     const handleSubmitDados = async () => {
@@ -126,15 +136,17 @@ function App() {
 
     return (
         <div className="App">
-            <header id="headerMinhaContaPage">
-                <img src={logo} alt="Logo" />
+            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
+                <div className="text-white title-logo">
+                    Match Serviços
+                </div>
                 <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">Página Inicial | Match Serviços</Link>
+                    <ul className="list-unstyled">
+                        <li className="mb-2">
+                            <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial | Match Serviços</Link>
                         </li>
-                        <li>
-                            <Link to="/cadastrar">Cadastrar-se</Link>
+                        <li className="mb-2">
+                            <Link to="/cadastrar" className="text-decoration-none text-dark d-block">Cadastrar-se</Link>
                         </li>
                     </ul>
                 </nav>
@@ -189,12 +201,16 @@ function App() {
                             )}
 
                             <div className="col-md-6 mb-3">
-                                <label htmlFor="telefone" className="form-label">Telefone:</label>
-                                <input type="tel" className="form-control" id="telefone" value={cliente.telefone} onChange={(e) => setTelefone(e.target.value)} />
-                            </div>
-                            <div className="col-md-6 mb-3">
                                 <label htmlFor="whatsapp" className="form-label">WhatsApp:</label>
-                                <input type="tel" className="form-control" id="whatsapp" value={cliente.whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
+                                <InputMask
+                                    mask="(99) 99999-9999" // Máscara para número de telefone do WhatsApp
+                                    type="tel"
+                                    className="form-control"
+                                    id="whatsapp"
+                                    placeholder="(XX) XXXXX-XXXX" // Opcional: forneça um placeholder com o formato desejado
+                                    value={cliente.whatsapp}
+                                    onChange={(e) => setWhatsapp(e.target.value)}
+                                />
                             </div>
 
                             <div className="col-md-6 mb-3">
@@ -205,27 +221,92 @@ function App() {
                                     <option value="masculino">Masculino</option>
                                 </select>
                             </div>
+
+                            {cliente.endereco && cliente.endereco.length > 0 && (
+                                <>
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="cep" className="form-label">CEP:</label>
+                                        <InputMask
+                                            mask="99999-999"
+                                            maskPlaceholder=""
+                                            type="text"
+                                            className="form-control"
+                                            id="cep"
+                                            value={cliente.endereco[0].cep}
+                                            disabled
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="endereco" className="form-label">Endereço:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="endereco"
+                                            value={cliente.endereco[0].rua}
+                                            disabled
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="numero" className="form-label">Número:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="numero"
+                                            value={cliente.endereco[0].numero}
+                                            disabled
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="complemento" className="form-label">Complemento:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="complemento"
+                                            value={cliente.endereco[0].complemento}
+                                            disabled
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="bairro" className="form-label">Bairro:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="bairro"
+                                            value={cliente.endereco[0].bairro}
+                                            disabled
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="localidade" className="form-label">Cidade:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="localidade"
+                                            value={cliente.endereco[0].cidade}
+                                            disabled
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6 mb-3">
+                                        <label htmlFor="uf" className="form-label">UF:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="uf"
+                                            value={cliente.endereco[0].estado}
+                                            disabled
+                                        />
+                                    </div>
+                                </>
+                            )}
+
                             <button type="submit">Salvar</button>
                         </form>
-                    </TabPanel>
-
-                    <TabPanel>
-                        <h2>Meu Endereço</h2>
-                        <form onSubmit={handleSubmitImage}>
-                            <label>
-                                Selecionar arquivo:
-                                <input type="file" onChange={handleFileChange} />
-                            </label>
-                            <button type="submit">Enviar</button>
-                        </form>
-
-                        {cliente.imagem && cliente.imagem.length > 0 && (
-                            <article id="articleCardTrabalhadorHomePage">
-                                {cliente.imagem.map((imagem, index) => (
-                                    <CardPrestadorServicos imageSrc={`http://localhost/match-servicos/api/imagem/ler/${imagem.nomeArquivo}`} alt={`Descrição da imagem ${index + 1}`} key={index} />
-                                ))}
-                            </article>
-                        )}
                     </TabPanel>
 
                     <TabPanel>

@@ -1,41 +1,41 @@
-#articleLoginPage {
+#articleBuscaPage {
     margin-top: 150px;
 }
 
-#articleLoginPage div {
+#articleBuscaPage div {
     text-align: -webkit-center;
 }
 
-#headerLoginPage nav {
+#headerBuscaPage nav {
     display: flex;
     justify-content: flex-end;
     margin-top: -185px;
 }
 
-#headerLoginPage nav ul {
+#headerBuscaPage nav ul {
     list-style: none;
     display: flex;
     align-items: end;
     flex-direction: column;
 }
 
-#headerLoginPage ul li {
+#headerBuscaPage ul li {
     margin-right: 10px;
     text-transform: uppercase;
 }
 
-#headerLoginPage ul li a {
+#headerBuscaPage ul li a {
     text-decoration: none;
     color: #000;
     font-size: xxx-large;
     margin-top: -50px;
 }
 
-#headerLoginPage ul li a:hover {
+#headerBuscaPage ul li a:hover {
     text-decoration: underline;
 }
 
-#headerLoginPage img {
+#headerBuscaPage img {
     width: 200px;
 }
 
@@ -45,7 +45,7 @@
     height: 200px;
 }
 
-#footerLoginPage{
+#footerBuscaPage {
     /* topo | direita | inferior | esquerda */
     margin: 80px 0 10px 0;
     background-color: burlywood;
@@ -53,12 +53,12 @@
     height: 200px;
 }
 
-#footerLoginPage nav {
+#footerBuscaPage nav {
     margin-inline-end: auto;
     margin-top: -52px;
 }
 
-#footerLoginPage nav ul {
+#footerBuscaPage nav ul {
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -66,29 +66,29 @@
     padding: 40px;
 }
 
-#footerLoginPage nav ul li {
+#footerBuscaPage nav ul li {
     margin-bottom: 10px;
 }
 
-#footerLoginPage ul li a {
+#footerBuscaPage ul li a {
     text-decoration: none;
     color: #000;
     font-size: x-large;
     margin-top: -50px;
 }
 
-#footerLoginPage ul li a:hover {
+#footerBuscaPage ul li a:hover {
     text-decoration: underline;
 }
 
-#footerLoginPage{
+#footerBuscaPage {
     background-color: burlywood;
     max-width: 1320px;
     height: 200px;
     display: flex;
 }
 
-#footerLoginPage div {
+#footerBuscaPage div {
     text-align: center;
     padding: 20px;
 }

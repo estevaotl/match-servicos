@@ -73,8 +73,18 @@
             $cliente->setAtivo(filter_var($l['ativo'], FILTER_VALIDATE_BOOLEAN));
             $cliente->setImagem($this->obterImagens($l['id']));
             $cliente->setServicosPrestados($l['servicosPrestados']);
+            $cliente->setEndereco($this->obterEnderecoCliente($l['id']));
 			return $cliente;
 		}
+
+        private function obterEnderecoCliente($idCliente){
+            $comando = "SELECT * FROM endereco WHERE idCliente = :idCliente";
+            $parametros = array(
+                "idCliente" => $idCliente
+            );
+
+            return $this->bancoDados->consultar($comando, $parametros, true);
+        }
 
         private function obterImagens($idCliente){
             $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto";
@@ -229,7 +239,7 @@
             if($cliente->getEndereco() instanceof Endereco){
                 $enderecoCliente = $cliente->getEndereco();
 
-                $comando = "INSERT INTO endereco (rua, numero, complemento, bairro, cidade, estado, cep) VALUES (:rua, :numero, :complemento, :bairro, :cidade, :estado, :cep)";
+                $comando = "INSERT INTO endereco (rua, numero, complemento, bairro, cidade, estado, cep, idCliente) VALUES (:rua, :numero, :complemento, :bairro, :cidade, :estado, :cep, :idCliente)";
                 $parametros = array(
                     "rua"         => $enderecoCliente->getRua(), 
                     "numero"      => $enderecoCliente->getNumero(),  
@@ -237,7 +247,8 @@
                     "bairro"      => $enderecoCliente->getBairro(),  
                     "cidade"      => $enderecoCliente->getCidade(),  
                     "estado"      => $enderecoCliente->getEstado(),  
-                    "cep"         => $enderecoCliente->getCep()                 
+                    "cep"         => $enderecoCliente->getCep(),
+                    "idCliente"   => $cliente->getId(),
                 );
 
                 $this->bancoDados->executar($comando, $parametros);

@@ -5,7 +5,9 @@ CREATE TABLE endereco(
     complemento VARCHAR(255) DEFAULT NULL,
     cep VARCHAR(255) DEFAULT NULL,
     cidade varchar(255) DEFAULT NULL, 
-    estado varchar(255) DEFAULT NULL
+    estado varchar(255) DEFAULT NULL,
+    bairro VARCHAR(255) DEFAULT NULL,
+    idCliente INT NOT NULL,
+    CONSTRAINT fk_endereco_idCliente FOREIGN KEY (idCliente)
+    REFERENCES cliente(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-ALTER TABLE `endereco` ADD `bairro` VARCHAR(255) NULL DEFAULT NULL AFTER `estado`;

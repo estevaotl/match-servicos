@@ -40,15 +40,17 @@ const LoginPage = () => {
 
     return (
         <div>
-            <header id="headerLoginPage">
-                <img src={logo} alt="Logo" />
+            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
+                <div className="text-white title-logo">
+                    Match Serviços
+                </div>
                 <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">Página Inicial | Match Serviços</Link>
+                    <ul className="list-unstyled">
+                        <li className="mb-2">
+                            <Link className="text-decoration-none text-dark d-block" to="/">Página Inicial | Match Serviços</Link>
                         </li>
-                        <li>
-                            <Link to="/cadastrar">Cadastrar-se</Link>
+                        <li className="mb-2">
+                            <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
                         </li>
                     </ul>
                 </nav>

@@ -1,7 +1,8 @@
 /* ProfilePage.css */
 .page-container {
     display: flex;
-    height: 100vh; /* Faz com que o conteúdo ocupe 100% da altura da tela */
+    height: 100vh;
+    /* Faz com que o conteúdo ocupe 100% da altura da tela */
 }
 
 .sidebar {
@@ -27,4 +28,21 @@
 .content {
     flex: 1;
     padding: 20px;
+}
+
+.header-background {
+    background-color: burlywood;
+    /* Cor de fundo desejada */
+    color: #fff;
+    /* Cor do texto */
+    font-size: 24px;
+    /* Tamanho da fonte desejado */
+    text-align: center;
+    /* Centraliza o texto horizontalmente */
+    padding: 10px;
+}
+
+.title-logo{
+    font-family: fantasy;
+    font-size: 50px;
 }

@@ -9,7 +9,6 @@ const CadastroPage = () => {
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [dataNascimento, setDataNascimento] = useState('');
-    const [telefone, setTelefone] = useState('');
     const [whatsapp, setWhatsapp] = useState('');
     const [genero, setGenero] = useState('');
     const [senha, setSenha] = useState('');
@@ -185,15 +184,17 @@ const CadastroPage = () => {
 
     return (
         <div>
-            <header id="headerCadastroPage">
-                <img src={logo} alt="Logo" />
+            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
+                <div className="text-white title-logo">
+                    Match Serviços
+                </div>
                 <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">Página Inicial | Match Serviços</Link>
+                    <ul className="list-unstyled">
+                        <li className="mb-2">
+                            <Link className="text-decoration-none text-dark d-block" to="/">Página Inicial | Match Serviços</Link>
                         </li>
-                        <li>
-                            <Link to="/login">Entrar na sua conta</Link>
+                        <li className="mb-2">
+                            <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
                         </li>
                     </ul>
                 </nav>
@@ -258,12 +259,16 @@ const CadastroPage = () => {
                         </div>
                         {renderCamposAdicionais()}
                         <div className="col-md-6 mb-3">
-                            <label htmlFor="telefone" className="form-label">Telefone:</label>
-                            <input type="tel" className="form-control" id="telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
-                        </div>
-                        <div className="col-md-6 mb-3">
                             <label htmlFor="whatsapp" className="form-label">WhatsApp:</label>
-                            <input type="tel" className="form-control" id="whatsapp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
+                            <InputMask
+                                mask="(99) 99999-9999" // Máscara para número de telefone do WhatsApp
+                                type="tel"
+                                className="form-control"
+                                id="whatsapp"
+                                placeholder="(XX) XXXXX-XXXX" // Opcional: forneça um placeholder com o formato desejado
+                                value={whatsapp}
+                                onChange={(e) => setWhatsapp(e.target.value)}
+                            />
                         </div>
                         <div className="col-md-6 mb-3">
                             <label htmlFor="senha" className="form-label">Senha:</label>

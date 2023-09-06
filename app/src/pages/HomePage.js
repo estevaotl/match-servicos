@@ -42,17 +42,19 @@ const HomePage = () => {
 
     return (
         <div>
-            <header id="headerHomePage">
-                <img src={logo} alt="Logo" />
+            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
+                <div className="text-white title-logo">
+                    Match Serviços
+                </div>
                 <nav>
-                    <ul>
+                    <ul className="list-unstyled">
                         {idCliente ? (
                             <>
-                                <li>Olá, {nomeCliente}.</li>
-                                <li>
-                                    <Link to="/minha-conta">Entrar na sua conta</Link>
+                                <li className="mb-2">Olá, {nomeCliente}.</li>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
                                 </li>
-                                <li>
+                                <li className="mb-2">
                                     <button onClick={handleLogout}>Logout</button>
                                 </li>
                             </>
@@ -60,11 +62,11 @@ const HomePage = () => {
                         ) : (
                             // Renderiza o menu padrão quando idCliente não está presente
                             <>
-                                <li>
-                                    <Link to="/cadastrar">Cadastrar-se</Link>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
                                 </li>
-                                <li>
-                                    <Link to="/login">Entrar na sua conta</Link>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
                                 </li>
                             </>
                         )}
