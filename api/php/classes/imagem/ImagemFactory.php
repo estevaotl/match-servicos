@@ -5,7 +5,7 @@
 
         public function __construct() {}
 
-        public static function saveImage($uploadedFile, $idCliente) {
+        public static function saveImage($uploadedFile, $idCliente, $ehImagemPerfil = false) {
             try {
                 $filename = $uploadedFile->getClientFilename(); // Nome original do arquivo
                 $fileSize = $uploadedFile->getSize(); // Tamanho do arquivo
@@ -21,6 +21,9 @@
                 $imagemLocal->setPasta($targetDirectory);
                 $imagemLocal->setNomeArquivo($fileName);
                 $imagemLocal->setIdObjeto($idCliente);
+
+                if($ehImagemPerfil)
+                    $imagemLocal->setEhImagemPerfil(true);
 
                 $imagem = $imagemLocal->getImagem();
 

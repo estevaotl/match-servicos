@@ -1,6 +1,9 @@
 <?php
 
     session_start();
+
+    require '../api/vendor/autoload.php';
+
     // Função de autoload
     function my_autoloader($class_name) {
         global $class_map;

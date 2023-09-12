@@ -30,7 +30,7 @@
 		}
 
 		protected function adicionarNovo($imagemLocal){
-			$comando = "insert into imagem (idObjeto, nomeArquivo, pasta) values (:idObjeto, :nomeArquivo, :pasta)";
+			$comando = "insert into imagem (idObjeto, nomeArquivo, pasta, ehImagemPerfil) values (:idObjeto, :nomeArquivo, :pasta, :ehImagemPerfil)";
 
 			return $this->bancoDados->executar($comando, $this->parametros($imagemLocal));
 		}
@@ -44,7 +44,8 @@
 			return array(
 				'idObjeto' => $imagemLocal->getIdObjeto(),
 				'nomeArquivo' => $imagemLocal->getNomeArquivo(),
-				'pasta' => $imagemLocal->getPasta()
+				'pasta' => $imagemLocal->getPasta(),
+				'ehImagemPerfil' => $imagemLocal->getEhImagemPerfil()
 			);
 		}
 

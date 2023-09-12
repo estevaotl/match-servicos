@@ -7,6 +7,7 @@ class ImagemLocal{
 	private $nomeArquivo = "";
 	private $pasta = "";
 	private $imagem = "";
+	private $ehImagemPerfil = false;
 
 	public function __construct(){}
 
@@ -48,5 +49,13 @@ class ImagemLocal{
 
 	public function setImagem($imagem){
 		$this->imagem = $imagem;
+	}
+
+	public function getEhImagemPerfil(){
+		return $this->ehImagemPerfil;
+	}
+
+	public function setEhImagemPerfil($ehImagemPerfil){
+		$this->ehImagemPerfil = $ehImagemPerfil;
 	}
 }

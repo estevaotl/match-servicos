@@ -11,6 +11,7 @@ import InputMask from 'react-input-mask';
 function App() {
     const [email, setEmail] = useState('');
     const [file, setFile] = useState(null);
+    const [filePerfil, setFilePerfil] = useState(null);
     const [idCliente, setIdCliente] = useState('');
     const [nomeCliente, setNomeCliente] = useState('');
     const [nome, setNome] = useState('');
@@ -24,6 +25,10 @@ function App() {
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
+    };
+
+    const handleFileChangePerfil = (event) => {
+        setFilePerfil(event.target.files[0]);
     };
 
     const handleSelectChange = (e) => {
@@ -41,6 +46,31 @@ function App() {
         formData.append('idCliente', idCliente);
 
         fetch('http://localhost/match-servicos/api/imagem/upload', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data); // Certifique-se de que você está vendo a resposta aqui
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+            });
+    };
+
+    const handleSubmitImagePerfil = async () => {
+        const idCliente = sessionStorage.getItem('idCliente');
+
+        const formData = new FormData();
+        formData.append('image', filePerfil);
+        formData.append('idCliente', idCliente);
+
+        fetch('http://localhost/match-servicos/api/imagem/uploadPerfil', {
             method: 'POST',
             body: formData,
         })
@@ -153,9 +183,24 @@ function App() {
             </header>
 
             <article id="articleMinhaContaPage">
+                {cliente.imagemPerfil && cliente.imagemPerfil.length > 0 && (
+                    <div className="container text-center mt-5">
+                        {cliente.imagemPerfil.map((imagem, index) => (
+                            <div key={index} className="ball-image mx-auto">
+                                <img
+                                    src={`http://localhost/match-servicos/api/imagem/ler/${imagem.nomeArquivo}`}
+                                    alt={`Imagem ${index}`}
+                                    className="rounded-circle ball-image-inner"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 <Tabs>
                     <TabList>
                         <Tab>Editar Dados</Tab>
+                        <Tab>Enviar Imagem Perfil</Tab>
                         <Tab>Enviar Fotos/Vídeos</Tab>
                         {cliente.prestadorDeServicos && <Tab>Ordens de Serviço</Tab>}
                     </TabList>
@@ -310,6 +355,17 @@ function App() {
                     </TabPanel>
 
                     <TabPanel>
+                        <h2>Enviar Imagem Perfil</h2>
+                        <form onSubmit={handleSubmitImagePerfil}>
+                            <label>
+                                Selecionar arquivo:
+                                <input type="file" onChange={handleFileChangePerfil} />
+                            </label>
+                            <button type="submit">Enviar</button>
+                        </form>
+                    </TabPanel>
+
+                    <TabPanel>
                         <h2>Enviar Fotos/Vídeos</h2>
                         <form onSubmit={handleSubmitImage}>
                             <label>
@@ -330,14 +386,12 @@ function App() {
 
                     <TabPanel>
                         <h2>Ordens de Serviço</h2>
-                        {/* Renderiza as ordens de serviço se houver */}
                         {ordensDeServico && ordensDeServico.map((ordem, index) => (
                             <div key={index}>
                                 <p>ID da Ordem: {ordem.id}</p>
                                 <p>Id Solicitante: {ordem.idSolicitante}</p>
                                 <p>Data Criação: {ordem.dataCriacao}</p>
                                 <p>Status: {ordem.status}</p>
-                                {/* Renderize outras informações da ordem aqui */}
                             </div>
                         ))}
                     </TabPanel>

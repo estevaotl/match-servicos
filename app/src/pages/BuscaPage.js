@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import TrabalhadorCard from '../componentes/TrabalhadorCard';
 import FooterPage from '../componentes/FooterPage';
-import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
-import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import '../css/busca-page.css';
 
 const SearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [idade, setIdade] = useState('');
-    const [distancia, setDistancia] = useState('');
     const [filteredWorkers, setFilteredWorkers] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
@@ -72,27 +69,10 @@ const SearchPage = () => {
 
                 <div className="d-flex">
                     <div className="flex-grow-1 d-flex flex-wrap">
-                        {[filteredWorkers].map(worker => (
+                        {filteredWorkers.map(worker => (
                             <TrabalhadorCard key={worker.id} worker={worker} />
                         ))}
                     </div>
-
-                    {/* <div className="flex-grow">
-                        <input
-                            type="range"
-                            className="form-control me-2"
-                            placeholder="Idade"
-                            value={idade}
-                            onChange={(e) => setIdade(e.target.value)}
-                        />
-                        <input
-                            type="range"
-                            className="form-control me-2"
-                            placeholder="Distância"
-                            value={distancia}
-                            onChange={(e) => setDistancia(e.target.value)}
-                        />
-                    </div> */}
                 </div>
             </article>
 

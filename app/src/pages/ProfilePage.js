@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import logo from '../imagens/logo.png';
 import FooterPage from '../componentes/FooterPage';
 import CardPrestadorServicos from '../componentes/CardPrestadorServicos';
 import '../css/profile-page.css';

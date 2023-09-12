@@ -123,6 +123,14 @@
                 $restricoes['q'] = $parametros['q'];
             }
 
+            if(isset($parametros['prestadorServicos'])){
+                $restricoes['prestadorServicos'] = $parametros['prestadorServicos'];
+            }
+
+            if(isset($parametros['obterParaCarrossel'])){
+                $restricoes['obterParaCarrossel'] = $parametros['obterParaCarrossel'];
+            }
+
             return $this->service->obterComRestricoes($restricoes);
         }
     }

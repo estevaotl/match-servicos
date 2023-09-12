@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
-const TrabalhadorCard = ({ worker }) => {
+const TrabalhadorCard = ({ key, worker }) => {
     const whatsappMessage = encodeURIComponent(`Olá ${worker.nome}. Vi seu perfil no site e gostei dos seus serviços prestados. Gostaria de solicitar um orçamento. Como posso proceder?`);
     const whatsappLink = `https://api.whatsapp.com/send?phone=${worker.whatsapp}&text=${whatsappMessage}`;
     const clienteId = sessionStorage.getItem('idCliente');
@@ -52,7 +52,7 @@ const TrabalhadorCard = ({ worker }) => {
 
 
     return (
-        <div className="card m-2">
+        <div className="card m-2" key={key}>
             <div className="card-body">
                 <h4 className="card-title">{worker.nome}</h4>
                 <p className="card-text">Email: {worker.email}</p>

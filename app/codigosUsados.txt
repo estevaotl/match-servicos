@@ -6,3 +6,6 @@ npm install bootstrap
 npm install react-input-mask
 npm install react-tabs
 npm install --save @fortawesome/react-fontawesome
+npm install react-responsive-carousel --save
+npm install react-icons
+npm install boxicons --save

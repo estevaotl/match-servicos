@@ -354,10 +354,10 @@ class BancoDados{
 		try{
 			$preparado = $this->pdo->prepare($comando);
 			$preparado->execute($parametros);
+
 			return $preparado;
 		}catch(Exception $e){
-			                
-            var_dump($e); die();
+
 			// Caso o objeto(conexão) atual tenha sido criado para salvar um erro em uma query feita em uma outra conexão, getSalvandoErro() deveria ser true
 			// Nesta situação apenas lançamos uma nova exceção para evitar um possível loop de tentativas falhas em salvar o erro na última query
 			if($this->getSalvandoErro()){

@@ -129,3 +129,21 @@
     font-family: fantasy;
     font-size: 50px;
 }
+
+/* Define uma classe CSS para a imagem em formato de bola */
+.ball-image {
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    border: 2px solid #fff; /* Adicione uma borda branca para destacar a forma da bola */
+}
+
+/* Adicione estilos CSS para a imagem interna dentro da bola */
+.ball-image-inner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}

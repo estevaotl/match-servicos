@@ -72,6 +72,7 @@
             $cliente->setWhatsapp($l['whatsapp']);
             $cliente->setAtivo(filter_var($l['ativo'], FILTER_VALIDATE_BOOLEAN));
             $cliente->setImagem($this->obterImagens($l['id']));
+            $cliente->setImagemPerfil($this->obterImagemPerfil($l['id']));
             $cliente->setServicosPrestados($l['servicosPrestados']);
             $cliente->setEndereco($this->obterEnderecoCliente($l['id']));
 			return $cliente;
@@ -86,8 +87,17 @@
             return $this->bancoDados->consultar($comando, $parametros, true);
         }
 
+        private function obterImagemPerfil($idCliente){
+            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 1";
+            $parametros = array(
+                "idObjeto" => $idCliente
+            );
+
+            return $this->bancoDados->consultar($comando, $parametros, true);
+        }
+
         private function obterImagens($idCliente){
-            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto";
+            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 0";
             $parametros = array(
                 "idObjeto" => $idCliente
             );
@@ -174,8 +184,12 @@
 		}
 
         public function obterComRestricoes($restricoes = array()){
-            $comando = "SELECT * FROM cliente ";
-            $where = " WHERE ativo = 1 ";
+            $comando = "SELECT cliente.* ";
+            $from = " FROM cliente ";
+            $where = " WHERE cliente.ativo = 1 ";
+            $join = "";
+            $orderBy = " cliente.id DESC ";
+            $groupBy = " GROUP BY cliente.id ";
             $parametros = array();
 
             if(isset($restricoes['profissao'])){
@@ -183,9 +197,21 @@
                 $parametros['profissao'] = '%' . $restricoes['profissao'] . '%';
             }
 
-            $comando = $comando . $where;
+            if(isset($restricoes['prestadorServicos']) && $restricoes['prestadorServicos'] == true){
+                $where .= " AND cliente.prestadorServico = 1 ";
+            }
 
-            return $this->bancoDados->obterObjeto($comando, array($this, 'transformarEmObjeto'), $parametros);
+            if(isset($restricoes['obterParaCarrossel']) && $restricoes['obterParaCarrossel'] == true){
+                $comando .= ", COUNT(DISTINCT ordem_servico.id) AS qtdOrdensServico ";
+                $where .= " AND ordem_servico.status != :ordemServicoAberta AND ordem_servico.ativo = 1 ";
+                $join .= " JOIN ordem_servico ON ordem_servico.idTrabalhador = cliente.id ";
+                $orderBy = " qtdOrdensServico DESC ";
+                $parametros['ordemServicoAberta'] = StatusOrdemServico::EM_ABERTO;
+            }
+
+            $comando = $comando . $from . $join . $where . $groupBy;
+
+            return $this->bancoDados->obterObjetos($comando, array($this, 'transformarEmObjeto'), $parametros, $orderBy);
         }
 
         public function existeEmail($cliente){

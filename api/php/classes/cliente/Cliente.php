@@ -11,6 +11,7 @@
         private $dataCadastro = "";
         private $ativo = true;
         private $imagem = array();
+        private $imagemPerfil = array();
         private $servicosPrestados = "";
 
         private $endereco = array();
@@ -106,7 +107,8 @@
                 'whatsapp' => $this->getWhatsapp(),
                 'imagem' => $this->getImagem(),
                 'servicosPrestados' => $this->getServicosPrestados(),
-                'endereco' => $this->getEndereco()
+                'endereco' => $this->getEndereco(),
+                'imagemPerfil' => $this->getImagemPerfil()
             ];
         }
 
@@ -132,5 +134,13 @@
 
         public function setEndereco($endereco){
             $this->endereco = $endereco;
+        }
+
+        public function getImagemPerfil(){
+            return $this->imagemPerfil;
+        }
+
+        public function setImagemPerfil($imagemPerfil){
+            $this->imagemPerfil = $imagemPerfil;
         }
     }
