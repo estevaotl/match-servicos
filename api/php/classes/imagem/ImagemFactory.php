@@ -10,7 +10,7 @@
                 $filename = $uploadedFile->getClientFilename(); // Nome original do arquivo
                 $fileSize = $uploadedFile->getSize(); // Tamanho do arquivo
                 $fileType = $uploadedFile->getClientMediaType(); // Tipo de mídia do arquivo (MIME type)
-                $fileName = uniqid() . '_' . $filename;
+                $fileName = str_replace(' ', '', uniqid() . '_' . $filename);
 
                 $targetDirectory = $_SERVER['DOCUMENT_ROOT'] . '/match-servicos/api/public/dinamica/';
                 $targetPath = $targetDirectory . $fileName;
@@ -71,34 +71,48 @@
             }
         }
 
-        public static function salvarImagemDaMemoria(&$imagem, $novo_caminho, $mime_type, $qualidade = 100) {
+        public static function salvarImagemDaMemoria(&$imagem, $novo_caminho, $fileType, $qualidade = 100) {
             $dir = dirname($novo_caminho);
-            if($dir != '' && !is_dir($dir)) {
+            if ($dir != '' && !is_dir($dir)) {
                 mkdir($dir, 0777, true);
             }
-            //remove extensao
-            $novo_caminho = preg_replace('/\\.[^.\\s]{3,5}$/', '', $novo_caminho);
 
-            switch($mime_type) {
-                case "image/gif": 
-                    $novo_caminho .= '.gif';
-                    $enviou = imagegif($imagem, $novo_caminho);
-                    break;
-                case "image/jpeg" : 
-                case "image/png" : 
-                    $novo_caminho .= '.jpg';
-                    $enviou = imagejpeg($imagem, $novo_caminho,$qualidade);
-                    break;
-                default:
-                    $novo_caminho .= '.jpg';
-                    $enviou = imagejpeg($imagem, $novo_caminho, $qualidade);
+            // Verifique se a extensão está presente no MIME type
+            if (strpos($fileType, 'jpeg') !== false || strpos($fileType, 'jpg') !== false) {
+                $extensao = 'jpg';
+            } elseif (strpos($fileType, 'png') !== false) {
+                $extensao = 'png';
+            } elseif (strpos($fileType, 'gif') !== false) {
+                $extensao = 'gif';
+            } else {
+                // Use .jpg como extensão padrão se o tipo de arquivo não for suportado
+                $extensao = 'jpg';
             }
 
-            if($enviou){
+            // Adicione a extensão ao caminho do arquivo apenas se já não estiver presente
+            if (pathinfo($novo_caminho, PATHINFO_EXTENSION) !== $extensao) {
+                $novo_caminho .= '.' . $extensao;
+            }
+
+            switch ($extensao) {
+                case "gif":
+                    $enviou = imagegif($imagem, $novo_caminho);
+                    break;
+                case "jpg":
+                    $enviou = imagejpeg($imagem, $novo_caminho, $qualidade);
+                    break;
+                case "png":
+                    $enviou = imagepng($imagem, $novo_caminho);
+                    break;
+                default:
+                    $enviou = false;
+            }
+        
+            if ($enviou) {
                 $explodedPath = explode('/', $novo_caminho);
                 return end($explodedPath);
             }
-
+        
             return $enviou;
         }
 

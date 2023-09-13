@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import MinhaContaPage from './pages/MinhaContaPage';
 import BuscaPage from './pages/BuscaPage';
 import ProfilePage from './pages/ProfilePage';
+import ContatoPage from './pages/ContatoPage';
 
 import "./App.css";
 
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/minha-conta" element={<MinhaContaPage />} />
           <Route path="/busca" element={<BuscaPage />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="/contato" element={<ContatoPage />} />
         </Routes>
       </Router>
     </div>

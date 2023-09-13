@@ -41,9 +41,6 @@ const FooterPage = () => {
                         <Link to="/contato">Contato</Link>
                     </li>
                     <li>
-                        <a href='email'>Email</a>
-                    </li>
-                    <li>
                         <a href='https://web.whatsapp.com/send?phone=+5522997249606&text=Ol%C3%A1%2C%20gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20o%20site!' target='_blank'>(22) 99724-9606</a>
                     </li>
                 </ul>
@@ -55,7 +52,8 @@ const FooterPage = () => {
                         <p className="newsletter-text">Não perca novidades</p>
                         <div>
                             <input type="text" id="emailNewsletter" value={emailNewsletter} onChange={(e) => setEmailNewsletter(e.target.value)} />
-                            <input type="text" id="nomeNewsletter" value={nomeNewsletter} onChange={(e) => setNomeNewsletter(e.target.value)} />                            <button type="submit" className="btn btn-success">Subscribe</button>
+                            <input type="text" id="nomeNewsletter" value={nomeNewsletter} onChange={(e) => setNomeNewsletter(e.target.value)} />                            
+                            <button type="submit" className="btn btn-success">Subscribe</button>
                         </div>
                     </div>
                 </form>

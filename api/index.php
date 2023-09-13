@@ -234,7 +234,11 @@ try {
 
             $params = $request->getParsedBody(); // Retorna um array com os dados do POST
 
-            $fileName = ImagemFactory::saveImage($uploadedFile, $params['idCliente']);
+            ImagemFactory::saveImage($uploadedFile, $params['idCliente']);
+
+            // Use o resultado da função salvar como necessário
+            $response->getBody()->write("Imagem criada.");
+            return $response;
         });
 
         $app->get('/ler/{nomeArquivo}', function ($request, $response, $args) {
