@@ -71,9 +71,10 @@
             $codifica = hash('sha512', $codifica);
             return $codifica;
         }
+
+        public static function dd(...$var){
+            echo '<pre>';
+            return die(var_dump(...$var));
+        }
     }
 
-    function dd(...$var){
-        echo '<pre>';
-        return die(var_dump(...$var));
-    }
