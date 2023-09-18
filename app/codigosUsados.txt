@@ -9,3 +9,4 @@ npm install --save @fortawesome/react-fontawesome
 npm install react-responsive-carousel --save
 npm install react-icons
 npm install boxicons --save
+npm install rc-slider --save

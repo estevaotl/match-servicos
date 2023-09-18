@@ -4,6 +4,7 @@
         private $id = 0;
         private $dataNascimento = "";
         private $cpf = "";
+        private $idade = "";
 
         public function __construct() {}
 
@@ -29,6 +30,14 @@
 
         public function setCpf($cpf){
             $this->cpf = $cpf;
+        }
+
+        public function getIdade(){
+            return $this->idade;
+        }
+
+        public function setIdade($idade){
+            $this->idade = $idade;
         }
     }
 

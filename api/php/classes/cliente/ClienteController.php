@@ -48,6 +48,12 @@
                 $dadosClienteFisico->setCpf($dados['documento']);
                 $dadosClienteFisico->setDataNascimento($dados['dataNascimento']);
 
+                $dataNascimento = $dados['dataNascimento'];
+                $idade = date_diff(new DateTime(), new DateTime($dataNascimento));
+                $idade = $idade->format('%Y');
+
+                $dadosClienteFisico->setIdade($idade);
+
                 $cliente->setDadosEspecificos($dadosClienteFisico);
             } else {
                 $dadosClienteJuridico = new DadosClienteJuridico();
@@ -120,7 +126,7 @@
             $restricoes = array();
 
             if(isset($parametros['q'])){
-                $restricoes['q'] = $parametros['q'];
+                $restricoes['profissao'] = $parametros['q'];
             }
 
             if(isset($parametros['prestadorServicos'])){
@@ -129,6 +135,10 @@
 
             if(isset($parametros['obterParaCarrossel'])){
                 $restricoes['obterParaCarrossel'] = $parametros['obterParaCarrossel'];
+            }
+
+            if(isset($parametros['idade'])){
+                $restricoes['idade'] = $parametros['idade'];
             }
 
             return $this->service->obterComRestricoes($restricoes);
