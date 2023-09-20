@@ -5,57 +5,63 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../css/busca-page.css';
 
 const SearchPage = () => {
-    const [searchQuery, setSearchQuery] = useState('');
+    const [currentSearchQuery, setCurrentSearchQuery] = useState('');
     const [filteredWorkers, setFilteredWorkers] = useState([]);
-    const [searchValue, setSearchValue] = useState('');
-    const [ageRange, setAgeRange] = useState('');
     const [minAge, setMinAge] = useState(18);
+    // const [maxDistance, setMaxDistance] = useState(10); // Defina a distância máxima permitida em quilômetros
     const navigate = useNavigate();
 
     const handleMinAgeChange = (event) => {
         setMinAge(event.target.value);
     };
 
-    useEffect(() => {
-        // Obtém os parâmetros da URL
-        const urlSearchParams = new URLSearchParams(window.location.search);
-        const query = urlSearchParams.get('q');
-        const ageRange = urlSearchParams.get('idade');
+    // const handleMaxDistanceChange = (event) => {
+    //     setMaxDistance(event.target.value);
+    // };
 
-        // Define os estados de busca de acordo com os parâmetros da URL
-        setSearchQuery(query || '');
-        setAgeRange(ageRange || '');
-
-        // Busca os trabalhadores filtrados pela busca e pela faixa de idade da URL
-        const buscarTrabalhadores = async () => {
-            try {
-                const response = await fetch(`http://localhost/match-servicos/api/clientes/busca?q=${query}&idade=${ageRange}`);
-                const data = await response.json();
-
-                setFilteredWorkers(data.cliente);
-            } catch (error) {
-                console.error('Erro na requisição:', error);
-            }
-        };
-
-        buscarTrabalhadores();
-
-    }, [searchQuery, ageRange]);
-
-    const handleFilter = async () => {
+    const fetchData = async () => {
         try {
-            // Enviar uma requisição para a API, filtrando os trabalhadores com base na faixa de idade selecionada e no valor da busca.
-            const response = await fetch(`http://localhost/match-servicos/api/clientes/busca?q=${searchQuery}&idade=${minAge}`);
+            // Encode the search query and minAge values
+            const encodedQuery = encodeURIComponent(currentSearchQuery);
+            const encodedMinAge = encodeURIComponent(minAge);
+            // const encodedMaxDistance = encodeURIComponent(maxDistance);
+            // distancia=${encodedMaxDistance}
+
+            // Send a request to the API, filtering workers based on the selected age range and search query.
+            const response = await fetch(`http://localhost/match-servicos/api/clientes/busca?q=${encodedQuery}&idade=${encodedMinAge}`);
+
             const data = await response.json();
 
             setFilteredWorkers(data.cliente);
-
-            // Atualiza a URL com os novos parâmetros de filtro.
-            navigate(`/busca?q=${searchQuery}&idade=${minAge}`);
         } catch (error) {
-            setFilteredWorkers('');
+            setFilteredWorkers([]);
         }
     };
+
+    useEffect(() => {
+        // Obtain URL parameters when the page loads.
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const query = urlSearchParams.get('q');
+        const ageRange = urlSearchParams.get('idade');
+        // const distance = urlSearchParams.get('distancia');
+
+        // Set search query and minAge based on URL parameters.
+        setCurrentSearchQuery(query || '');
+        setMinAge(ageRange || 18);
+        // setMaxDistance(distance || 10); // Valor padrão: 10 km
+
+        // Fetch data when the page loads.
+        fetchData();
+    }, []);
+
+    const handleFilter = () => {
+        // Update the URL with the new filter parameters.
+        // distancia=${maxDistance}
+        navigate(`/busca?q=${currentSearchQuery}&idade=${minAge}`);
+        // Fetch data with the updated parameters.
+        fetchData();
+    };
+
 
     return (
         <div className="App">
@@ -79,8 +85,8 @@ const SearchPage = () => {
                             type="text"
                             className="form-control me-2"
                             placeholder="Digite o serviço desejado"
-                            value={searchQuery}
-                            onChange={(e) => setSearchValue(e.target.value)}
+                            value={currentSearchQuery}
+                            onChange={(e) => setCurrentSearchQuery(e.target.value)}
                         />
                         <input
                             type="range"
@@ -90,6 +96,14 @@ const SearchPage = () => {
                             onChange={handleMinAgeChange}
                         />
                         <span>Idade atual: {minAge} anos</span>
+                        {/* <input
+                            type="range"
+                            min="0"
+                            max="50" // Defina o valor máximo com base nas suas necessidades
+                            value={maxDistance}
+                            onChange={handleMaxDistanceChange}
+                        />
+                        <span>Distância máxima: {maxDistance} km</span> */}
                         <button
                             className="btn btn-primary"
                             type="button"

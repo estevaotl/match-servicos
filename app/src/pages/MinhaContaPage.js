@@ -7,6 +7,7 @@ import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretame
 import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import CardPrestadorServicos from '../componentes/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
 import InputMask from 'react-input-mask';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Importe o CSS do Bootstrap
 
 function App() {
     const [email, setEmail] = useState('');
@@ -22,6 +23,7 @@ function App() {
     const [servicosPrestados, setServicosPrestados] = useState(false);
     const [cliente, setCliente] = useState('');
     const [ordensDeServico, setOrdensDeServico] = useState(''); // Estado para armazenar as ordens de serviço
+    const [message, setMessage] = useState('');
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -164,6 +166,88 @@ function App() {
         }
     };
 
+    const handleStatusChange = async (ordemId, novoStatus) => {
+        // Salvar o status atual em uma variável temporária
+        const statusAnterior = ordensDeServico.find(ordem => ordem.id === ordemId).status;
+
+        try {
+            // Configurar os dados a serem enviados no corpo da solicitação
+            const data = {
+                ordemId: ordemId,
+                novoStatus: novoStatus
+            };
+
+            // Configurar as opções da solicitação
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+
+            // Enviar a solicitação para a URL de modificação
+            const response = await fetch('http://localhost/match-servicos/api/ordemServico/modificarStatus', requestOptions);
+
+            // Verificar se a solicitação foi bem-sucedida (código de resposta 200)
+            if (response.ok) {
+                const updatedOrdensDeServico = ordensDeServico.map(ordem => {
+                    if (ordem.id === ordemId) {
+                        return { ...ordem, status: novoStatus };
+                    }
+                    return ordem;
+                });
+                setOrdensDeServico(updatedOrdensDeServico);
+
+                // Definir a mensagem de sucesso
+                setMessage('Status atualizado com sucesso');
+
+                // Limpar a mensagem de erro após 3 segundos (3000 milissegundos)
+                setTimeout(() => {
+                    setMessage('');
+                }, 3000);
+            } else {
+                // A solicitação falhou, você pode tratar erros aqui
+                // Reverter para o status anterior na interface do usuário
+                // Atualizar o estado local com o status anterior
+                const updatedOrdensDeServico = ordensDeServico.map(ordem => {
+                    if (ordem.id === ordemId) {
+                        return { ...ordem, status: statusAnterior };
+                    }
+                    return ordem;
+                });
+                setOrdensDeServico(updatedOrdensDeServico);
+
+                // Definir a mensagem de erro
+                setMessage('Falha ao atualizar o status');
+
+                // Limpar a mensagem de erro após 3 segundos (3000 milissegundos)
+                setTimeout(() => {
+                    setMessage('');
+                }, 3000);
+            }
+        } catch (error) {
+            // Reverter para o status anterior na interface do usuário
+            // Atualizar o estado local com o status anterior
+            const updatedOrdensDeServico = ordensDeServico.map(ordem => {
+                if (ordem.id === ordemId) {
+                    return { ...ordem, status: statusAnterior };
+                }
+                return ordem;
+            });
+            setOrdensDeServico(updatedOrdensDeServico);
+
+            // Definir a mensagem de erro em caso de erro na solicitação
+            setMessage('Erro ao atualizar o status: ' + error.message);
+
+            // Limpar a mensagem de erro após 3 segundos (3000 milissegundos)
+            setTimeout(() => {
+                setMessage('');
+            }, 3000);
+        }
+    };
+
+
     return (
         <div className="App">
             <header className="mt-4 header-background d-flex justify-content-between align-items-center">
@@ -176,7 +260,7 @@ function App() {
                             <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial | Match Serviços</Link>
                         </li>
                         <li className="mb-2">
-                            <Link to="/cadastrar" className="text-decoration-none text-dark d-block">Cadastrar-se</Link>
+                            <button onClick={handleLogout}>Logout</button>
                         </li>
                     </ul>
                 </nav>
@@ -386,14 +470,39 @@ function App() {
 
                     <TabPanel>
                         <h2>Ordens de Serviço</h2>
-                        {ordensDeServico && ordensDeServico.map((ordem, index) => (
-                            <div key={index}>
-                                <p>ID da Ordem: {ordem.id}</p>
-                                <p>Id Solicitante: {ordem.idSolicitante}</p>
-                                <p>Data Criação: {ordem.dataCriacao}</p>
-                                <p>Status: {ordem.status}</p>
+                        <div className="container">
+                            <div className="row">
+                                {ordensDeServico && ordensDeServico.map((ordem, index) => (
+                                    <div key={index} className="col-md-4 mb-3">
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <h5 className="card-title">ID da Ordem: {ordem.id}</h5>
+                                                <p className="card-text">Id Solicitante: {ordem.idSolicitante}</p>
+                                                <p className="card-text">Data Criação: {ordem.dataCriacao}</p>
+                                                <div className="form-group">
+                                                    <label>Status:</label>
+                                                    <select
+                                                        className="form-control form-select"
+                                                        value={ordem.status}
+                                                        onChange={(e) => handleStatusChange(ordem.id, e.target.value)}
+                                                    >
+                                                        <option value="0">Em Aberto</option>
+                                                        <option value="1">Em Andamento</option>
+                                                        <option value="2">Concluído</option>
+                                                        <option value="3">Cancelado</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Renderizar a mensagem de erro ou sucesso */}
+                                                <div className="message">
+                                                    {message && <div className={message.startsWith('Erro') ? 'alert alert-danger' : 'alert alert-success'}>{message}</div>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
                     </TabPanel>
                 </Tabs>
             </article>

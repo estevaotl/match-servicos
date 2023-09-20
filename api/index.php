@@ -305,6 +305,37 @@ try {
 
             return $response->withHeader('Content-Type', 'application/json');
         });
+
+        $app->post('/modificarStatus', function (Request $request, Response $response, $args) {
+            try {
+                $body = $request->getBody()->getContents();
+
+                $data = json_decode($body, true);
+
+                $ordemServicoController = new OrdemServicoController();
+
+                $ordemServico = $ordemServicoController->modificarStatus($data['ordemId'], $data['novoStatus']);
+
+                $responseData = [
+                    'id' => $data['ordemId'],
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            } catch (\Throwable $th) {
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'excecao' => $th->getMessage()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            }
+        });
     });
 } catch (\Throwable $th) {
     Util::logException($th);

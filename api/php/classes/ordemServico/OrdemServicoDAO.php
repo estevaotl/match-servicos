@@ -124,4 +124,14 @@ class OrdemServicoDAO
 
         return $this->bancoDados->consultar($comando, $parametros, true);
     }
+
+    public function modificarStatus($idOrdemServico, $statusNovo){
+        $comando = "UPDATE ordem_servico SET status = :status WHERE id = :id";
+        $parametros = array(
+            "id"     => $idOrdemServico,
+            "status" => $statusNovo
+        );
+
+        return $this->bancoDados->executar($comando, $parametros);
+    }
 }
