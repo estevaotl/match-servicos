@@ -115,6 +115,9 @@ const SearchPage = () => {
                                 <li className="mb-2">
                                     <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
                                 </li>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
+                                </li>
                             </>
                         )}
                     </ul>
