@@ -2,14 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../css/home-page.css';
 import icone_engenharia from '../imagens/icone_engenharia.png'; // Importe o caminho da imagem corretamente
-import icone_personagem from '../imagens/icone_personagem.png'; // Importe o caminho da imagem corretamente
-import icone_person from '../imagens/icone_person.png'; // Importe o caminho da imagem corretamente
 import CardPrestadorServicos from '../componentes/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
-import CardAvalicoesSite from '../componentes/CardAvaliacoesSite'; // Caminho relativo para o arquivo Card.js
 import FooterPage from '../componentes/FooterPage';
 import 'bootstrap/dist/css/bootstrap.css';
 import Carousel from 'react-bootstrap/Carousel';
-import { BiEnvelopeOpen } from 'react-icons/bi';
 
 const HomePage = () => {
     const [idCliente, setIdCliente] = useState('');
@@ -108,9 +104,6 @@ const HomePage = () => {
                                 <li className="mb-2">
                                     <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
                                 </li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
-                                </li>
                             </>
                         )}
                     </ul>
@@ -157,6 +150,7 @@ const HomePage = () => {
                                         endereco={`${prestador.endereco[0].rua}, ${prestador.endereco[0].numero}, ${prestador.endereco[0].bairro}, ${prestador.endereco[0].cidade}, ${prestador.endereco[0].estado}`}
                                         media_avaliacao={prestador.media_avaliacao}
                                         key={prestadorIndex}
+                                        id={prestador.id}
                                     >
                                         {/* O restante do seu conteúdo do CardPrestadorServicos */}
                                     </CardPrestadorServicos>

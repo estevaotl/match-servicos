@@ -130,6 +130,10 @@ function App() {
 
     useEffect(() => {
         const idCliente = sessionStorage.getItem('idCliente');
+        const nomeCliente = sessionStorage.getItem('nomeCliente');
+        if (nomeCliente) {
+            setNomeCliente(nomeCliente);
+        }
 
         fetch(`http://localhost/match-servicos/api/clientes/obter/${idCliente}`, {
             method: 'GET', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
@@ -256,8 +260,9 @@ function App() {
                 </div>
                 <nav>
                     <ul className="list-unstyled">
+                        <li className="mb-2">Olá, {nomeCliente}.</li>
                         <li className="mb-2">
-                            <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial | Match Serviços</Link>
+                            <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
                         </li>
                         <li className="mb-2">
                             <button onClick={handleLogout}>Logout</button>
@@ -267,6 +272,7 @@ function App() {
             </header>
 
             <article id="articleMinhaContaPage">
+                <h1>Minha Conta</h1>
                 {cliente.imagemPerfil && cliente.imagemPerfil.length > 0 && (
                     <div className="container text-center mt-5">
                         {cliente.imagemPerfil.map((imagem, index) => (

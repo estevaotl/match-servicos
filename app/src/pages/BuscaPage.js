@@ -5,6 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../css/busca-page.css';
 
 const SearchPage = () => {
+    const [idCliente, setIdCliente] = useState('');
+    const [nomeCliente, setNomeCliente] = useState('');
+
     const [currentSearchQuery, setCurrentSearchQuery] = useState('');
     const [filteredWorkers, setFilteredWorkers] = useState([]);
     const [minAge, setMinAge] = useState(18);
@@ -39,6 +42,17 @@ const SearchPage = () => {
     };
 
     useEffect(() => {
+        // Verifica se o idCliente está salvo na sessionStorage
+        const idClienteStorage = sessionStorage.getItem('idCliente');
+        if (idClienteStorage) {
+            setIdCliente(idClienteStorage);
+        }
+
+        const nomeCliente = sessionStorage.getItem('nomeCliente');
+        if (nomeCliente) {
+            setNomeCliente(nomeCliente);
+        }
+
         // Obtain URL parameters when the page loads.
         const urlSearchParams = new URLSearchParams(window.location.search);
         const query = urlSearchParams.get('q');
@@ -52,6 +66,7 @@ const SearchPage = () => {
 
         // Fetch data when the page loads.
         fetchData();
+        
     }, []);
 
     const handleFilter = () => {
@@ -62,6 +77,12 @@ const SearchPage = () => {
         fetchData();
     };
 
+    const handleLogout = () => {
+        sessionStorage.removeItem('idCliente'); // Supondo que 'idCliente' é o item que você deseja limpar
+        sessionStorage.removeItem('nomeCliente');
+        setIdCliente(false); // Atualizar o estado para indicar que o cliente não está mais logado
+        setNomeCliente(false);
+    };
 
     return (
         <div className="App">
@@ -71,9 +92,31 @@ const SearchPage = () => {
                 </div>
                 <nav>
                     <ul className="list-unstyled">
-                        <li className="mb-2">
-                            <Link className="text-decoration-none text-dark d-block" to="/">Página Inicial | Match Serviços</Link>
-                        </li>
+                        {idCliente ? (
+                            <>
+                                <li className="mb-2">Olá, {nomeCliente}.</li>
+                                <li className="mb-2">
+                                    <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
+                                </li>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
+                                </li>
+                                <li className="mb-2">
+                                    <button onClick={handleLogout}>Logout</button>
+                                </li>
+                            </>
+
+                        ) : (
+                            // Renderiza o menu padrão quando idCliente não está presente
+                            <>
+                                <li className="mb-2">
+                                    <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
+                                </li>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </nav>
             </header>
