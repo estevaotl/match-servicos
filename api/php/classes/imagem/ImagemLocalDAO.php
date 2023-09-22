@@ -55,7 +55,7 @@
 			return false;*/
 		}
 
-		public function transformarEmObjeto($l, $completo = true){
+		public function transformarEmObjeto($l){
 			$imagemLocal = new ImagemLocal();
 			$imagemLocal->setId($l['id']);
 			$imagemLocal->setIdObjeto($l['idObjeto']);
@@ -65,7 +65,7 @@
 			return $imagemLocal;
 		}
 
-		public function obterComRestricoes($restricoes,$orderBy = 'principal desc, costas desc, ordem', $limit = null, $offset = 0, $completo = true){
+		public function obterComRestricoes($restricoes, $orderBy = 'id desc', $limit = null, $offset = 0, $completo = true){
 			$query = 'select * from imagem';
 			$where = ' where ativo = 1';
 			$parametros = array();
@@ -80,7 +80,11 @@
 				$parametros['nomeArquivo'] = $restricoes['nomeArquivo'];
 			}
 
-			$comando = $query.$where;
+			if(isset($restricoes['ehImagemPerfil']) && $restricoes['ehImagemPerfil'] == true){
+				$where .= ' and ehImagemPerfil = 1';
+			}
+
+			$comando = $query . $where;
 
 			return $this->bancoDados->obterObjetos($comando,array($this,'transformarEmObjeto'), $parametros, $orderBy, $limit, $offset, $completo);
 		}

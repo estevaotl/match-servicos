@@ -23,4 +23,12 @@
         private function validar($imagemLocal, &$erro){
             
         }
+
+        public function desativarComId($idImagemLocal){
+            return $this->dao->desativarComId($idImagemLocal);
+        }
+
+        public function obterComRestricoes($restricoes = array(), $orderBy = 'id desc', $limit = null, $offset = 0){
+            return $this->dao->obterComRestricoes($restricoes, $orderBy, $limit, $offset);
+        }
     }

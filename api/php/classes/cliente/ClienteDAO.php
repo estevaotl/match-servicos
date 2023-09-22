@@ -88,7 +88,7 @@
         }
 
         private function obterImagemPerfil($idCliente){
-            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 1";
+            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 1 AND ativo = 1";
             $parametros = array(
                 "idObjeto" => $idCliente
             );
@@ -97,7 +97,7 @@
         }
 
         private function obterImagens($idCliente){
-            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 0";
+            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 0 AND ativo = 1";
             $parametros = array(
                 "idObjeto" => $idCliente
             );

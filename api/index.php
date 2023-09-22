@@ -255,15 +255,26 @@ try {
         });
 
         $app->post('/uploadPerfil', function (Request $request, Response $response, $args) {
-            $uploadedFile = $request->getUploadedFiles()['image'];
+            try {
+                $uploadedFile = $request->getUploadedFiles()['image'];
 
-            $params = $request->getParsedBody();
+                $params = $request->getParsedBody();
 
-            ImagemFactory::saveImage($uploadedFile, $params['idCliente'], true);
+                ImagemFactory::saveImage($uploadedFile, $params['idCliente'], true);
 
-            // Use o resultado da função salvar como necessário
-            $response->getBody()->write("Imagem criada.");
-            return $response;
+                // Use o resultado da função salvar como necessário
+                $response->getBody()->write("Imagem criada.");
+                return $response;
+            } catch (\Throwable $th) {
+                $responseData = [
+                    'excecao' => $th->getMessage()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            }
         });
     });
 
