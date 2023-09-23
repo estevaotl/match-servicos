@@ -84,21 +84,21 @@ const HomePage = () => {
     };
 
     return (
-        <div>
-            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
+        <main>
+            <header className="header-home">
                 <div className="text-white title-logo">
                     Match Serviços
                 </div>
                 <nav>
-                    <ul className="list-unstyled">
-                        {idCliente ? (
+                    <ul className="user-options list-unstyled">
+                        {!idCliente ? (
                             <>
-                                <li className="mb-2">Olá, {nomeCliente}.</li>
+                                <li className="mb-2">Olá, teste.</li>
                                 <li className="mb-2">
                                     <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
                                 </li>
                                 <li className="mb-2">
-                                    <button onClick={handleLogout}>Logout</button>
+                                    <button className="button" onClick={handleLogout}>Logout</button>
                                 </li>
                             </>
 
@@ -126,7 +126,7 @@ const HomePage = () => {
                 <img src={icone_engenharia} alt="Logo" />
             </section>
 
-            <div className="d-flex">
+            <div className="search-box d-flex">
                 <input
                     type="text"
                     className="form-control me-2"
@@ -173,8 +173,8 @@ const HomePage = () => {
                 <CardAvalicoesSite imageSrc={icone_personagem} altText="Descrição da imagem" nome="Rosana" idade="40 anos" comentario="A loja é muito boa. Recomendo" />
             </article> */}
 
-            <FooterPage></FooterPage>
-        </div>
+            {/* <FooterPage></FooterPage> */}
+        </main>
     );
 };
 

@@ -7,7 +7,7 @@ import MinhaContaPage from './pages/MinhaContaPage';
 import BuscaPage from './pages/BuscaPage';
 import ProfilePage from './pages/ProfilePage';
 import ContatoPage from './pages/ContatoPage';
-
+import Footer from './componentes/Footer'
 import "./App.css";
 
 const App = () => {
@@ -23,6 +23,7 @@ const App = () => {
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/contato" element={<ContatoPage />} />
         </Routes>
+        <Footer/>
       </Router>
     </div>
   );

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import '../css/minha-conta-page.css';
-import FooterPage from '../componentes/FooterPage';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
 import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import CardPrestadorServicos from '../componentes/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
@@ -398,7 +397,6 @@ function App() {
                 </Tabs>
             </article>
 
-            <FooterPage></FooterPage>
         </div>
     );
 }

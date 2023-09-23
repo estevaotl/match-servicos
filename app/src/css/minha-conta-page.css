@@ -45,54 +45,6 @@
     height: 200px;
 }
 
-#footerMinhaContaPage {
-    /* topo | direita | inferior | esquerda */
-    margin: 80px 0 10px 0;
-    background-color: burlywood;
-    max-width: 1320px;
-    height: 200px;
-}
-
-#footerMinhaContaPage nav {
-    margin-inline-end: auto;
-    margin-top: -52px;
-}
-
-#footerMinhaContaPage nav ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    margin-top: 50px;
-    padding: 40px;
-}
-
-#footerMinhaContaPage nav ul li {
-    margin-bottom: 10px;
-}
-
-#footerMinhaContaPage ul li a {
-    text-decoration: none;
-    color: #000;
-    font-size: x-large;
-    margin-top: -50px;
-}
-
-#footerMinhaContaPage ul li a:hover {
-    text-decoration: underline;
-}
-
-#footerMinhaContaPage {
-    background-color: burlywood;
-    max-width: 1320px;
-    height: 200px;
-    display: flex;
-}
-
-#footerMinhaContaPage div {
-    text-align: center;
-    padding: 20px;
-}
-
 .button-container-article-login-page {
     display: flex;
     justify-content: center;

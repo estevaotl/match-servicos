@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import TrabalhadorCard from '../componentes/TrabalhadorCard';
-import FooterPage from '../componentes/FooterPage';
 import { Link, useNavigate } from 'react-router-dom';
 import '../css/busca-page.css';
 
@@ -76,7 +75,6 @@ const SearchPage = () => {
                 </div>
             </article>
 
-            <FooterPage></FooterPage>
         </div>
     );
 };

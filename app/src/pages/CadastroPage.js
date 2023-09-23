@@ -3,7 +3,6 @@ import InputMask from 'react-input-mask';
 import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import '../css/cadastro-page.css';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
-import FooterPage from '../componentes/FooterPage';
 
 const CadastroPage = () => {
     const [nome, setNome] = useState('');
@@ -362,7 +361,6 @@ const CadastroPage = () => {
                 </div>
             </article>
 
-            <FooterPage></FooterPage>
         </div>
     );
 };

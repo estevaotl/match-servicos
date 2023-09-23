@@ -22,15 +22,15 @@ const FooterPage = () => {
                 nome: nomeNewsletter
             })
         })
-        .then(response => response.json())
+            .then(response => response.json())
             .then(data => {
-             // Aqui você pode lidar com a resposta da API
-            console.log(data);
-        })
-        .catch(error => {
-            // Aqui você pode lidar com erros de requisição
-            console.error(error);
-        });
+                // Aqui você pode lidar com a resposta da API
+                console.log(data);
+            })
+            .catch(error => {
+                // Aqui você pode lidar com erros de requisição
+                console.error(error);
+            });
     };
 
     return (
@@ -41,7 +41,7 @@ const FooterPage = () => {
                         <Link to="/contato">Contato</Link>
                     </li>
                     <li>
-                        <a href='https://web.whatsapp.com/send?phone=+5522997249606&text=Ol%C3%A1%2C%20gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20o%20site!' target='_blank'>(22) 99724-9606</a>
+                        <a href='https://web.whatsapp.com/send?phone=+5522997249606&text=Ol%C3%A1%2C%20gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20o%20site!' target='_blank' rel="noreferrer">(22) 99724-9606</a>
                     </li>
                 </ul>
             </nav>
@@ -50,9 +50,9 @@ const FooterPage = () => {
                 <form onSubmit={handleSubmitNewsletter}>
                     <div className="newsletter-container">
                         <p className="newsletter-text">Não perca novidades</p>
-                        <div>
+                        <div className='newsletter-form' >
                             <input type="text" id="emailNewsletter" value={emailNewsletter} onChange={(e) => setEmailNewsletter(e.target.value)} />
-                            <input type="text" id="nomeNewsletter" value={nomeNewsletter} onChange={(e) => setNomeNewsletter(e.target.value)} />                            
+                            <input type="text" id="nomeNewsletter" value={nomeNewsletter} onChange={(e) => setNomeNewsletter(e.target.value)} />
                             <button type="submit" className="btn btn-success">Subscribe</button>
                         </div>
                     </div>

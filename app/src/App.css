@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: red;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -38,6 +38,9 @@
 }
 
 .container {
-  margin-top: 60px;
-  background-color: silver;
+  display:flex;
+  flex-direction: column;
+  font-family: Roboto,sans-serif;
+  margin-top: 10px;
+  margin-bottom: 0px;
 }
