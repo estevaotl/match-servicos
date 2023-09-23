@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './style.css';
+import {FaWhatsapp} from 'react-icons/fa'
 import Input from '../Input';
+import './style.css';
 
 const Footer = () => {
   const [emailNewsletter, setEmailNewsletter] = useState('');
@@ -42,6 +43,7 @@ const Footer = () => {
             <Link className='contact' to="/contato">Contato</Link>
           </li>
           <li>
+            <FaWhatsapp size={24}/>
             <a href='https://web.whatsapp.com/send?phone=+5522997249606&text=Ol%C3%A1%2C%20gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20o%20site!' target='_blank' rel="noreferrer">(22) 99724-9606</a>
           </li>
           <li>

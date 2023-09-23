@@ -24,6 +24,8 @@ footer nav ul {
 }
 
 footer nav ul li {
+  display: flex;
+  align-items:center;
 }
 footer nav ul li .contact {
   cursor: pointer;
