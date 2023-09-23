@@ -76,7 +76,6 @@ const LoginPage = () => {
                 </div>
             </article>
 
-            <FooterPage></FooterPage>
         </div>
     );
 };

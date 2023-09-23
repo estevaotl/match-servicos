@@ -87,9 +87,9 @@ const HomePage = () => {
                 </div>
                 <nav>
                     <ul className="user-options list-unstyled">
-                        {!idCliente ? (
+                        {idCliente ? (
                             <>
-                                <li className="mb-2">Olá, teste.</li>
+                                <li className="mb-2">Olá, {nomeCliente}.</li>
                                 <li className="mb-2">
                                     <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
                                 </li>
@@ -102,7 +102,7 @@ const HomePage = () => {
                             // Renderiza o menu padrão quando idCliente não está presente
                             <>
                                 <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
+                                    <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se |</Link>
                                 </li>
                                 <li className="mb-2">
                                     <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
