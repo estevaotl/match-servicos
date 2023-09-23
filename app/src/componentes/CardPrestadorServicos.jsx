@@ -1,7 +1,8 @@
 import React from 'react';
 import '../css/card.css'; // Caminho relativo para o arquivo card.css
+import { Link } from 'react-router-dom';
 
-const CardPrestadorServicos = ({ imageSrc, altText, profissao, idade, endereco, media_avaliacao, key }) => {
+const CardPrestadorServicos = ({ imageSrc, altText, profissao, idade, endereco, media_avaliacao, key, id }) => {
     return (
         <div className="card">
             <div key={key} className="ball-image mx-auto">
@@ -16,7 +17,9 @@ const CardPrestadorServicos = ({ imageSrc, altText, profissao, idade, endereco, 
             <p>{endereco}</p>
             <p>Média Avaliação: {media_avaliacao}</p>
 
-            <button className="btn btn-success">Ver Perfil</button>
+            <Link to={`/profile/${id}`} className="btn btn-primary">
+                Ver Perfil
+            </Link>
         </div>
     );
 };

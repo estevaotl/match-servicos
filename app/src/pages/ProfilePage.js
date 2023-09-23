@@ -2,18 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import CardPrestadorServicos from '../componentes/CardPrestadorServicos';
 import '../css/profile-page.css';
+import 'bootstrap/dist/css/bootstrap.css';
 
 const Profile = () => {
     const { id } = useParams();
     const [profileData, setProfileData] = useState(null);
+    const [idCliente, setIdCliente] = useState('');
+    const [nomeCliente, setNomeCliente] = useState('');
 
     useEffect(() => {
+        // Verifica se o idCliente está salvo na sessionStorage
+        const idClienteStorage = sessionStorage.getItem('idCliente');
+        if (idClienteStorage) {
+            setIdCliente(idClienteStorage);
+        }
+
+        const nomeCliente = sessionStorage.getItem('nomeCliente');
+        if (nomeCliente) {
+            setNomeCliente(nomeCliente);
+        }
+
         // Faz a requisição à API usando o ID fornecido
         fetch(`http://localhost/match-servicos/api/clientes/obter/${id}`)
             .then((response) => response.json())
             .then((data) => setProfileData(data.cliente))
             .catch((error) => console.error('Erro ao obter dados do perfil:', error));
     }, [id]);
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('idCliente'); // Supondo que 'idCliente' é o item que você deseja limpar
+        sessionStorage.removeItem('nomeCliente');
+        setIdCliente(false); // Atualizar o estado para indicar que o cliente não está mais logado
+        setNomeCliente(false);
+    };
 
     return (
         <div className="container">
@@ -23,12 +44,34 @@ const Profile = () => {
                 </div>
                 <nav>
                     <ul className="list-unstyled">
-                        <li className="mb-2">
-                            <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial | Match Serviços</Link>
-                        </li>
-                        <li className="mb-2">
-                            <Link to="/cadastrar" className="text-decoration-none text-dark d-block">Cadastrar-se</Link>
-                        </li>
+                        {idCliente ? (
+                            <>
+                                <li className="mb-2">Olá, {nomeCliente}.</li>
+                                <li className="mb-2">
+                                    <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
+                                </li>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
+                                </li>
+                                <li className="mb-2">
+                                    <button onClick={handleLogout}>Logout</button>
+                                </li>
+                            </>
+
+                        ) : (
+                            // Renderiza o menu padrão quando idCliente não está presente
+                            <>
+                                <li className="mb-2">
+                                    <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
+                                </li>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
+                                </li>
+                                <li className="mb-2">
+                                    <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </nav>
             </header>

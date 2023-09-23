@@ -37,4 +37,8 @@
         public function obterComId($idTrabalhador, $completo = true){
             return $this->service->obterComId($idTrabalhador, $completo);
         }
+
+        public function modificarStatus($idOrdemServico, $statusNovo){
+            return $this->service->modificarStatus($idOrdemServico, $statusNovo);
+        }
     }

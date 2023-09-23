@@ -22,14 +22,21 @@
                 $imagemLocal->setNomeArquivo($fileName);
                 $imagemLocal->setIdObjeto($idCliente);
 
-                if($ehImagemPerfil)
+                $imagemLocalController = new ImagemLocalController();
+                if($ehImagemPerfil){
+                    $imagemBD = $imagemLocalController->obterComRestricoes(array("idObjeto" => $idCliente, "ehImagemPerfil" => true), "id desc" , 1, 0);
+                    if(count($imagemBD) > 0 && $imagemBD[0] instanceof ImagemLocal){
+                        $imagemLocalController->desativarComId($imagemBD[0]->getId());
+                    }
+
                     $imagemLocal->setEhImagemPerfil(true);
+                }
 
                 $imagem = $imagemLocal->getImagem();
 
                 $nome_novo_arquivo = self::salvarImagemDaMemoria($imagem, $targetPath, $fileType);
                 if ($nome_novo_arquivo) {
-                    (new ImagemLocalController())->salvar($imagemLocal);
+                    $imagemLocalController->salvar($imagemLocal);
                     return $targetPath;
                 }
 

@@ -88,7 +88,7 @@
         }
 
         private function obterImagemPerfil($idCliente){
-            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 1";
+            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 1 AND ativo = 1";
             $parametros = array(
                 "idObjeto" => $idCliente
             );
@@ -97,7 +97,7 @@
         }
 
         private function obterImagens($idCliente){
-            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 0";
+            $comando = "SELECT * FROM imagem WHERE idObjeto = :idObjeto AND ehImagemPerfil = 0 AND ativo = 1";
             $parametros = array(
                 "idObjeto" => $idCliente
             );
@@ -107,7 +107,7 @@
 
         public function adicionarDadosEspecificos(Cliente $cliente){
             if ($cliente->getDadosEspecificos() instanceof DadosClienteFisico) {
-                $comando = "INSERT INTO pessoafisica (idCliente, cpf, dataNascimento) VALUES (:idCliente, :cpf, :dataNascimento)";
+                $comando = "INSERT INTO pessoafisica (idCliente, cpf, dataNascimento, idade) VALUES (:idCliente, :cpf, :dataNascimento, :idade)";
                 $parametros = $this->parametrosClienteFisico($cliente);
             } elseif($cliente->getDadosEspecificos() instanceof DadosClienteJuridico) {
                 $comando = "INSERT INTO pessoafisica (idCliente, cnpj, inscricaoEstadual, razaoSocial) VALUES (:idCliente, :cnpj, :inscricaoEstadual, :razaoSocial)";
@@ -136,7 +136,8 @@
             $parametros = array(
                 "idCliente" => $cliente->getId(),
                 "cpf" => $cliente->getDadosEspecificos()->getCpf(),
-                "dataNascimento" => $cliente->getDadosEspecificos()->getDataNascimento()
+                "dataNascimento" => $cliente->getDadosEspecificos()->getDataNascimento(),
+                "idade" => $cliente->getDadosEspecificos()->getIdade()
             );
 
             return $parametros;
@@ -207,6 +208,12 @@
                 $join .= " JOIN ordem_servico ON ordem_servico.idTrabalhador = cliente.id ";
                 $orderBy = " qtdOrdensServico DESC ";
                 $parametros['ordemServicoAberta'] = StatusOrdemServico::EM_ABERTO;
+            }
+
+            if(isset($restricoes['idade'])){
+                $where .= " AND pessoafisica.idade >= :idade ";
+                $join .= " JOIN pessoafisica ON pessoafisica.idCliente = cliente.id ";
+                $parametros['idade'] = $restricoes['idade'];
             }
 
             $comando = $comando . $from . $join . $where . $groupBy;

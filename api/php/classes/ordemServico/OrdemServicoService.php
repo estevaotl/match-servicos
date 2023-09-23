@@ -37,4 +37,8 @@
         public function obterComId($idTrabalhador, $completo = true){
             return $this->dao->obterComId($idTrabalhador, $completo);
         }
+
+        public function modificarStatus($idOrdemServico, $statusNovo){
+            return $this->dao->modificarStatus($idOrdemServico, $statusNovo);
+        }
     }
