@@ -1,4 +1,6 @@
 <?php
+    require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+
     class OrdemServicoService{
         private $dao = null;
 
@@ -39,6 +41,14 @@
         }
 
         public function modificarStatus($idOrdemServico, $statusNovo){
+            $ordemServico = $this->obterComId($idOrdemServico)[0];
+            $cliente = (new ClienteController())->obterComId($ordemServico['idSolicitante']);
+            (new EmailSender())->enviarEmail($cliente->getEmail(), "Email Transacional", "Bem Vindo");
+
             return $this->dao->modificarStatus($idOrdemServico, $statusNovo);
+        }
+
+        public function atualizarValor($idOrdemServico, $valor){
+            return $this->dao->atualizarValor($idOrdemServico, $valor);
         }
     }

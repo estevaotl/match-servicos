@@ -41,4 +41,8 @@
         public function modificarStatus($idOrdemServico, $statusNovo){
             return $this->service->modificarStatus($idOrdemServico, $statusNovo);
         }
+
+        public function atualizarValor($idOrdemServico, $valor){
+            return $this->service->atualizarValor($idOrdemServico, $valor);
+        }
     }

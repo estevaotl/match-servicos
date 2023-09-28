@@ -6,6 +6,7 @@ header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
 
+use PHPMailer\PHPMailer\PHPMailer;
 use Slim\Factory\AppFactory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -329,6 +330,68 @@ try {
 
                 $responseData = [
                     'id' => $data['ordemId'],
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            } catch (\Throwable $th) {
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'excecao' => $th->getMessage()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            }
+        });
+
+        $app->post('/atualizarValor', function (Request $request, Response $response, $args) {
+            try{
+                // Obter o corpo da requisição
+                $params = $request->getParsedBody();
+
+                // Cria uma instância da classe ClienteController
+                $ordemServicoController = new OrdemServicoController();
+
+                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                $resultado = $ordemServicoController->atualizarValor($params['ordemId'], $params['valor']);
+
+                $responseData = [
+                    'resposta' => $resultado
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            } catch (\Throwable $th) {
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'excecao' => $th->getMessage()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            }
+        });
+    });
+
+    $app->group('/match-servicos/api/contato', function ($app) {
+        $app->post('/enviar', function (Request $request, Response $response, $args) {
+            try{
+                $body = $request->getBody()->getContents();
+                $data = json_decode($body, true);
+
+                $resultado = (new EmailSender())->enviarEmail("estevaotlnf@gmail.com", "Duvida vinda do site do cliente " . $data['name'], $data['message']);
+
+                $responseData = [
+                    'resposta' => $resultado
                 ];
 
                 // Responder com JSON

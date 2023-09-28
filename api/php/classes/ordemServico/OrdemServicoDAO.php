@@ -116,10 +116,10 @@ class OrdemServicoDAO
         return $this->bancoDados->executar($comando, $parametros);
     }
 
-    public function obterComId($idTrabalhador, $completo = true){
-        $comando = "SELECT * FROM ordem_servico WHERE idTrabalhador = :idTrabalhador AND ativo = 1";
+    public function obterComId($idOrdemServico, $completo = true){
+        $comando = "SELECT * FROM ordem_servico WHERE id = :idOrdemServico AND ativo = 1";
         $parametros = array(
-            "idTrabalhador" => $idTrabalhador
+            "idOrdemServico" => $idOrdemServico
         );
 
         return $this->bancoDados->consultar($comando, $parametros, true);
@@ -130,6 +130,16 @@ class OrdemServicoDAO
         $parametros = array(
             "id"     => $idOrdemServico,
             "status" => $statusNovo
+        );
+
+        return $this->bancoDados->executar($comando, $parametros);
+    }
+
+    public function atualizarValor($idOrdemServico, $valor){
+        $comando = "UPDATE ordem_servico SET valor = :valor WHERE id = :id";
+        $parametros = array(
+            "id"     => $idOrdemServico,
+            "valor" => $valor
         );
 
         return $this->bancoDados->executar($comando, $parametros);

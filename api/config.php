@@ -60,5 +60,6 @@
         'EnderecoService' => '/endereco/EnderecoService.php',
         'EnderecoDAO' => '/endereco/EnderecoDAO.php',
         'ControllerException' => '/exception/ControllerException.php',
+        'EmailSender' => '/phpmailer/PhpMailer.php',
         // Adicione outros mapeamentos de classes aqui
     );

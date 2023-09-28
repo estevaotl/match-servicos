@@ -21,6 +21,7 @@ function App() {
     const [cliente, setCliente] = useState('');
     const [ordensDeServico, setOrdensDeServico] = useState(''); // Estado para armazenar as ordens de serviço
     const [message, setMessage] = useState('');
+    const [valorOrdem, setValorOrdem] = useState('');
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -162,7 +163,8 @@ function App() {
             // Configurar os dados a serem enviados no corpo da solicitação
             const data = {
                 ordemId: ordemId,
-                novoStatus: novoStatus
+                novoStatus: novoStatus,
+                valor: novoStatus === '2' ? valorOrdem : null,
             };
 
             // Configurar as opções da solicitação
@@ -235,6 +237,51 @@ function App() {
         }
     };
 
+    const enviarValorParaAPI = async (ordemId, valor) => {
+        try {
+            const formData = new FormData();
+            formData.append('ordemId', ordemId);
+            formData.append('valor', valor);
+
+            fetch('http://localhost/match-servicos/api/ordemServico/atualizarValor', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na requisição');
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    // Definir a mensagem de erro em caso de erro na solicitação
+                    setMessage('Sucesso ao enviar valor da ordem de serviço');
+
+                    // Limpar a mensagem de erro após 3 segundos (3000 milissegundos)
+                    setTimeout(() => {
+                        setMessage('');
+                    }, 3000);
+                })
+                .catch(error => {
+                    // Definir a mensagem de erro em caso de erro na solicitação
+                    setMessage('Erro ao enviar valor da ordem de serviço: ' + error.message);
+
+                    // Limpar a mensagem de erro após 3 segundos (3000 milissegundos)
+                    setTimeout(() => {
+                        setMessage('');
+                    }, 3000);
+                });
+        } catch (error) {
+            // Definir a mensagem de erro em caso de erro na solicitação
+            setMessage('Erro ao enviar valor da ordem de serviço: ' + error.message);
+
+            // Limpar a mensagem de erro após 3 segundos (3000 milissegundos)
+            setTimeout(() => {
+                setMessage('');
+            }, 3000);
+        }
+    };
 
     return (
         <div className="App">
@@ -452,6 +499,7 @@ function App() {
                                                 <h5 className="card-title">ID da Ordem: {ordem.id}</h5>
                                                 <p className="card-text">Id Solicitante: {ordem.idSolicitante}</p>
                                                 <p className="card-text">Data Criação: {ordem.dataCriacao}</p>
+                                                <p className="card-text">Valor: {ordem.valor}</p>
                                                 <div className="form-group">
                                                     <label>Status:</label>
                                                     <select
@@ -465,6 +513,27 @@ function App() {
                                                         <option value="3">Cancelado</option>
                                                     </select>
                                                 </div>
+
+                                                {ordem.status == 2 && ordem.valor == null && (
+                                                    <div className="mb-3">
+                                                        <label>Valor:</label>
+                                                        <div className="input-group">
+                                                            <input
+                                                                type="number"
+                                                                className="form-control"
+                                                                value={valorOrdem}
+                                                                onChange={(e) => setValorOrdem(e.target.value)}
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-primary"
+                                                                onClick={() => enviarValorParaAPI(ordem.id, valorOrdem)}
+                                                            >
+                                                                Enviar
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
 
                                                 {/* Renderizar a mensagem de erro ou sucesso */}
                                                 <div className="message">
