@@ -3,7 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import '../css/minha-conta-page.css';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
-import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
+import {  useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import CardPrestadorServicos from '../componentes/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
 import InputMask from 'react-input-mask';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importe o CSS do Bootstrap
@@ -12,8 +12,6 @@ function App() {
     const [email, setEmail] = useState('');
     const [file, setFile] = useState(null);
     const [filePerfil, setFilePerfil] = useState(null);
-    const [idCliente, setIdCliente] = useState('');
-    const [nomeCliente, setNomeCliente] = useState('');
     const [nome, setNome] = useState('');
     const [whatsapp, setWhatsapp] = useState('');
     const [genero, setGenero] = useState('');
@@ -89,15 +87,6 @@ function App() {
             });
     };
 
-    const handleLogout = () => {
-        sessionStorage.removeItem('idCliente'); // Supondo que 'idCliente' é o item que você deseja limpar
-        sessionStorage.removeItem('nomeCliente');
-        setIdCliente(false); // Atualizar o estado para indicar que o cliente não está mais logado
-        setNomeCliente(false);
-
-        navigate("/");
-    };
-
     const handleSubmitDados = async () => {
         const idCliente = sessionStorage.getItem('idCliente');
 
@@ -129,10 +118,6 @@ function App() {
 
     useEffect(() => {
         const idCliente = sessionStorage.getItem('idCliente');
-        const nomeCliente = sessionStorage.getItem('nomeCliente');
-        if (nomeCliente) {
-            setNomeCliente(nomeCliente);
-        }
 
         fetch(`http://localhost/match-servicos/api/clientes/obter/${idCliente}`, {
             method: 'GET', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
@@ -253,23 +238,6 @@ function App() {
 
     return (
         <div className="App">
-            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
-                <div className="text-white title-logo">
-                    Match Serviços
-                </div>
-                <nav>
-                    <ul className="list-unstyled">
-                        <li className="mb-2">Olá, {nomeCliente}.</li>
-                        <li className="mb-2">
-                            <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
-                        </li>
-                        <li className="mb-2">
-                            <button onClick={handleLogout}>Logout</button>
-                        </li>
-                    </ul>
-                </nav>
-            </header>
-
             <article id="articleMinhaContaPage">
                 <h1>Minha Conta</h1>
                 {cliente.imagemPerfil && cliente.imagemPerfil.length > 0 && (

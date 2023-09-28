@@ -183,22 +183,6 @@ const CadastroPage = () => {
 
     return (
         <div>
-            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
-                <div className="text-white title-logo">
-                    Match Serviços
-                </div>
-                <nav>
-                    <ul className="list-unstyled">
-                        <li className="mb-2">
-                            <Link className="text-decoration-none text-dark d-block" to="/">Página Inicial | Match Serviços</Link>
-                        </li>
-                        <li className="mb-2">
-                            <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
-                        </li>
-                    </ul>
-                </nav>
-            </header>
-
             <article id="articleCadastroPage">
                 <div>
                     <h1>CADASTRO</h1> <br />

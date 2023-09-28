@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import FooterPage from '../componentes/FooterPage';
-import { Link } from 'react-router-dom'; // Importe o useNavigate
 
 const ContatoPage = () => {
-    const [idCliente, setIdCliente] = useState('');
-    const [nomeCliente, setNomeCliente] = useState('');
 
     const [formData, setFormData] = useState({
         name: '',
@@ -28,65 +25,8 @@ const ContatoPage = () => {
         console.log('Enviando e-mail com os seguintes dados:', formData);
     };
 
-    useEffect(() => {
-        // Verifica se o idCliente está salvo na sessionStorage
-        const idClienteStorage = sessionStorage.getItem('idCliente');
-        if (idClienteStorage) {
-            setIdCliente(idClienteStorage);
-        }
-
-        const nomeCliente = sessionStorage.getItem('nomeCliente');
-        if (nomeCliente) {
-            setNomeCliente(nomeCliente);
-        }
-    }, []);
-
-    const handleLogout = () => {
-        sessionStorage.removeItem('idCliente'); // Supondo que 'idCliente' é o item que você deseja limpar
-        sessionStorage.removeItem('nomeCliente');
-        setIdCliente(false); // Atualizar o estado para indicar que o cliente não está mais logado
-        setNomeCliente(false);
-    };
-
     return (
         <div className="App">
-            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
-                <div className="text-white title-logo">
-                    Match Serviços
-                </div>
-                <nav>
-                    <ul className="list-unstyled">
-                        {idCliente ? (
-                            <>
-                                <li className="mb-2">Olá, {nomeCliente}.</li>
-                                <li className="mb-2">
-                                    <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <button onClick={handleLogout}>Logout</button>
-                                </li>
-                            </>
-
-                        ) : (
-                            // Renderiza o menu padrão quando idCliente não está presente
-                            <>
-                                <li className="mb-2">
-                                    <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
-                                </li>
-                            </>
-                        )}
-                    </ul>
-                </nav>
-            </header>
 
             <article id="articleMinhaContaPage">
 

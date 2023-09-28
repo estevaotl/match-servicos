@@ -6,39 +6,6 @@
     text-align: -webkit-center;
 }
 
-#headerMinhaContaPage nav {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -185px;
-}
-
-#headerMinhaContaPage nav ul {
-    list-style: none;
-    display: flex;
-    align-items: end;
-    flex-direction: column;
-}
-
-#headerMinhaContaPage ul li {
-    margin-right: 10px;
-    text-transform: uppercase;
-}
-
-#headerMinhaContaPage ul li a {
-    text-decoration: none;
-    color: #000;
-    font-size: xxx-large;
-    margin-top: -50px;
-}
-
-#headerMinhaContaPage ul li a:hover {
-    text-decoration: underline;
-}
-
-#headerMinhaContaPage img {
-    width: 200px;
-}
-
 #articleHomePage {
     background-color: burlywood;
     max-width: 1320px;
@@ -63,23 +30,6 @@
 
 .newsletter-container p {
     font-size: x-large;
-}
-
-.header-background {
-    background-color: burlywood;
-    /* Cor de fundo desejada */
-    color: #fff;
-    /* Cor do texto */
-    font-size: 24px;
-    /* Tamanho da fonte desejado */
-    text-align: center;
-    /* Centraliza o texto horizontalmente */
-    padding: 10px;
-}
-
-.title-logo{
-    font-family: fantasy;
-    font-size: 50px;
 }
 
 /* Define uma classe CSS para a imagem em formato de bola */

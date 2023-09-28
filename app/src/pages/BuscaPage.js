@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import TrabalhadorCard from '../componentes/TrabalhadorCard';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import '../css/busca-page.css';
 
 const SearchPage = () => {
-    const [idCliente, setIdCliente] = useState('');
-    const [nomeCliente, setNomeCliente] = useState('');
+
 
     const [currentSearchQuery, setCurrentSearchQuery] = useState('');
     const [filteredWorkers, setFilteredWorkers] = useState([]);
@@ -41,16 +40,6 @@ const SearchPage = () => {
     };
 
     useEffect(() => {
-        // Verifica se o idCliente está salvo na sessionStorage
-        const idClienteStorage = sessionStorage.getItem('idCliente');
-        if (idClienteStorage) {
-            setIdCliente(idClienteStorage);
-        }
-
-        const nomeCliente = sessionStorage.getItem('nomeCliente');
-        if (nomeCliente) {
-            setNomeCliente(nomeCliente);
-        }
 
         // Obtain URL parameters when the page loads.
         const urlSearchParams = new URLSearchParams(window.location.search);
@@ -76,52 +65,10 @@ const SearchPage = () => {
         fetchData();
     };
 
-    const handleLogout = () => {
-        sessionStorage.removeItem('idCliente'); // Supondo que 'idCliente' é o item que você deseja limpar
-        sessionStorage.removeItem('nomeCliente');
-        setIdCliente(false); // Atualizar o estado para indicar que o cliente não está mais logado
-        setNomeCliente(false);
-    };
+
 
     return (
         <div className="App">
-            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
-                <div className="text-white title-logo">
-                    Match Serviços
-                </div>
-                <nav>
-                    <ul className="list-unstyled">
-                        {idCliente ? (
-                            <>
-                                <li className="mb-2">Olá, {nomeCliente}.</li>
-                                <li className="mb-2">
-                                    <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <button onClick={handleLogout}>Logout</button>
-                                </li>
-                            </>
-
-                        ) : (
-                            // Renderiza o menu padrão quando idCliente não está presente
-                            <>
-                                <li className="mb-2">
-                                    <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
-                                </li>
-                            </>
-                        )}
-                    </ul>
-                </nav>
-            </header>
 
             <article id="articleMinhaContaPage">
                 <div className="d-flex">

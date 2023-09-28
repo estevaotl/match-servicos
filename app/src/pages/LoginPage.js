@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import '../css/login-page.css';
-import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
-import FooterPage from '../componentes/FooterPage';
-import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
+import {  useNavigate } from 'react-router-dom'; // Importe o useNavigate
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -40,21 +38,6 @@ const LoginPage = () => {
 
     return (
         <div>
-            <header className="mt-4 header-background d-flex justify-content-between align-items-center">
-                <div className="text-white title-logo">
-                    Match Serviços
-                </div>
-                <nav>
-                    <ul className="list-unstyled">
-                        <li className="mb-2">
-                            <Link className="text-decoration-none text-dark d-block" to="/">Página Inicial | Match Serviços</Link>
-                        </li>
-                        <li className="mb-2">
-                            <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se</Link>
-                        </li>
-                    </ul>
-                </nav>
-            </header>
 
             <article id="articleLoginPage">
                 <div>

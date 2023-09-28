@@ -8,8 +8,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Carousel from 'react-bootstrap/Carousel';
 
 const HomePage = () => {
-    const [idCliente, setIdCliente] = useState('');
-    const [nomeCliente, setNomeCliente] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(0); // Página inicial em 0
@@ -23,26 +21,9 @@ const HomePage = () => {
     const visibleData = prestadoresServicos.slice(startIdx, endIdx);
 
     useEffect(() => {
-        // Verifica se o idCliente está salvo na sessionStorage
-        const idClienteStorage = sessionStorage.getItem('idCliente');
-        if (idClienteStorage) {
-            setIdCliente(idClienteStorage);
-        }
-
-        const nomeCliente = sessionStorage.getItem('nomeCliente');
-        if (nomeCliente) {
-            setNomeCliente(nomeCliente);
-        }
-
         fetchPrestadoresServicos();
     }, []);
 
-    const handleLogout = () => {
-        sessionStorage.removeItem('idCliente'); // Supondo que 'idCliente' é o item que você deseja limpar
-        sessionStorage.removeItem('nomeCliente');
-        setIdCliente(false); // Atualizar o estado para indicar que o cliente não está mais logado
-        setNomeCliente(false);
-    };
 
     const handleSearch = () => {
         if (searchValue) {
@@ -81,38 +62,6 @@ const HomePage = () => {
 
     return (
         <main>
-            <header className="header-home">
-                <div className="text-white title-logo">
-                    Match Serviços
-                </div>
-                <nav>
-                    <ul className="user-options list-unstyled">
-                        {idCliente ? (
-                            <>
-                                <li className="mb-2">Olá, {nomeCliente}.</li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <button className="button" onClick={handleLogout}>Logout</button>
-                                </li>
-                            </>
-
-                        ) : (
-                            // Renderiza o menu padrão quando idCliente não está presente
-                            <>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/cadastrar">Cadastrar-se |</Link>
-                                </li>
-                                <li className="mb-2">
-                                    <Link className="text-decoration-none text-dark d-block" to="/login">Entrar na sua conta</Link>
-                                </li>
-                            </>
-                        )}
-                    </ul>
-                </nav>
-            </header>
-
             <section id="sectionHomePage">
                 <span>
                     BEM VINDO AO MATCH SERVIÇOS. <br />

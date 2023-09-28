@@ -9,11 +9,13 @@ import ProfilePage from './pages/ProfilePage';
 import ContatoPage from './pages/ContatoPage';
 import Footer from './componentes/Footer'
 import "./App.css";
+import Header from './componentes/Header';
 
 const App = () => {
   return (
     <div className="container">
       <Router>
+        <Header/>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/cadastrar" element={<CadastroPage />} />
