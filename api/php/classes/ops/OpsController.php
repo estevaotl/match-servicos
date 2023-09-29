@@ -1,5 +1,5 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+	require_once($_SERVER['DOCUMENT_ROOT'] . "/config.php");
 
 	class OpsController{
 		private $service = null;
@@ -26,4 +26,3 @@
 			return $this->service->salvar($ops);
 		}
 	}
-?>

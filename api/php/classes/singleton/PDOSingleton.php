@@ -1,25 +1,27 @@
 <?php
-    require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/config.php");
 
-    abstract class PDOSingleton {
-        private static $pdo;
-        
-        // Instancia apenas uma vez
-        public static function get() {
-            if (!isset(self::$pdo)) {
-                self::$pdo = self::create();
-                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            }
+abstract class PDOSingleton
+{
+    private static $pdo;
 
-            return self::$pdo;
+    // Instancia apenas uma vez
+    public static function get()
+    {
+        if (!isset(self::$pdo)) {
+            self::$pdo = self::create();
+            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
 
-        // Cria o objeto PDO
-        private static function create() {
-            $dsn = "mysql:dbname=match_servicos;host=localhost;charset=utf8mb4";
-            $usuario = "root";
-            $senha = "";
-
-            return new PDO($dsn, $usuario, $senha);
-        }
+        return self::$pdo;
     }
+
+    // Cria o objeto PDO
+    private static function create()
+    {
+        $dsn = "mysql:dbname=match_servicos;host=host.docker.internal;charset=utf8mb4";
+        $usuario = "root";
+        $senha = "root";
+        return new PDO($dsn, $usuario, $senha);
+    }
+}

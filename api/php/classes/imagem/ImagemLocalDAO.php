@@ -1,5 +1,5 @@
 <?php
-	require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+	require_once($_SERVER['DOCUMENT_ROOT'] . "/config.php");
 
 	class ImagemLocalDAO{
 		private $bancoDados = null;
@@ -124,4 +124,3 @@
 			return $this->bancoDados->excluir('imagem', $id);
 		}
 	}
-?>
