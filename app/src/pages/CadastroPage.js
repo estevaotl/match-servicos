@@ -3,6 +3,7 @@ import InputMask from 'react-input-mask';
 import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import '../css/cadastro-page.css';
 import logo from '../imagens/logo.png'; // Importe o caminho da imagem corretamente
+import { useAuth } from '../contexts/Auth';
 
 const CadastroPage = () => {
     const [nome, setNome] = useState('');
@@ -27,6 +28,7 @@ const CadastroPage = () => {
     const [uf, setUf] = useState('');
     const [editandoCep, setEditandoCep] = useState(false);
     const [mostrarCamposEndereco, setMostrarCamposEndereco] = useState(false);
+    const { saveUserSate } = useAuth();
 
     const handleChangeDocumento = (value) => {
         // Remove caracteres não numéricos
@@ -84,8 +86,7 @@ const CadastroPage = () => {
                 if (data.excecao) {
                     setErrors(data.excecao.split('\n'));
                 } else {
-                    sessionStorage.setItem('idCliente', data['id']);
-                    sessionStorage.setItem('nomeCliente', data['nome']);
+                    saveUserSate(data['id'], data['nome'])
                     navigate('/');
                 }
             })

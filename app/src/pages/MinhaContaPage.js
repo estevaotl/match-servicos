@@ -7,6 +7,7 @@ import {  useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import CardPrestadorServicos from '../componentes/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
 import InputMask from 'react-input-mask';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importe o CSS do Bootstrap
+import { useAuth } from '../contexts/Auth';
 
 function App() {
     const [email, setEmail] = useState('');
@@ -22,6 +23,7 @@ function App() {
     const [ordensDeServico, setOrdensDeServico] = useState(''); // Estado para armazenar as ordens de serviço
     const [message, setMessage] = useState('');
     const [valorOrdem, setValorOrdem] = useState('');
+    const { idCliente } = useAuth();
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -39,8 +41,6 @@ function App() {
     const navigate = useNavigate();
 
     const handleSubmitImage = async () => {
-        const idCliente = sessionStorage.getItem('idCliente');
-
         const formData = new FormData();
         formData.append('image', file);
         formData.append('idCliente', idCliente);
@@ -64,7 +64,6 @@ function App() {
     };
 
     const handleSubmitImagePerfil = async () => {
-        const idCliente = sessionStorage.getItem('idCliente');
 
         const formData = new FormData();
         formData.append('image', filePerfil);
@@ -89,7 +88,6 @@ function App() {
     };
 
     const handleSubmitDados = async () => {
-        const idCliente = sessionStorage.getItem('idCliente');
 
         fetch('http://localhost/match-servicos/api/clientes/atualizar', {
             method: 'POST',
@@ -118,8 +116,6 @@ function App() {
     };
 
     useEffect(() => {
-        const idCliente = sessionStorage.getItem('idCliente');
-
         fetch(`http://localhost/match-servicos/api/clientes/obter/${idCliente}`, {
             method: 'GET', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
             headers: {
@@ -140,11 +136,10 @@ function App() {
             .catch(error => {
                 navigate('/'); // Use navigate('/') para redirecionar para a página inicial
             });
-    }, []);
+    }, [ idCliente]);
 
     // Função para buscar ordens de serviço da API
     const fetchOrdensDeServico = async () => {
-        const idCliente = sessionStorage.getItem('idCliente');
 
         try {
             const response = await fetch(`http://localhost/match-servicos/api/ordemServico/obter/${idCliente}`);

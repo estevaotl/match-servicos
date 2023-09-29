@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import '../css/login-page.css';
 import {  useNavigate } from 'react-router-dom'; // Importe o useNavigate
+import { useAuth } from '../contexts/Auth';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const { saveUserSate } = useAuth();
+
 
     const navigate = useNavigate();
 
@@ -26,6 +29,7 @@ const LoginPage = () => {
         })
         .then(response => response.json())
             .then(data => {
+            saveUserSate(data.id, data.nome)
                 sessionStorage.setItem('idCliente', data.id);
                 sessionStorage.setItem('nomeCliente', data.nome);
                 navigate('/'); // Use navigate('/') para redirecionar para a página inicial
@@ -34,6 +38,7 @@ const LoginPage = () => {
             // Aqui você pode lidar com erros de requisição
             console.error(error);
         });
+        
     };
 
     return (

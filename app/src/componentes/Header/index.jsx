@@ -1,32 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import './styles.css';
 import { Link, useLocation, } from 'react-router-dom';
+import { useAuth } from '../../contexts/Auth';
 
 function Header() {
-  const [idCliente, setIdCliente] = useState('');
-  const [nomeCliente, setNomeCliente] = useState('');
   const location = useLocation();
-
-  useEffect(() => {
-    const idClienteStorage = sessionStorage.getItem('idCliente');
-    if (idClienteStorage) {
-      setIdCliente(idClienteStorage);
-    }
-
-    const nomeCliente = sessionStorage.getItem('nomeCliente');
-    if (nomeCliente) {
-      setNomeCliente(nomeCliente);
-    }
-
-  }, []);
-
-  const handleLogout = () => {
-    sessionStorage.removeItem('idCliente');
-    sessionStorage.removeItem('nomeCliente');
-    setIdCliente(false);
-    setNomeCliente(false);
-  };
+  const { signed, nomeCliente, signOut } = useAuth();
 
   const isHomePage = useMemo(() => {
     return location.pathname === '/'
@@ -40,7 +20,7 @@ function Header() {
       </div>
       <nav>
         <ul className="user-options list-unstyled">
-          {idCliente ? (
+          {signed ? (
             <>
               <li className="mb-2">Olá, {nomeCliente}.</li>
               {!isHomePage &&
@@ -52,7 +32,7 @@ function Header() {
                 <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
               </li>
               <li className="mb-2">
-                <button className="button" onClick={handleLogout}>Logout</button>
+                <button className="button" onClick={signOut}>Logout</button>
               </li>
             </>
 

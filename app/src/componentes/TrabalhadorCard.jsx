@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { useAuth } from '../contexts/Auth';
 
 const TrabalhadorCard = ({ key, worker }) => {
     const whatsappMessage = encodeURIComponent(`Olá ${worker.nome}. Vi seu perfil no site e gostei dos seus serviços prestados. Gostaria de solicitar um orçamento. Como posso proceder?`);
     const whatsappLink = `https://api.whatsapp.com/send?phone=${worker.whatsapp}&text=${whatsappMessage}`;
-    const clienteId = sessionStorage.getItem('idCliente');
+    const { idCliente } = useAuth();
 
     const [isLogged, setIsLogged] = useState(sessionStorage.getItem('idCliente') !== null);
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ const TrabalhadorCard = ({ key, worker }) => {
                 },
                 body: JSON.stringify({
                     idTrabalhador: worker.id,
-                    idCliente: clienteId
+                    idCliente: idCliente
                 })
             });
 
