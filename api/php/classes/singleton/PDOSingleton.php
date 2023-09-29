@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . "/config.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
 
 abstract class PDOSingleton
 {
@@ -19,9 +19,9 @@ abstract class PDOSingleton
     // Cria o objeto PDO
     private static function create()
     {
-        $dsn = "mysql:dbname=match_servicos;host=host.docker.internal;charset=utf8mb4";
+        $dsn = "mysql:dbname=match_servicos;host=localhost;charset=utf8mb4";
         $usuario = "root";
-        $senha = "root";
+        $senha = "";
         return new PDO($dsn, $usuario, $senha);
     }
 }

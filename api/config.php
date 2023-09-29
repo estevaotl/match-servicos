@@ -2,7 +2,7 @@
 
 session_start();
 
-require './vendor/autoload.php';
+require '../api/vendor/autoload.php';
 
 // Função de autoload
 function my_autoloader($class_name)
