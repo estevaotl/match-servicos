@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import CadastroPage from './pages/CadastroPage';
-import LoginPage from './pages/LoginPage';
+import CadastroPage from './pages/Cadastro';
+import LoginPage from './pages/Login';
 import MinhaContaPage from './pages/MinhaContaPage';
 import BuscaPage from './pages/BuscaPage';
 import ProfilePage from './pages/ProfilePage';
