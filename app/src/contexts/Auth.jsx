@@ -11,13 +11,14 @@ export const AuthProvider = ({ children }) => {
     const idClienteStorage = sessionStorage.getItem('idCliente');
     if (idClienteStorage) {
       setIdCliente(idClienteStorage);
+      setSigned(true);
     }
 
     const nomeCliente = sessionStorage.getItem('nomeCliente');
     if (nomeCliente) {
       setNomeCliente(nomeCliente);
     }
-    setSigned(true);
+
 
   }, []);
 

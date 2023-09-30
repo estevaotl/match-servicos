@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-
+import { FaArrowRightFromBracket } from 'react-icons/fa6';
 import './styles.css';
 import { Link, useLocation, } from 'react-router-dom';
 import { useAuth } from '../../contexts/Auth';
@@ -22,17 +22,17 @@ function Header() {
         <ul className="user-options list-unstyled">
           {signed ? (
             <>
-              <li className="mb-2">Olá, {nomeCliente}.</li>
+              <li className="mb-2">Olá, {nomeCliente}. |</li>
               {!isHomePage &&
                 <li className="mb-2">
-                  <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial</Link>
+                  <Link to="/" className="text-decoration-none text-dark d-block">Página Inicial |</Link>
                 </li>
               }
               <li className="mb-2">
-                <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta</Link>
+                <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta </Link>
               </li>
-              <li className="mb-2">
-                <button className="button" onClick={signOut}>Logout</button>
+              <li className="mb-2 ml-4">
+                <FaArrowRightFromBracket color='red' size={24} onClick={signOut} />
               </li>
             </>
 
