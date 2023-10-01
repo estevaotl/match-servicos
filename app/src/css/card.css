@@ -1,9 +1,9 @@
 .card {
-    width: 300px;
     border: 1px solid #ccc;
+    border-radius: 8px;
     padding: 10px;
     height: inherit;
-    margin-left: 80px;
+    width: 260px;
 }
 
 .card img {
@@ -17,11 +17,13 @@
 
 .card p {
     font-weight: bold;
-    /* topo | direita | inferior | esquerda */
-    margin: 15px auto 14px auto;
+    margin: 8px auto 8px auto;
+    max-width: 250px;
+    white-space: nowrap;                  
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
-/* Define uma classe CSS para a imagem em formato de bola */
 .ball-image {
     width: 200px;
     height: 200px;
@@ -31,7 +33,6 @@
     border: 2px solid #fff; /* Adicione uma borda branca para destacar a forma da bola */
 }
 
-/* Adicione estilos CSS para a imagem interna dentro da bola */
 .ball-image-inner {
     width: 100%;
     height: 100%;
