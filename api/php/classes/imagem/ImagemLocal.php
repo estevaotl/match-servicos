@@ -1,61 +1,76 @@
 <?php
-    require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
 
-class ImagemLocal{
-    private $id = 0;
+class ImagemLocal
+{
+	private $id = 0;
 	private $idObjeto = 0;
 	private $nomeArquivo = "";
 	private $pasta = "";
 	private $imagem = "";
 	private $ehImagemPerfil = false;
 
-	public function __construct(){}
+	public function __construct()
+	{
+	}
 
-    public function getId(){
-        return $this->id;
-    }
+	public function getId()
+	{
+		return $this->id;
+	}
 
-    public function setId($id){
-        $this->id = $id;
-    }
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
 
-	public function getIdObjeto(){
+	public function getIdObjeto()
+	{
 		return $this->idObjeto;
 	}
 
-	public function setIdObjeto($idObjeto){
+	public function setIdObjeto($idObjeto)
+	{
 		$this->idObjeto = $idObjeto;
 	}
 
-	public function getNomeArquivo(){
+	public function getNomeArquivo()
+	{
 		return $this->nomeArquivo;
 	}
 
-	public function setNomeArquivo($nomeArquivo){
+	public function setNomeArquivo($nomeArquivo)
+	{
 		$this->nomeArquivo = $nomeArquivo;
 	}
 
-	public function getPasta(){
+	public function getPasta()
+	{
 		return $this->pasta;
 	}
 
-	public function setPasta($pasta){
+	public function setPasta($pasta)
+	{
 		$this->pasta = $pasta;
 	}
 
-	public function getImagem(){
+	public function getImagem()
+	{
 		return $this->imagem;
 	}
 
-	public function setImagem($imagem){
+	public function setImagem($imagem)
+	{
 		$this->imagem = $imagem;
 	}
 
-	public function getEhImagemPerfil(){
+	public function getEhImagemPerfil()
+	{
 		return $this->ehImagemPerfil;
 	}
 
-	public function setEhImagemPerfil($ehImagemPerfil){
+	public function setEhImagemPerfil($ehImagemPerfil)
+	{
 		$this->ehImagemPerfil = $ehImagemPerfil;
 	}
 }

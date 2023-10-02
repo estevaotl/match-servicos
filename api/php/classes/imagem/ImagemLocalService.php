@@ -1,34 +1,29 @@
 <?php
-    require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
 
-    class ImagemLocalService{
-        private $dao = null;
+class ImagemLocalService
+{
+    private $dao = null;
 
-        public function __construct($imagemLocalDAO){
-			$this->dao = $imagemLocalDAO;
-		}
+    public function __construct($imagemLocalDAO)
+    {
+        $this->dao = $imagemLocalDAO;
+    }
 
-        public function salvar($imagemLocal){
-            $erro = array();
+    public function salvar($imagemLocal)
+    {
+        $erro = array();
 
-            $this->validar($imagemLocal, $erro);
+        $this->validar($imagemLocal, $erro);
 
-            try {
+        try {
             return $this->dao->salvar($imagemLocal);
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
-        }
-
-        private function validar($imagemLocal, &$erro){
-            
-        }
-
-        public function desativarComId($idImagemLocal){
-            return $this->dao->desativarComId($idImagemLocal);
-        }
-
-        public function obterComRestricoes($restricoes = array(), $orderBy = 'id desc', $limit = null, $offset = 0){
-            return $this->dao->obterComRestricoes($restricoes, $orderBy, $limit, $offset);
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
+
+    private function validar($imagemLocal, &$erro)
+    {
+    }
+}

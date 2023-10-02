@@ -6,11 +6,12 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
  * Database utilities.
  */
 
-class BancoDados{
+class BancoDados
+{
 
 	private $pdo = NULL;	//PDO Object - Carrega a conexão com o banco de dados
 
-    /**
+	/**
 	 * Indica se o objeto foi criado apenas como uma nova conexão para salvar um erro em um comando sql anterior
 	 * Caso true, erros ao executar queries não serão salvos na tabela ops, para evitar um possível loop infinito de execução de comandos que geram erros
 	 * e que criam novas conexões para salvar esses erros
@@ -26,24 +27,26 @@ class BancoDados{
 	 *	Constante referente ao id considerado inexistente pelo banco de dados
 	 */
 	const ID_INEXISTENTE = 0;
-	
+
 	/**
 	 * Construtor - Cria a classe banco dados já abrindo a conexão com o banco
 	 *
 	 * @example new BancoDados();
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$this->conectar();
 	}
 
 	/**
 	 * Realiza a conexão com o banco.
 	 */
-	private function conectar() {
+	private function conectar()
+	{
 		$this->pdo = PDOSingleton::get();
 	}
-	
+
 	/**
 	 * Inicia uma transação no banco de dados
 	 * 
@@ -52,10 +55,11 @@ class BancoDados{
 	 * @example iniciarTransacao();
 	 * @return void
 	 */
-	public function iniciarTransacao(){ //throws
+	public function iniciarTransacao()
+	{ //throws
 		$this->pdo->beginTransaction();
 	}
-	
+
 	/**
 	 * Conclui uma transação aberta no o banco de dados
 	 * 
@@ -64,14 +68,16 @@ class BancoDados{
 	 * @example concluirTransacao(); or finalizarTransacao();
 	 * @return void
 	 */
-	public function concluirTransacao(){ //throws
+	public function concluirTransacao()
+	{ //throws
 		$this->pdo->commit();
 	}
-	
-	public function finalizarTransacao(){ //throws
+
+	public function finalizarTransacao()
+	{ //throws
 		$this->pdo->commit();
 	}
-	
+
 	/**
 	 * Desfaz uma transação aberta no o banco de dados
 	 * 
@@ -80,10 +86,11 @@ class BancoDados{
 	 * @example desfazerTransacao();
 	 * @return void
 	 */
-	public function desfazerTransacao(){ //throws
+	public function desfazerTransacao()
+	{ //throws
 		$this->pdo->rollBack();
 	}
-	
+
 	/**
 	 * Verifica se uma transação está aberta no momento
 	 * Esta função funciona apenas no PHP5 >= 5.3.3
@@ -93,10 +100,11 @@ class BancoDados{
 	 * @example emTransacao();
 	 * @return bool emTransacao
 	 */
-	public function emTransacao(){
+	public function emTransacao()
+	{
 		return $this->pdo->inTransaction();
 	}
-	
+
 	/**
 	 * Retorna o id do próximo dado que será salvo no banco de dados
 	 * 
@@ -107,15 +115,16 @@ class BancoDados{
 	 *	A tabela para verificar o id do próximo registro a ser salvo
 	 * @return int id
 	 */
-	public function gerarId($tabela){ //throws
+	public function gerarId($tabela)
+	{ //throws
 		$comando = "select id from $tabela order by id desc limit 1";
 		$preparado = $this->rodar($comando);
-		if($preparado->rowCount()<=0)
+		if ($preparado->rowCount() <= 0)
 			return 1;
 		$vetor = $preparado->fetchAll();
-		return $vetor[ 0 ]['id']+1;
+		return $vetor[0]['id'] + 1;
 	}
-	
+
 	/**
 	 * Verifica se um dado já está registrado na tabela
 	 * 
@@ -134,20 +143,21 @@ class BancoDados{
 	 *	Controle de verificação da coluna de controle de exclusão de registro (default to true)
 	 * @return bool
 	 */
-	public function existe($tabela, $campo, $informacao, $id = 0, $verificaAtivo = true){ //throws
+	public function existe($tabela, $campo, $informacao, $id = 0, $verificaAtivo = true)
+	{ //throws
 		$comando = "select $campo from $tabela where $campo = :informacao and id != :id";
-		if($verificaAtivo)
+		if ($verificaAtivo)
 			$comando .= " and ativo = 1";
 		$parametros = array(
 			'informacao' => $informacao,
-			'id' => $id 
+			'id' => $id
 		);
 		$preparado = $this->rodar($comando, $parametros);
-		if($preparado->rowCount() > 0)
+		if ($preparado->rowCount() > 0)
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Executa uma consulta no banco e retorna um array com os dados encontrados
 	 * 
@@ -160,14 +170,15 @@ class BancoDados{
 	 *	Matriz de valores com a mesma quantidade de parâmetros vinculados na instrução SQL (default to array())
 	 * @return array 
 	 */
-	public function consultar($comando, $parametros = array(), $uniqueAssociation = false){ //throws
+	public function consultar($comando, $parametros = array(), $uniqueAssociation = false)
+	{ //throws
 		$preparado = $this->rodar($comando, $parametros);
-		if($uniqueAssociation){
+		if ($uniqueAssociation) {
 			return $preparado->fetchAll(PDO::FETCH_ASSOC);
 		}
 		return $preparado->fetchAll();
 	}
-	
+
 	/**
 	 * Executa uma query no banco.
 	 * 
@@ -181,11 +192,12 @@ class BancoDados{
 	 * @return int
 	 *	Número de linhas afetadas
 	 */
-	public function executar($comando, $parametros = array()){ //throws
+	public function executar($comando, $parametros = array())
+	{ //throws
 		$preparado = $this->rodar($comando, $parametros);
 		return $preparado->rowCount();
 	}
-	
+
 	/**
 	 * Remove, por completo, um registro da tabela pelo seu id
 	 * 
@@ -199,14 +211,16 @@ class BancoDados{
 	 * @return int
 	 *	Número de linhas afetadas
 	 */
-	public function excluir($tabela, $id){ //throws
+	public function excluir($tabela, $id)
+	{ //throws
 		$comando = "delete from $tabela where id = :id";
 		$parametros = array(
-			'id' => $id );
+			'id' => $id
+		);
 		$preparado = $this->rodar($comando, $parametros);
 		return $preparado->rowCount();
 	}
-	
+
 	/**
 	 * Desativa um registro da tabela, setando o campo "ativo" como 0 (zero)
 	 * 
@@ -220,14 +234,16 @@ class BancoDados{
 	 * @return int
 	 *	Número de linhas afetadas
 	 */
-	public function desativar($tabela, $id){ //throws
+	public function desativar($tabela, $id)
+	{ //throws
 		$comando = "update $tabela set ativo = 0 where id = :id";
 		$parametros = array(
-			'id' => $id );
+			'id' => $id
+		);
 		$preparado = $this->rodar($comando, $parametros);
 		return $preparado->rowCount();
 	}
-	
+
 	/**
 	 * Executa uma consulta e usa o callback para formar os objetos do tipo desejado
 	 * 
@@ -252,20 +268,21 @@ class BancoDados{
 	 * @return array unknown_type
 	 *	Array de objetos - o tipo do objeto é definido pelo callback enviado
 	 */
-	public function obterObjetos($comando, $callback, $parametros = array(), $orderBy = 'id', $limit = null, $offset = 0, $completo = true){
-		if($orderBy != '')
+	public function obterObjetos($comando, $callback, $parametros = array(), $orderBy = 'id', $limit = null, $offset = 0, $completo = true)
+	{
+		if ($orderBy != '')
 			$comando .= " order by $orderBy";
-		if(isset($limit))
+		if (isset($limit))
 			$comando .= " limit $offset, $limit";
 		$linhas = $this->consultar($comando, $parametros);
 		$objetos = array();
-		foreach($linhas as $l){
+		foreach ($linhas as $l) {
 			$obj = call_user_func_array($callback, array($l, $completo));
 			array_push($objetos, $obj);
 		}
 		return $objetos;
 	}
-	
+
 	/**
 	 * Executa uma consulta e usa o callback para formar o objeto do tipo desejado
 	 * 
@@ -284,15 +301,16 @@ class BancoDados{
 	 * @return unknown_type
 	 *	Objeto do que é definido pelo callback enviado
 	 */
-	public function obterObjeto($comando, $callback, $parametros = array(), $completo = true){
+	public function obterObjeto($comando, $callback, $parametros = array(), $completo = true)
+	{
 		$objetos = $this->obterObjetos($comando, $callback, $parametros, '', null, 0, $completo);
-		if(count($objetos) < 1){
+		if (count($objetos) < 1) {
 			return null;
 			//throw new NaoEncontradoException("Não foi possível localizar o registro em nosso banco de dados");
 		}
 		return $objetos[0];
 	}
-	
+
 	/**
 	 * Gera um teste para ser feito no MySQL com a consulta e os parâmetros desejados
 	 * 
@@ -307,35 +325,36 @@ class BancoDados{
 	 * @return String
 	 *	Teste para rodar no MySQL
 	 */
-	 public function geraTeste($comando, $parametros = array()){
-		foreach($parametros as $key => $p){
+	public function geraTeste($comando, $parametros = array())
+	{
+		foreach ($parametros as $key => $p) {
 			$dado = $p;
-			$type = gettype( $p );
-			switch ( $type ) {
-				case 'string' : 
-					if(!is_numeric($dado))
-						$dado = '"' . addslashes( str_replace("\n", "\\n", str_replace("\r\n", "\\n", $dado)) ) . '"';
+			$type = gettype($p);
+			switch ($type) {
+				case 'string':
+					if (!is_numeric($dado))
+						$dado = '"' . addslashes(str_replace("\n", "\\n", str_replace("\r\n", "\\n", $dado))) . '"';
 					break;
-				case 'boolean' : // continue
+				case 'boolean': // continue
 					$dado = ($dado == true) ? "1" : "0";
 					break;
-				case 'number' : // continue
-				case 'integer' : // continue
-				case 'float' : // continue
-				case 'double' : // continue
-				case 'NULL' : 
+				case 'number': // continue
+				case 'integer': // continue
+				case 'float': // continue
+				case 'double': // continue
+				case 'NULL':
 					break;
-				default :
-					die("Tipo de dado impróprio para comando SQL: '".$key."' => ".$type);
+				default:
+					die("Tipo de dado impróprio para comando SQL: '" . $key . "' => " . $type);
 			}
-			$comando = str_replace(":".$key.",", $dado.",", $comando);
-			$comando = str_replace(":".$key." ", $dado." ", $comando);
-			$comando = str_replace(":".$key.")", $dado.")", $comando);
-			$comando = str_replace(":".$key."%", $dado."%", $comando);
+			$comando = str_replace(":" . $key . ",", $dado . ",", $comando);
+			$comando = str_replace(":" . $key . " ", $dado . " ", $comando);
+			$comando = str_replace(":" . $key . ")", $dado . ")", $comando);
+			$comando = str_replace(":" . $key . "%", $dado . "%", $comando);
 		}
 		return $comando;
-	 }
-	
+	}
+
 	/**
 	 * Executa o comando preparado
 	 * 
@@ -350,26 +369,27 @@ class BancoDados{
 	 * @return PDOStatement
 	 *	O SQL preparado
 	 */
-	private function rodar($comando, $parametros = array()){ //throw
-		try{
+	private function rodar($comando, $parametros = array())
+	{ //throw
+		try {
 			$preparado = $this->pdo->prepare($comando);
 			$preparado->execute($parametros);
 
 			return $preparado;
-		}catch(Exception $e){
+		} catch (Exception $e) {
 
 			// Caso o objeto(conexão) atual tenha sido criado para salvar um erro em uma query feita em uma outra conexão, getSalvandoErro() deveria ser true
 			// Nesta situação apenas lançamos uma nova exceção para evitar um possível loop de tentativas falhas em salvar o erro na última query
-			if($this->getSalvandoErro()){
+			if ($this->getSalvandoErro()) {
 				throw new DBException($e->getMessage());
 
-			// Caso contrário salvamos o erro encontrado na última query no banco e retornamos uma exceção mais genérica, possivelmente evitando o 
-			// vazamento de informações confidenciais do banco
-			}else{
+				// Caso contrário salvamos o erro encontrado na última query no banco e retornamos uma exceção mais genérica, possivelmente evitando o 
+				// vazamento de informações confidenciais do banco
+			} else {
 
 				$idInseridoOps = null;
-				try{
-					$mensagem = "Erro: ". $e->getMessage() . PHP_EOL . " No comando: ". PHP_EOL .$comando. PHP_EOL." Parâmetros: ". PHP_EOL .Util::arrayParaTexto($parametros). PHP_EOL ." Testador MySQL: ". PHP_EOL .$this->geraTeste($comando, $parametros);
+				try {
+					$mensagem = "Erro: " . $e->getMessage() . PHP_EOL . " No comando: " . PHP_EOL . $comando . PHP_EOL . " Parâmetros: " . PHP_EOL . Util::arrayParaTexto($parametros) . PHP_EOL . " Testador MySQL: " . PHP_EOL . $this->geraTeste($comando, $parametros);
 
 					$exception = array(
 						"mensagem" => $mensagem,
@@ -385,20 +405,22 @@ class BancoDados{
 
 					$novaConexao = null;
 					$opsController = null;
-				}catch(Exception $e){
+				} catch (Exception $e) {
 					throw new DBException("Houve um erro ao completar ação - " . self::ERRO_SALVANDO_OPS . " - " . $e->getMessage());
 				}
 
-				throw new DBException("Houve um erro ao completar ação - ".$idInseridoOps);
+				throw new DBException("Houve um erro ao completar ação - " . $idInseridoOps);
 			}
 		}
 	}
 
-	public function setSalvandoErro($salvandoErro){
+	public function setSalvandoErro($salvandoErro)
+	{
 		$this->salvandoErro = $salvandoErro;
 	}
 
-	public function getSalvandoErro(){
+	public function getSalvandoErro()
+	{
 		return $this->salvandoErro;
 	}
 
@@ -407,7 +429,8 @@ class BancoDados{
 	 *
 	 * @return int id o último id inserido
 	 */
-	public function ultimoIdInserido(){
+	public function ultimoIdInserido()
+	{
 		return $this->pdo->lastInsertId();
 	}
 }
