@@ -78,8 +78,8 @@ const HomePage = () => {
                 {pageData.map((prestador, prestadorIndex) => (
                   <CardPrestadorServicos
                     imageSrc={
-                      prestador.imagem.length > 0
-                        ? `http://localhost/match-servicos/api/imagem/ler/${prestador.imagem[0].nomeArquivo}`
+                      prestador.imagemPerfil.length > 0
+                        ? `http://localhost/match-servicos/api/imagem/ler/${prestador.imagemPerfil[0].nomeArquivo}`
                         : 'http://localhost/match-servicos/api/imagem/ler/icone_person.png' // Defina o caminho para a imagem padrão aqui
                     }
                     altText={`Imagem de ${prestador.nome}`}

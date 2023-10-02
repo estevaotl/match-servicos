@@ -21,4 +21,12 @@ class ImagemLocalController
         $erro = array();
         return $this->service->salvar($imagemLocal, $erro);
     }
+
+    public function desativarComId($idImagemLocal){
+        return $this->service->desativarComId($idImagemLocal);
+    }
+
+    public function obterComRestricoes($restricoes = array(), $orderBy = 'id desc', $limit = null, $offset = 0){
+        return $this->service->obterComRestricoes($restricoes, $orderBy, $limit, $offset);
+    }
 }
