@@ -41,7 +41,7 @@
         }
 
         public function modificarStatus($idOrdemServico, $statusNovo){
-            $ordemServico = $this->obterComId($idOrdemServico)[0];
+            $ordemServico = $this->obterComId($idOrdemServico)[0]; 
             $cliente = (new ClienteController())->obterComId($ordemServico['idSolicitante']);
             (new EmailSender())->enviarEmail($cliente->getEmail(), "Email Transacional", "Bem Vindo");
 
