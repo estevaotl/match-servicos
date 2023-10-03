@@ -110,7 +110,7 @@
                 $comando = "INSERT INTO pessoafisica (idCliente, cpf, dataNascimento, idade) VALUES (:idCliente, :cpf, :dataNascimento, :idade)";
                 $parametros = $this->parametrosClienteFisico($cliente);
             } elseif($cliente->getDadosEspecificos() instanceof DadosClienteJuridico) {
-                $comando = "INSERT INTO pessoafisica (idCliente, cnpj, inscricaoEstadual, razaoSocial) VALUES (:idCliente, :cnpj, :inscricaoEstadual, :razaoSocial)";
+                $comando = "INSERT INTO pessoajuridica (idCliente, cnpj, inscricaoEstadual, razaoSocial) VALUES (:idCliente, :cnpj, :inscricaoEstadual, :razaoSocial)";
                 $parametros = $this->parametrosClienteJuridico($cliente);
             }
 
@@ -193,9 +193,12 @@
             $groupBy = " GROUP BY cliente.id ";
             $parametros = array();
 
-            if(isset($restricoes['profissao'])){
+            if(isset($restricoes['profissao']) && !isset($restricoes['profissaoEspecifica'])){
                 $where .= " AND cliente.servicosPrestados LIKE :profissao ";
                 $parametros['profissao'] = '%' . $restricoes['profissao'] . '%';
+            } else if(isset($restricoes['profissaoEspecifica'])){
+                $where .= " AND cliente.servicosPrestados LIKE :profissaoEspecifica ";
+                $parametros['profissaoEspecifica'] = '%' . $restricoes['profissaoEspecifica'] . '%';
             }
 
             if(isset($restricoes['prestadorServicos']) && $restricoes['prestadorServicos'] == true){

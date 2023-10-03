@@ -46,7 +46,7 @@ class ClienteController
             $cliente->setSenha($dados['senha']);
         }
 
-        if (isset($dados['documento']) && isset($dados['dataNascimento'])) {
+        if (!empty($dados['documento']) && !empty($dados['dataNascimento'])) {
             $dadosClienteFisico = new DadosClienteFisico();
             $dadosClienteFisico->setCpf($dados['documento']);
             $dadosClienteFisico->setDataNascimento($dados['dataNascimento']);
@@ -57,7 +57,7 @@ class ClienteController
             $dadosClienteJuridico->setCnpj($dados['documento']);
             $dadosClienteJuridico->setInscricaoEstadual($dados['inscricaoEstadual']);
             $dadosClienteJuridico->setRazaoSocial($dados['razaoSocial']);
-
+            $dadosClienteJuridico->setSituacaoTributaria(SituacaoTributaria::stringToEnum($dados['situacaoTributaria']));
             $cliente->setDadosEspecificos($dadosClienteJuridico);
         }
 
@@ -127,8 +127,8 @@ class ClienteController
     {
         $restricoes = array();
 
-        if (isset($parametros['q'])) {
-            $restricoes['q'] = $parametros['q'];
+        if (isset($parametros['q']) && $parametros['q'] != 'null') {
+            $restricoes['profissao'] = $parametros['q'];
         }
 
         if (isset($parametros['prestadorServicos'])) {
@@ -137,6 +137,14 @@ class ClienteController
 
         if (isset($parametros['obterParaCarrossel'])) {
             $restricoes['obterParaCarrossel'] = $parametros['obterParaCarrossel'];
+        }
+
+        if (isset($parametros['idade']) && $parametros['idade'] > 18) {
+            $restricoes['idade'] = $parametros['idade'];
+        }
+
+        if (isset($parametros['profissaoEspecifica'])) {
+            $restricoes['profissaoEspecifica'] = $parametros['profissaoEspecifica'];
         }
 
         return $this->service->obterComRestricoes($restricoes);

@@ -31,3 +31,13 @@
 .newsletter-container p {
     font-size: x-large;
 }
+
+.input-servico{
+    height: fit-content;
+    margin-bottom: 50px;
+}
+
+.input-age{
+    height: fit-content;
+    margin-bottom: 50px;
+}

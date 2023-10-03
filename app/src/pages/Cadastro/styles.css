@@ -25,3 +25,11 @@
   margin-right: 25%;
   /* align-self: flex-end; */
 }
+
+.selected-profissoes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px; /* Espaçamento entre as opções */
+  max-width: 100%; /* O máximo de largura permitida */
+  margin-top: 10px;
+}

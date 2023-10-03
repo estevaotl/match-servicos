@@ -4,6 +4,7 @@
         private $cnpj = "";
         private $inscricaoEstadual = "";
         private $razaoSocial = "";
+        private $situacaoTributaria = "";
 
         public function __construct() {}
 
@@ -37,6 +38,14 @@
 
         public function setRazaoSocial($razaoSocial){
             $this->razaoSocial = $razaoSocial;
+        }
+
+        public function getSituacaoTributaria(){
+            return $this->situacaoTributaria;
+        }
+
+        public function setSituacaoTributaria($situacaoTributaria){
+            $this->situacaoTributaria = $situacaoTributaria;
         }
     }
 

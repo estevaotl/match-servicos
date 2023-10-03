@@ -28,6 +28,7 @@ const CadastroPage = () => {
   const [editandoCep, setEditandoCep] = useState(false);
   const [mostrarCamposEndereco, setMostrarCamposEndereco] = useState(false);
   const { saveUserSate } = useAuth();
+  const [selectedProfissoes, setSelectedProfissoes] = useState([]);
 
   const handleChangeDocumento = (value) => {
     // Remove caracteres não numéricos
@@ -69,7 +70,7 @@ const CadastroPage = () => {
         senha: senha,
         ehPrestadorDeServicos: prestadorDeServicos == "prestadorSim" ? true : false,
         documento: documento,
-        servicosPrestados: servicosPrestados,
+        servicosPrestados: document.getElementById('servicosPrestados').value,
         cep: cep,
         rua: endereco,
         bairro: bairro,
@@ -77,7 +78,10 @@ const CadastroPage = () => {
         endereco: endereco,
         complemento: complemento,
         numero: numero,
-        cidade: localidade
+        cidade: localidade,
+        situacaoTributaria: situacaoTributaria,
+        razaoSocial: razaoSocial,
+        inscricaoEstadual: inscricaoEstadual
       })
     })
       .then(response => response.json())
@@ -181,6 +185,43 @@ const CadastroPage = () => {
     }
   };
 
+  const handleProfissaoChange = (event) => {
+    const optionValue = event.target.value;
+    if (!selectedProfissoes.includes(optionValue)) {
+      setSelectedProfissoes([...selectedProfissoes, optionValue]);
+    }
+  };
+
+  const handleRemoveProfissao = (profissaoToRemove) => {
+    const updatedProfissoes = selectedProfissoes.filter(
+      (profissao) => profissao !== profissaoToRemove
+    );
+    setSelectedProfissoes(updatedProfissoes);
+  };
+
+  // Atualiza o campo "servicosPrestados" com as opções selecionadas
+  useEffect(() => {
+    const servicosPrestadosInput = document.getElementById('servicosPrestados');
+    if (servicosPrestadosInput) {
+      servicosPrestadosInput.value = selectedProfissoes.join(', ');
+    }
+  }, [selectedProfissoes]);
+
+  // Função para formatar a lista de profissões com tags removíveis
+  const formatSelectedProfissoes = () => {
+    return selectedProfissoes.map((profissao) => (
+      <span key={profissao} className="badge bg-primary selected-profissao">
+        {profissao}
+        <button
+          type="button"
+          className="btn-close"
+          aria-label="Remover"
+          onClick={() => handleRemoveProfissao(profissao)}
+        ></button>
+      </span>
+    ));
+  };
+
   return (
     <div className='cadastro-container'>
       <h1>CADASTRO</h1>
@@ -216,15 +257,83 @@ const CadastroPage = () => {
 
         {prestadorDeServicos === "prestadorSim" && (
           <div className="col-md-6 mb-3">
-            <label htmlFor="servicosPrestados" className="form-label">Serviços Prestados:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="servicosPrestados"
-              placeholder="Digite os serviços prestados separados por vírgula (pedreiro, eletricista, etc)"
-              value={servicosPrestados}
-              onChange={(e) => setServicosPrestados(e.target.value)}
-            />
+            <label htmlFor="profissao" className="form-label">Serviços Prestados:</label>
+            <div>
+              <select
+                id="profissao"
+                name="profissao"
+                multiple
+                value={selectedProfissoes}
+                onChange={handleProfissaoChange}
+                className="form-select"
+              >
+                <optgroup label="Ciências Agrárias">
+                  <option value="agronomia">Agronomia</option>
+                  <option value="biotecnologia">Biotecnologia</option>
+                  <option value="engenharia agricola">Engenharia Agrícola</option>
+                  <option value="engenharia de alimentos">Engenharia de Alimentos</option>
+                  <option value="engenharia de pesca">Engenharia de Pesca</option>
+                  <option value="engenharia florestal">Engenharia Florestal</option>
+                  <option value="medicina veterinaria">Medicina Veterinária</option>
+                  <option value="zootecnia">Zootecnia</option>
+                </optgroup>
+
+                <optgroup label="Ciências da Saúde">
+                  <option value="educação fisica">Educação Física</option>
+                  <option value="enfermagem">Enfermagem</option>
+                  <option value="farmacia">Farmácia</option>
+                  <option value="fisioterapia">Fisioterapia</option>
+                  <option value="fonoaudiologia">Fonoaudiologia</option>
+                  <option value="medicina">Medicina</option>
+                  <option value="odontologia">Odontologia</option>
+                  <option value="saude coletiva">Saúde Coletiva</option>
+                  <option value="terapia ocupacional">Terapia Ocupacional</option>
+                </optgroup>
+
+                <optgroup label="Ciências Exatas e da Terra">
+                  <option value="ciencia da computação">Ciência da Computação</option>
+                  <option value="fisica">Física</option>
+                  <option value="matematica">Matemática</option>
+                  <option value="quimica">Química</option>
+                </optgroup>
+
+                <optgroup label="Ciências Humanas">
+                  <option value="geografia">Geografia</option>
+                  <option value="historia">História</option>
+                  <option value="psicologia">Psicologia</option>
+                  <option value="sociologia">Sociologia</option>
+                  <option value="teologia">Teologia</option>
+                </optgroup>
+
+                <optgroup label="Ciências Sociais Aplicadas">
+                  <option value="administração">Administração</option>
+                  <option value="publicidade e propaganda">Publicidade e Propaganda</option>
+                </optgroup>
+
+                <optgroup label="Construção Civil">
+                  <option value="pedreiro">Pedreiro</option>
+                  <option value="eletrecista">Eletrecista</option>
+                  <option value="bombeiro hidraulico">Bombeiro Hidráulico</option>
+                  <option value="servente">Servente de Obras</option>
+                </optgroup>
+
+                <optgroup label="Serviços Gerais">
+                  <option value="mecanico">Mecânico</option>
+                  <option value="mecanico de moto">Mecânico de Moto</option>
+                  <option value="mecanico de carro">Mecânico de Carro</option>
+                </optgroup>
+              </select>
+
+              <div className="selected-profissoes-container">
+                {formatSelectedProfissoes()}
+              </div>
+              <input
+                type="hidden"
+                id="servicosPrestados"
+                name="servicosPrestados"
+                value={selectedProfissoes.join(', ')}
+              />
+            </div>
           </div>
         )}
 

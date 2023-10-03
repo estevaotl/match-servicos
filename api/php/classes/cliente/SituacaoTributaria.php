@@ -36,4 +36,19 @@
             $array = self::toArray();
             return $array[$enum];
         }
+
+        public static function stringToEnum($string) {
+            switch ($string) {
+                case 'isento':
+                    return self::ISENTO;
+                    break;
+                case 'naoContribuinte':
+                    return self::NAO_CONTRIBUINTE;
+                    break;
+                case 'contribuinte':
+                    return self::CONTRIBUINTE;
+                default:
+                    return self::ISENTO;
+            }
+        }
     }
