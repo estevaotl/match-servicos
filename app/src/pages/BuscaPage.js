@@ -8,7 +8,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 const SearchPage = () => {
     const [currentSearchQuery, setCurrentSearchQuery] = useState('');
     const [filteredWorkers, setFilteredWorkers] = useState([]);
-    const [minAge, setMinAge] = useState(18);
+    // const [minAge, setMinAge] = useState(18);
     const [selectedProfession, setSelectedProfession] = useState(''); // Add state for selected profession
     const [ufs, setUfs] = useState([]);
     const [selectedEstado, setSelectedEstado] = useState('');
@@ -17,9 +17,9 @@ const SearchPage = () => {
 
     const navigate = useNavigate();
 
-    const handleMinAgeChange = (event) => {
-        setMinAge(event.target.value);
-    };
+    // const handleMinAgeChange = (event) => {
+    //     setMinAge(event.target.value);
+    // };
 
     const handleProfessionChange = (event) => {
         setSelectedProfession(event.target.value);
@@ -29,7 +29,7 @@ const SearchPage = () => {
         setSelectedCidade(event.target.value);
     };
 
-    const fetchData = async (query = '', age = 18, profession = '', estado = '', cidade = '') => {
+    const fetchData = async (query = '', profession = '', estado = '', cidade = '') => {
         try {
             const encodedQuery = encodeURIComponent(query); // Use the `query` parameter
             const encodedProfession = encodeURIComponent(profession); // Include the selected profession
@@ -37,10 +37,10 @@ const SearchPage = () => {
             const encodedCidade = encodeURIComponent(cidade); // Include the selected profession
 
             var url = `http://localhost/match-servicos/api/clientes/busca?q=${encodedQuery}`;
-            if (age > 18) {
-                const encodedMinAge = encodeURIComponent(age);
-                url += `&idade=${encodedMinAge}`;
-            }
+            // if (age > 18) {
+            //     const encodedMinAge = encodeURIComponent(age);
+            //     url += `&idade=${encodedMinAge}`;
+            // }
 
             if (profession) { // Add the profession to the URL if it's selected
                 url += `&profissaoEspecifica=${encodedProfession}`;
@@ -72,19 +72,19 @@ const SearchPage = () => {
     useEffect(() => {
         const urlSearchParams = new URLSearchParams(window.location.search);
         const query = urlSearchParams.get('q');
-        const ageRange = urlSearchParams.get('idade');
+        // const ageRange = urlSearchParams.get('idade');
         const profissaoEspecifica = urlSearchParams.get('profissaoEspecifica');
         const estado = urlSearchParams.get('estado');
         const cidade = urlSearchParams.get('cidade');
 
         setCurrentSearchQuery(query || '');
-        setMinAge(ageRange || 18);
+        // setMinAge(ageRange || 18);
         setSelectedProfession(profissaoEspecifica || '');
         setSelectedEstado(estado || '');
         setSelectedCidade(cidade || '');
 
         // Use the `query` parameter in the initial API request
-        fetchData(query, ageRange, profissaoEspecifica, estado, cidade); // Pass `query` as an argument to fetchData
+        fetchData(query, profissaoEspecifica, estado, cidade); // Pass `query` as an argument to fetchData
     }, []);
 
     const fetchEstados = async () => {
@@ -127,9 +127,9 @@ const SearchPage = () => {
 
     const handleFilter = () => {
         var url = `/busca?q=${currentSearchQuery}`;
-        if (minAge > 18) {
-            url += `&idade=${minAge}`;
-        }
+        // if (minAge > 18) {
+        //     url += `&idade=${minAge}`;
+        // }
 
         if (selectedProfession) {
             url += `&profissaoEspecifica=${selectedProfession}`;
@@ -144,7 +144,7 @@ const SearchPage = () => {
         }
 
         navigate(url); // Include the selected profession in the URL
-        fetchData(currentSearchQuery, minAge, selectedProfession, selectedEstado, selectedCidade); // Pass the selected profession to fetchData
+        fetchData(currentSearchQuery, selectedProfession, selectedEstado, selectedCidade); // Pass the selected profession to fetchData
     };
 
     useEffect(() => {
@@ -176,7 +176,7 @@ const SearchPage = () => {
                             onChange={(e) => setCurrentSearchQuery(e.target.value)}
                         />
 
-                        <span>Idade atual: {minAge} anos</span><br />
+                        {/* <span>Idade atual: {minAge} anos</span><br />
                         <input
                             type="range"
                             min="18"
@@ -184,7 +184,7 @@ const SearchPage = () => {
                             value={minAge}
                             onChange={handleMinAgeChange}
                             className='input-age'
-                        /><br />
+                        /><br /> */}
 
                         <label htmlFor="profissao" className="form-label">
                             Serviços Prestados:
