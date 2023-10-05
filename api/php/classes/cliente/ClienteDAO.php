@@ -219,6 +219,24 @@
                 $parametros['idade'] = $restricoes['idade'];
             }
 
+            if(isset($restricoes['estado']) && !isset($restricoes['cidade'])){
+                $where .= " AND endereco.estado LIKE :estado ";
+                $join .= " JOIN endereco ON endereco.idCliente = cliente.id ";
+                $parametros['estado'] = "%" . $restricoes['estado'] . "%";
+            }
+
+            if(isset($restricoes['cidade']) && !isset($restricoes['estado'])){
+                $where .= " AND endereco.cidade LIKE :cidade  ";
+                $join .= " JOIN endereco ON endereco.idCliente = cliente.id ";
+                $parametros['cidade'] = "%" . $restricoes['cidade'] . "%";
+            }
+
+            if(isset($restricoes['estado']) && isset($restricoes['cidade'])){
+                $where .= " AND endereco.cidade LIKE :cidade ";
+                $join .= " JOIN endereco ON endereco.idCliente = cliente.id ";
+                $parametros['cidade'] = "%" . $restricoes['cidade'] . "%";
+            }
+
             $comando = $comando . $from . $join . $where . $groupBy;
 
             return $this->bancoDados->obterObjetos($comando, array($this, 'transformarEmObjeto'), $parametros, $orderBy);

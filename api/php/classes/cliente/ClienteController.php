@@ -147,6 +147,14 @@ class ClienteController
             $restricoes['profissaoEspecifica'] = $parametros['profissaoEspecifica'];
         }
 
+        if (isset($parametros['estado'])) {
+            $restricoes['estado'] = $parametros['estado'];
+        }
+
+        if (isset($parametros['cidade'])) {
+            $restricoes['cidade'] = $parametros['cidade'];
+        }
+
         return $this->service->obterComRestricoes($restricoes);
     }
 }
