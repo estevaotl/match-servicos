@@ -1,0 +1,83 @@
+.minha-conta-container{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+  padding:12px 0;
+}
+.minha-conta-container article{
+  min-width:70%;
+}
+.minha-conta-container article .container-images-minha-conta{
+  display:flex;
+  flex-direction:row;
+  margin:16px 0;
+}
+
+.minha-conta-container article .submit-button{
+  display:flex;
+  margin-left:auto;
+}
+
+.minha-conta-container article .editar-dados-form{
+  width:100%;
+}
+.minha-conta-container article .enviar-fotos-section{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  flex-direction:row;
+  gap:8px;
+  margin:16px 0;
+
+}
+.form-enviar-fotos{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  width:100%;
+}
+
+.form-enviar-fotos .input-file {
+  display:flex;
+  flex-direction:column;
+  border: 1px solid #ddd;
+  border-radius:8px;
+  width:100%;
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+
+}
+.form-enviar-fotos .icon-container {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content: center
+}
+.form-enviar-fotos span {
+  color:green;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.ball-image {
+  width: 200px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  border: 2px solid #fff; 
+}
+
+.ball-image-inner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}

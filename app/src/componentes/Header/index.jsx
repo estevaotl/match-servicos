@@ -29,7 +29,7 @@ function Header() {
                 </li>
               }
               <li className="mb-2">
-                <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Entrar na sua conta </Link>
+                <Link className="text-decoration-none text-dark d-block" to="/minha-conta">Minha conta </Link>
               </li>
               <li className="mb-2 ml-4">
                 <FaArrowRightFromBracket color='red' size={24} onClick={signOut} />

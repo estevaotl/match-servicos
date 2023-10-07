@@ -13,31 +13,30 @@ const LoginPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    fetch('http://localhost/match-servicos/api/clientes/logar', {
-      method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
-      headers: {
-        'Content-Type': 'application/json',
-        // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
-      },
-      body: JSON.stringify({
-        // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
-        // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
-        email: email,
-        senha: senha
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        saveUserSate(data.id, data.nome)
-        sessionStorage.setItem('idCliente', data.id);
-        sessionStorage.setItem('nomeCliente', data.nome);
-        navigate('/'); // Use navigate('/') para redirecionar para a página inicial
-      })
-      .catch(error => {
-        // Aqui você pode lidar com erros de requisição
-        console.error(error);
-      });
+    saveUserSate('123', 'Cleiton')
+    navigate('/');
+    // fetch('http://localhost/match-servicos/api/clientes/logar', {
+    //   method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
+    //   },
+    //   body: JSON.stringify({
+    //     // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
+    //     // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
+    //     email: email,
+    //     senha: senha
+    //   })
+    // })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     saveUserSate(data.id, data.nome)
+    //     navigate('/'); // Use navigate('/') para redirecionar para a página inicial
+    //   })
+    //   .catch(error => {
+    //     // Aqui você pode lidar com erros de requisição
+    //     console.error(error);
+    //   });
 
   };
 
