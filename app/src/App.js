@@ -4,7 +4,7 @@ import HomePage from './pages/Home';
 import CadastroPage from './pages/Cadastro';
 import LoginPage from './pages/Login';
 import MinhaContaPage from './pages/MinhaConta';
-import BuscaPage from './pages/BuscaPage';
+import BuscaPage from './pages/Busca';
 import ProfilePage from './pages/ProfilePage';
 import ContatoPage from './pages/Contato';
 import Footer from './componentes/Footer'
