@@ -6,6 +6,7 @@ import CardPrestadorServicos from '../../componentes/CardPrestadorServicos'; // 
 import 'bootstrap/dist/css/bootstrap.css';
 import Carousel from 'react-bootstrap/Carousel';
 import { prestadoresServicosMocked } from './mock'
+import { FaSearch } from 'react-icons/fa'
 const ITEMS_PER_PAGE = 3; // Número de itens por página no carrossel
 
 
@@ -66,7 +67,7 @@ const HomePage = () => {
           onChange={(e) => setSearchValue(e.target.value)}
         />
         <button className="btn btn-primary" type="button" onClick={handleSearch}>
-          Buscar
+          <FaSearch size={20} color='#fff' />
         </button>
       </div>
 
