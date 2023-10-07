@@ -44,3 +44,9 @@
   margin-top: 10px;
   margin-bottom: 0px;
 }
+.main-container{
+  display:flex;
+  flex:1;
+  flex-direction: column;
+  overflow-y: auto;
+}

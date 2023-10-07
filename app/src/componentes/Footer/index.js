@@ -55,8 +55,11 @@ const Footer = () => {
       <aside>
         <h2 className="newsletter-text">Não perca novidades</h2>
         <form onSubmit={handleSubmitNewsletter}>
+          <div className='row-input-container'>
+
             <Input label="Email:" type="text"  value={emailNewsletter} onChange={(e) => setEmailNewsletter(e.target.value)} />
             <Input label="Nome:" type="text"  value={nomeNewsletter} onChange={(e) => setNomeNewsletter(e.target.value)} />
+          </div>
             <button type="submit" className="btn btn-success">Inscrever-se</button>
         </form>
       </aside>

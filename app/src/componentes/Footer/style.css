@@ -5,7 +5,7 @@ footer {
   align-items:center;
   justify-content:space-between;
   background-color: burlywood;
-  padding:16px 16px;
+  padding:8px;
   border-radius:10px;
   margin-top:auto;
 }
@@ -48,7 +48,7 @@ footer aside{
   width:40%;
 }
 footer aside h2{
-  font-size:24px;
+  font-size:22px;
   font-weight:medium;
   margin:0;
   font-family:"Roboto",sens-serif;
@@ -58,6 +58,13 @@ footer aside form{
   flex:1;
   width:100%;
   flex-direction:column;
+}
+footer aside form .row-input-container{
+  display:flex;
+  flex:1;
+  width:100%;
+  flex-direction:row;
+  gap:8px;
 }
 
 

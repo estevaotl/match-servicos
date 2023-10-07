@@ -18,6 +18,7 @@ const App = () => {
       <Router>
         <AuthProvider>
           <Header/>
+          <main className='main-container'>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/cadastrar" element={<CadastroPage />} />
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/profile/:id" element={<ProfilePage />} />
             <Route path="/contato" element={<ContatoPage />} />
           </Routes>
+          </main>
           <Footer/>
         </AuthProvider>
       </Router>
