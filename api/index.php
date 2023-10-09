@@ -24,7 +24,7 @@ try {
     // });
 
     $apiInicial = "";
-    if (strpos($referer, 'localhost') !== false) {
+    if (strpos($_SERVER['HTTP_REFERER'], 'localhost') !== false) {
         $apiInicial = "/match-servicos/api";
     }
 
