@@ -1,6 +1,6 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+require_once("../../../config.php");
 
 /**
  * Database utilities.

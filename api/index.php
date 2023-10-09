@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Incluindo o arquivo de configuração
-require_once __DIR__ . '/config.php';
+require_once "./config.php";
 
 try {
 
@@ -23,8 +23,13 @@ try {
     //     return $response;
     // });
 
+    $apiInicial = "";
+    if(substr($_SERVER['HTTP_HOST'], -3) != '.com'){
+        $apiInicial = "/match-servicos/api";
+    }
+
     // Grupo de rotas para a rota '/clientes'
-    $app->group('/match-servicos/api/clientes', function ($app) {
+    $app->group($apiInicial . '/clientes', function ($app) {
 
         $app->post('/criar', function (Request $request, Response $response, $args) {
 
@@ -208,7 +213,7 @@ try {
         });
     });
 
-    $app->group('/match-servicos/api/newsletter', function ($app) {
+    $app->group($apiInicial . '/newsletter', function ($app) {
         $app->post('/criar', function (Request $request, Response $response, $args) {
             // Obter o corpo da requisição
             $body = $request->getBody()->getContents();
@@ -228,7 +233,7 @@ try {
         });
     });
 
-    $app->group('/match-servicos/api/imagem', function ($app) {
+    $app->group($apiInicial . '/imagem', function ($app) {
         $app->post('/upload', function (Request $request, Response $response, $args) {
             $uploadedFile = $request->getUploadedFiles()['image'];
 
@@ -278,7 +283,7 @@ try {
         });
     });
 
-    $app->group('/match-servicos/api/ordemServico', function ($app) {
+    $app->group($apiInicial . '/ordemServico', function ($app) {
         $app->post('/criar', function (Request $request, Response $response, $args) {
             // Obter o corpo da requisição
             $body = $request->getBody()->getContents();
@@ -381,7 +386,7 @@ try {
         });
     });
 
-    $app->group('/match-servicos/api/contato', function ($app) {
+    $app->group($apiInicial . '/contato', function ($app) {
         $app->post('/enviar', function (Request $request, Response $response, $args) {
             try{
                 $body = $request->getBody()->getContents();

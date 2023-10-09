@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+require_once("../../../config.php");
 
 abstract class PDOSingleton
 {
@@ -19,9 +19,16 @@ abstract class PDOSingleton
     // Cria o objeto PDO
     private static function create()
     {
-        $dsn = "mysql:dbname=match_servicos;host=localhost;charset=utf8mb4";
-        $usuario = "root";
-        $senha = "";
+        if(substr($_SERVER['HTTP_HOST'], -3) == '.com'){
+            $dsn = "mysql:dbname=match_servicos;host=localhost;charset=utf8mb4";
+			$usuario = "root";
+			$senha = "";
+		}else{
+			$dsn = "mysql:dbname=match_servicos;unix_socket=/var/lib/mysql/mysql.sock;charset=utf8mb4";
+			$usuario = "root";
+			$senha = "";
+		}
+
         return new PDO($dsn, $usuario, $senha);
     }
 }

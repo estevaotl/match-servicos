@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . "/match-servicos/api/config.php");
+require_once("../../../config.php");
 
 class OrdemServicoController
 {
@@ -40,5 +40,13 @@ class OrdemServicoController
     public function obterComId($idTrabalhador, $completo = true)
     {
         return $this->service->obterComId($idTrabalhador, $completo);
+    }
+
+    public function modificarStatus($idOrdemServico, $statusNovo){
+        return $this->service->modificarStatus($idOrdemServico, $statusNovo);
+    }
+
+    public function atualizarValor($idOrdemServico, $valor){
+        return $this->service->atualizarValor($idOrdemServico, $valor);
     }
 }
