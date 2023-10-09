@@ -9,11 +9,13 @@ import { prestadoresServicosMocked } from './mock'
 import { FaSearch } from 'react-icons/fa'
 const ITEMS_PER_PAGE = 3; // Número de itens por página no carrossel
 
-
 const HomePage = () => {
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
   const [prestadoresServicos, setPrestadoresServicos] = useState([]);
+
+  const currentURL = window.location.href;
+  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
 
   useEffect(() => {
     fetchPrestadoresServicos();
@@ -21,7 +23,7 @@ const HomePage = () => {
 
   const fetchPrestadoresServicos = async () => {
     try {
-      const response = await fetch(`http://localhost/match-servicos/api/clientes/obterParaCarrossel`);
+      const response = await fetch(`${apiURL}/clientes/obterParaCarrossel`);
       const data = await response.json();
       setPrestadoresServicos(data.cliente);
     } catch (error) {
@@ -80,8 +82,8 @@ const HomePage = () => {
                   <CardPrestadorServicos
                     imageSrc={
                       prestador.imagemPerfil.length > 0
-                        ? `http://localhost/match-servicos/api/imagem/ler/${prestador.imagemPerfil[0].nomeArquivo}`
-                        : 'http://localhost/match-servicos/api/imagem/ler/icone_person.png' // Defina o caminho para a imagem padrão aqui
+                        ? `${apiURL}/imagem/ler/${prestador.imagemPerfil[0].nomeArquivo}`
+                        : `${apiURL}/imagem/ler/icone_person.png`
                     }
                     altText={`Imagem de ${prestador.nome}`}
                     profissao={prestador.servicosPrestados}

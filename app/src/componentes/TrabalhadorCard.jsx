@@ -12,6 +12,9 @@ const TrabalhadorCard = ({ key, worker }) => {
     const [isLogged, setIsLogged] = useState(sessionStorage.getItem('idCliente') !== null);
     const navigate = useNavigate();
 
+    const currentURL = window.location.href;
+    const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
+  
     const enviarRequisicao = async () => {
         if (!isLogged) {
             alert("Faça login para entrar em contato");
@@ -20,7 +23,7 @@ const TrabalhadorCard = ({ key, worker }) => {
         }
 
         try {
-            const response = await fetch('http://localhost/match-servicos/api/ordemServico/criar', {
+            const response = await fetch(`${apiURL}/ordemServico/criar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

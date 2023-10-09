@@ -15,6 +15,9 @@ const SearchPage = () => {
   const [cities, setCities] = useState([]);
   const [selectedCidade, setSelectedCidade] = useState([]);
 
+  const currentURL = window.location.href;
+  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
+
   const navigate = useNavigate();
 
   // const handleMinAgeChange = (event) => {
@@ -36,7 +39,7 @@ const SearchPage = () => {
       const encodedEstado = encodeURIComponent(estado); // Include the selected profession
       const encodedCidade = encodeURIComponent(cidade); // Include the selected profession
 
-      var url = `http://localhost/match-servicos/api/clientes/busca?q=${encodedQuery}`;
+      var url = `${apiURL}/clientes/busca?q=${encodedQuery}`;
       // if (age > 18) {
       //     const encodedMinAge = encodeURIComponent(age);
       //     url += `&idade=${encodedMinAge}`;

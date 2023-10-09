@@ -8,36 +8,36 @@ const LoginPage = () => {
   const [senha, setSenha] = useState('');
   const { saveUserSate } = useAuth();
 
+  const currentURL = window.location.href;
+  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
 
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    saveUserSate('123', 'Cleiton')
-    navigate('/');
-    // fetch('http://localhost/match-servicos/api/clientes/logar', {
-    //   method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
-    //   },
-    //   body: JSON.stringify({
-    //     // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
-    //     // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
-    //     email: email,
-    //     senha: senha
-    //   })
-    // })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     saveUserSate(data.id, data.nome)
-    //     navigate('/'); // Use navigate('/') para redirecionar para a página inicial
-    //   })
-    //   .catch(error => {
-    //     // Aqui você pode lidar com erros de requisição
-    //     console.error(error);
-    //   });
 
+    fetch(`${apiURL}/clientes/logar`, {
+      method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
+      headers: {
+        'Content-Type': 'application/json',
+        // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
+      },
+      body: JSON.stringify({
+        // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
+        // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
+        email: email,
+        senha: senha
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        saveUserSate(data.id, data.nome)
+        navigate('/'); // Use navigate('/') para redirecionar para a página inicial
+      })
+      .catch(error => {
+        // Aqui você pode lidar com erros de requisição
+        console.error(error);
+      });
   };
 
   return (

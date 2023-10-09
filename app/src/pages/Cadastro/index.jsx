@@ -30,6 +30,9 @@ const CadastroPage = () => {
   const { saveUserSate } = useAuth();
   const [selectedProfissoes, setSelectedProfissoes] = useState([]);
 
+  const currentURL = window.location.href;
+  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
+
   const handleChangeDocumento = (value) => {
     // Remove caracteres não numéricos
     const numericValue = value.replace(/\D/g, '');
@@ -53,7 +56,7 @@ const CadastroPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch('http://localhost/match-servicos/api/clientes/criar', {
+    fetch(`${apiURL}/clientes/criar`, {
       method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
       headers: {
         'Content-Type': 'application/json',

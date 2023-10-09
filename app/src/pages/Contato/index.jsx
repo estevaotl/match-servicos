@@ -4,6 +4,9 @@ import './styles.css';
 const ContatoPage = () => {
   const [message, setMessage] = useState('');
 
+  const currentURL = window.location.href;
+  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -30,7 +33,7 @@ const ContatoPage = () => {
       valor: valor,
     });
 
-    fetch('http://localhost/match-servicos/api/contato/enviar', {
+    fetch(`${apiURL}/contato/enviar`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

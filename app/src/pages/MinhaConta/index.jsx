@@ -25,6 +25,9 @@ function App() {
   const [valorOrdem, setValorOrdem] = useState('');
   const { idCliente } = useAuth();
 
+  const currentURL = window.location.href;
+  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
+
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
@@ -45,7 +48,7 @@ function App() {
     formData.append('image', file);
     formData.append('idCliente', idCliente);
 
-    fetch('http://localhost/match-servicos/api/imagem/upload', {
+    fetch(`${apiURL}/imagem/upload`, {
       method: 'POST',
       body: formData,
     })
@@ -69,7 +72,7 @@ function App() {
     formData.append('image', filePerfil);
     formData.append('idCliente', idCliente);
 
-    fetch('http://localhost/match-servicos/api/imagem/uploadPerfil', {
+    fetch(`${apiURL}/imagem/uploadPerfil`, {
       method: 'POST',
       body: formData,
     })
@@ -89,7 +92,7 @@ function App() {
 
   const handleSubmitDados = async () => {
 
-    fetch('http://localhost/match-servicos/api/clientes/atualizar', {
+    fetch(`${apiURL}/clientes/atualizar`, {
       method: 'POST',
       body: JSON.stringify({
         id: idCliente,
@@ -117,7 +120,7 @@ function App() {
 
   useEffect(() => {
 
-    fetch(`http://localhost/match-servicos/api/clientes/obter/${idCliente}`, {
+    fetch(`${apiURL}/clientes/obter/${idCliente}`, {
       method: 'GET', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
       headers: {
         'Content-Type': 'application/json',
@@ -143,7 +146,7 @@ function App() {
   const fetchOrdensDeServico = async () => {
 
     try {
-      const response = await fetch(`http://localhost/match-servicos/api/ordemServico/obter/${idCliente}`);
+      const response = await fetch(`${apiURL}/ordemServico/obter/${idCliente}`);
       const data = await response.json();
       setOrdensDeServico(data.cliente);
     } catch (error) {
@@ -173,7 +176,7 @@ function App() {
       };
 
       // Enviar a solicitação para a URL de modificação
-      const response = await fetch('http://localhost/match-servicos/api/ordemServico/modificarStatus', requestOptions);
+      const response = await fetch(`${apiURL}/ordemServico/modificarStatus`, requestOptions);
 
       // Verificar se a solicitação foi bem-sucedida (código de resposta 200)
       if (response.ok) {
@@ -239,7 +242,7 @@ function App() {
       formData.append('ordemId', ordemId);
       formData.append('valor', valor);
 
-      fetch('http://localhost/match-servicos/api/ordemServico/atualizarValor', {
+      fetch(`${apiURL}/ordemServico/atualizarValor`, {
         method: 'POST',
         body: formData,
       })
@@ -288,7 +291,7 @@ function App() {
             {cliente.imagemPerfil.map((imagem, index) => (
               <div key={index} className="ball-image mx-auto">
                 <img
-                  src={`http://localhost/match-servicos/api/imagem/ler/${imagem.nomeArquivo}`}
+                  src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
                   alt={`Imagem ${index}`}
                   className="rounded-circle ball-image-inner"
                 />
@@ -490,7 +493,7 @@ function App() {
             {cliente.imagem && cliente.imagem.length > 0 && (
               <section className='enviar-fotos-section'>
                 {cliente.imagem.map((imagem, index) => (
-                  <CardPrestadorServicos imageSrc={`http://localhost/match-servicos/api/imagem/ler/${imagem.nomeArquivo}`} alt={`Descrição da imagem ${index + 1}`} key={index} />
+                  <CardPrestadorServicos imageSrc={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`} alt={`Descrição da imagem ${index + 1}`} key={index} />
                 ))}
               </section>
             )}
