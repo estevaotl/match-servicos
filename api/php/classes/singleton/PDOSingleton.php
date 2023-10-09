@@ -19,8 +19,8 @@ abstract class PDOSingleton
     // Cria o objeto PDO
     private static function create()
     {
-        if(substr($_SERVER['HTTP_HOST'], -3) == '.com'){
-            $dsn = "mysql:dbname=match_servicos;host=localhost;charset=utf8mb4";
+        if (strpos($_SERVER['HTTP_REFERER'], 'localhost') !== false){
+            $dsn = "mysql:dbname=dev_match_servicos;host=localhost;charset=utf8mb4";
 			$usuario = "root";
 			$senha = "";
 		}else{
