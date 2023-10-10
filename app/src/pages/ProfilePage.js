@@ -8,15 +8,16 @@ const Profile = () => {
     const { id } = useParams();
     const [profileData, setProfileData] = useState(null);
 
+    const currentURL = window.location.href;
+    const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
+
     useEffect(() => {
         // Faz a requisição à API usando o ID fornecido
-        fetch(`http://localhost/match-servicos/api/clientes/obter/${id}`)
+        fetch(`${apiURL}/clientes/obter/${id}`)
             .then((response) => response.json())
             .then((data) => setProfileData(data.cliente))
             .catch((error) => console.error('Erro ao obter dados do perfil:', error));
     }, [id]);
-
-
 
     return (
         <div className="container">
@@ -31,7 +32,7 @@ const Profile = () => {
                         <div className="image-gallery">
                             {profileData.imagem.map((imagem, index) => (
                                 <CardPrestadorServicos
-                                    imageSrc={`http://localhost/match-servicos/api/imagem/ler/${imagem.nomeArquivo}`}
+                                    imageSrc={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
                                     alt={`Descrição da imagem ${index + 1}`}
                                     key={index}
                                 />
