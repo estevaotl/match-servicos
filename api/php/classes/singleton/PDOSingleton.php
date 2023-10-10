@@ -26,8 +26,8 @@ abstract class PDOSingleton
 			$senha = "";
 		}else{
 			$dsn = "mysql:dbname=match_servicos;unix_socket=/var/lib/mysql/mysql.sock;charset=utf8mb4";
-			$usuario = "root";
-			$senha = "";
+			$usuario = "projetotcc";
+			$senha = "y73P,FyC4]20";
 		}
 
         return new PDO($dsn, $usuario, $senha);
