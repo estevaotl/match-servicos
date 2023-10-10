@@ -50,7 +50,12 @@ class ClienteController
             $dadosClienteFisico = new DadosClienteFisico();
             $dadosClienteFisico->setCpf($dados['documento']);
             $dadosClienteFisico->setDataNascimento($dados['dataNascimento']);
+            $dataNascimento = $dados['dataNascimento'];
+            $idade = date_diff(new DateTime(), new DateTime($dataNascimento));
+            $idade = $idade->format('%Y');
 
+            $dadosClienteFisico->setIdade($idade);
+    
             $cliente->setDadosEspecificos($dadosClienteFisico);
         } else {
             $dadosClienteJuridico = new DadosClienteJuridico();
