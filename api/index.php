@@ -1,10 +1,10 @@
 <?php
 // Configuração do CORS
-header('Access-Control-Allow-Origin: *');
+// header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Credentials: true");
-header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+// header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 header('Access-Control-Max-Age: 1000');
-header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
+// header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
 
 use Slim\Factory\AppFactory;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -73,33 +73,46 @@ try {
         });
 
         $app->post('/logar', function (Request $request, Response $response, $args) {
-            // Obter o corpo da requisição
-            $body = $request->getBody()->getContents();
+            try {
+                // Obter o corpo da requisição
+                $body = $request->getBody()->getContents();
 
-            // Transformar o JSON em array (caso o corpo seja JSON)
-            $data = json_decode($body, true);
+                // Transformar o JSON em array (caso o corpo seja JSON)
+                $data = json_decode($body, true);
 
-            // Cria uma instância da classe ClienteController
-            $clienteController = new ClienteController();
+                // Cria uma instância da classe ClienteController
+                $clienteController = new ClienteController();
 
-            // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-            $clienteController->logar($data['email'], $data['senha']);
-            $cliente = $clienteController->obterComEmail($data['email']);
+                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                $clienteController->logar($data['email'], $data['senha']);
+                $cliente = $clienteController->obterComEmail($data['email']);
 
-            if (!$cliente instanceof Cliente) {
-                throw new Exception("Cliente não encontrado.");
+                if (!$cliente instanceof Cliente) {
+                    throw new Exception("Cliente não encontrado.");
+                }
+
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'id' => $cliente->getId(),
+                    'nome' => $cliente->getNome()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            } catch (\Throwable $th) {
+                Util::logException($th);
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'excecao' => $th->getMessage()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
             }
-
-            // Preparar uma resposta JSON
-            $responseData = [
-                'id' => $cliente->getId(),
-                'nome' => $cliente->getNome()
-            ];
-
-            // Responder com JSON
-            $response->getBody()->write(json_encode($responseData));
-
-            return $response->withHeader('Content-Type', 'application/json');
         });
 
         $app->post('/atualizar', function (Request $request, Response $response, $args) {

@@ -1,5 +1,7 @@
 <?php
 
+    require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
+
     class ClienteDAO{
         private $bancoDados = null;
 
