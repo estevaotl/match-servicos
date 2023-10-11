@@ -72,7 +72,7 @@ function App() {
     formData.append('image', filePerfil);
     formData.append('idCliente', idCliente);
 
-    fetch(`${apiURL}/imagem/uploadPerfil`, {
+    await fetch(`${apiURL}/imagem/uploadPerfil`, {
       method: 'POST',
       body: formData,
     })
@@ -92,7 +92,7 @@ function App() {
 
   const handleSubmitDados = async () => {
 
-    fetch(`${apiURL}/clientes/atualizar`, {
+    await fetch(`${apiURL}/clientes/atualizar`, {
       method: 'POST',
       body: JSON.stringify({
         id: idCliente,
