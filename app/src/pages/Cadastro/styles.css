@@ -33,3 +33,11 @@
   max-width: 100%; /* O máximo de largura permitida */
   margin-top: 10px;
 }
+
+.divs-escondidas-cpf div{
+  width: auto;
+}
+
+.divs-escondidas-cnpj div{
+  width: auto;
+}
