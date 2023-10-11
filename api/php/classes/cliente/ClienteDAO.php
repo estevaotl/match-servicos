@@ -210,7 +210,7 @@
             if(isset($restricoes['obterParaCarrossel']) && $restricoes['obterParaCarrossel'] == true){
                 $comando .= ", COUNT(DISTINCT ordem_servico.id) AS qtdOrdensServico ";
                 $where .= " AND ordem_servico.status != :ordemServicoAberta AND ordem_servico.ativo = 1 ";
-                $join .= " JOIN ordem_servico ON ordem_servico.idTrabalhador = cliente.id ";
+                $join .= " LEFT JOIN ordem_servico ON ordem_servico.idTrabalhador = cliente.id ";
                 $orderBy = " qtdOrdensServico DESC ";
                 $parametros['ordemServicoAberta'] = StatusOrdemServico::EM_ABERTO;
             }
