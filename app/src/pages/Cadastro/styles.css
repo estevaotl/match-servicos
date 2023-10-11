@@ -34,10 +34,10 @@
   margin-top: 10px;
 }
 
-.divs-escondidas-cpf div{
+#divs-escondidas-cpf div{
   width: auto;
 }
 
-.divs-escondidas-cnpj div{
+#divs-escondidas-cnpj div{
   width: auto;
 }
