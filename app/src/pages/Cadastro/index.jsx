@@ -73,7 +73,7 @@ const CadastroPage = () => {
         senha: senha,
         ehPrestadorDeServicos: prestadorDeServicos == "prestadorSim" ? true : false,
         documento: documento,
-        servicosPrestados: document.getElementById('servicosPrestados').value,
+        servicosPrestados: document.getElementById('servicosPrestados') != null ? document.getElementById('servicosPrestados').value : '',
         cep: cep,
         rua: endereco,
         bairro: bairro,
