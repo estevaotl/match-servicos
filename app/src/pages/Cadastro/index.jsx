@@ -107,11 +107,11 @@ const CadastroPage = () => {
       // CPF
       return (
         <div className="col-md-6 mb-3">
-          <div className="col-md-6 mb-3" style='width: auto'>
+          <div className="col-md-6 mb-3">
             <label htmlFor="dataNascimento" className="form-label">Data de Nascimento:</label>
             <input type="date" className="form-control" id="dataNascimento" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
           </div>
-          <div className="col-md-6 mb-3" style='width: auto'>
+          <div className="col-md-6 mb-3">
             <label htmlFor="genero" className="form-label">Gênero:</label>
             <select className="form-select" id="genero" value={genero} onChange={(e) => setGenero(e.target.value)}>
               <option value="">Selecione</option>
@@ -125,15 +125,15 @@ const CadastroPage = () => {
       // CNPJ
       return (
         <div className="col-md-6 mb-3">
-          <div className="col-md-6 mb-3" style='width: auto'>
+          <div className="col-md-6 mb-3">
             <label htmlFor="inscricaoEstadual" className="form-label">Inscrição Estadual:</label>
             <input type="text" className="form-control" id="inscricaoEstadual" value={inscricaoEstadual} onChange={(e) => setInscricaoEstadual(e.target.value)} />
           </div>
-          <div className="col-md-6 mb-3" style='width: auto'>
+          <div className="col-md-6 mb-3">
             <label htmlFor="razaoSocial" className="form-label">Razão Social:</label>
             <input type="text" className="form-control" id="razaoSocial" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} />
           </div>
-          <div className="col-md-6 mb-3" style='width: auto'>
+          <div className="col-md-6 mb-3">
             <label htmlFor="situacaoTributaria" className="form-label">Situação Tributária:</label>
             <select className="form-select" id="situacaoTributaria" value={situacaoTributaria} onChange={(e) => setSituacaoTributaria(e.target.value)}>
               <option value="">Selecione</option>
