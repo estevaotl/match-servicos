@@ -106,7 +106,7 @@ const CadastroPage = () => {
     if (documento.length === 14) {
       // CPF
       return (
-        <div>
+        <div className="col-md-6 mb-3">
           <div className="col-md-6 mb-3">
             <label htmlFor="dataNascimento" className="form-label">Data de Nascimento:</label>
             <input type="date" className="form-control" id="dataNascimento" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
@@ -124,7 +124,7 @@ const CadastroPage = () => {
     } else if (documento.length === 18) {
       // CNPJ
       return (
-        <div>
+        <div className="col-md-6 mb-3">
           <div className="col-md-6 mb-3">
             <label htmlFor="inscricaoEstadual" className="form-label">Inscrição Estadual:</label>
             <input type="text" className="form-control" id="inscricaoEstadual" value={inscricaoEstadual} onChange={(e) => setInscricaoEstadual(e.target.value)} />
