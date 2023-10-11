@@ -304,7 +304,7 @@ function App() {
           <TabList>
             <Tab>Editar Dados</Tab>
             <Tab>Enviar Imagem Perfil</Tab>
-            <Tab>Enviar Fotos/Vídeos</Tab>
+            {cliente.prestadorDeServicos && <Tab>Enviar Fotos/Vídeos</Tab>}
             {cliente.prestadorDeServicos && <Tab>Ordens de Serviço</Tab>}
           </TabList>
 
