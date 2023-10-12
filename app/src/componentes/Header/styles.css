@@ -3,14 +3,34 @@
   display:flex;
   flex:1;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content:space-between;
   background-color: burlywood;
-  padding:16px 8px;
+  padding:16px 12px;
   border-radius: 8px;
   font-size: 24px;
   min-height: 80px;
   max-height:80px;
+}
+.main-header nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:row;
+  margin:0 auto;
+  padding-right:8%;
+}
+.main-header nav ul{
+  display:flex;
+  flex-direction:row;
+  gap:32px;
+}
+.main-header nav ul li .header-link{
+  text-decoration:none;
+  color:#000;
+}
+.main-header nav ul li .header-link:hover{
+  color:#fff;
 }
 .user-options{
   margin:0;
