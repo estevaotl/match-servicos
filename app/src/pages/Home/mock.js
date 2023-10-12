@@ -1,7 +1,7 @@
 export const prestadoresServicosMocked = [
   {
     id: 1,
-    imagem: [],
+    imagemPerfil: [],
     nome: 'cleiton',
     servicosPrestados: 'pedreiro',
     idade: 24,
@@ -9,7 +9,7 @@ export const prestadoresServicosMocked = [
     endereco: [{ rua: 'rua', numero: 1, bairro: 'bairro', cidade: 'cidade', estado: 'estado' }]
   }, {
     id: 1,
-    imagem: [],
+    imagemPerfil: [],
     nome: 'cleiton aasasasasasasasasasasasasasasasas',
     servicosPrestados: 'pedreiro asasasasasasasasasasass',
     idade: 24,
@@ -17,7 +17,7 @@ export const prestadoresServicosMocked = [
     endereco: [{ rua: 'rua', numero: 1, bairro: 'bairro', cidade: 'cidade', estado: 'estado' }]
   }, {
     id: 1,
-    imagem: [],
+    imagemPerfil: [],
     nome: 'cleiton',
     servicosPrestados: 'pedreiro',
     idade: 24,
@@ -26,7 +26,7 @@ export const prestadoresServicosMocked = [
   },
   {
     id: 1,
-    imagem: [],
+    imagemPerfil: [],
     nome: 'cleiton',
     servicosPrestados: 'pedreiro',
     idade: 24,
@@ -34,7 +34,7 @@ export const prestadoresServicosMocked = [
     endereco: [{ rua: 'rua', numero: 1, bairro: 'bairro', cidade: 'cidade', estado: 'estado' }]
   }, {
     id: 1,
-    imagem: [],
+    imagemPerfil: [],
     nome: 'cleiton aasasasasasasasasasasasasasasasas',
     servicosPrestados: 'pedreiro asasasasasasasasasasass',
     idade: 24,
@@ -42,7 +42,7 @@ export const prestadoresServicosMocked = [
     endereco: [{ rua: 'rua', numero: 1, bairro: 'bairro', cidade: 'cidade', estado: 'estado' }]
   }, {
     id: 1,
-    imagem: [],
+    imagemPerfil: [],
     nome: 'cleiton',
     servicosPrestados: 'pedreiro',
     idade: 24,

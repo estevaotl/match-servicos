@@ -5,10 +5,10 @@ import './styles.css';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
+
 const SearchPage = () => {
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
   const [filteredWorkers, setFilteredWorkers] = useState([]);
-  // const [minAge, setMinAge] = useState(18);
   const [selectedProfession, setSelectedProfession] = useState(''); // Add state for selected profession
   const [ufs, setUfs] = useState([]);
   const [selectedEstado, setSelectedEstado] = useState('');
@@ -19,10 +19,6 @@ const SearchPage = () => {
   const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
 
   const navigate = useNavigate();
-
-  // const handleMinAgeChange = (event) => {
-  //     setMinAge(event.target.value);
-  // };
 
   const handleProfessionChange = (event) => {
     setSelectedProfession(event.target.value);
@@ -188,16 +184,6 @@ const SearchPage = () => {
               value={currentSearchQuery}
               onChange={(e) => setCurrentSearchQuery(e.target.value)}
             />
-
-            {/* <span>Idade atual: {minAge} anos</span><br />
-                        <input
-                            type="range"
-                            min="18"
-                            max="200"
-                            value={minAge}
-                            onChange={handleMinAgeChange}
-                            className='input-age'
-                        /><br /> */}
 
             <label htmlFor="profissao" className="form-label">
               Serviços Prestados:

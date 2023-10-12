@@ -31,8 +31,21 @@
   flex-direction:row;
   gap:8px;
   margin:16px 0;
-
 }
+
+.rounded-image-minha-conta {
+  width: 200px;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}
+.rounded-image-minha-conta >img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+
 .form-enviar-fotos{
   display:flex;
   flex-direction:column;

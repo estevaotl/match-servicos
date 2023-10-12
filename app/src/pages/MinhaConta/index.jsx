@@ -3,7 +3,6 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import './styles.css';
 import { useNavigate } from 'react-router-dom'; // Importe o useNavigate
-import CardPrestadorServicos from '../../componentes/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
 import InputMask from 'react-input-mask';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importe o CSS do Bootstrap
 import { useAuth } from '../../contexts/Auth';
@@ -140,6 +139,7 @@ function App() {
       .catch(error => {
         navigate('/'); // Use navigate('/') para redirecionar para a página inicial
       });
+
   }, [idCliente]);
 
   // Função para buscar ordens de serviço da API
@@ -304,6 +304,7 @@ function App() {
           <TabList>
             <Tab>Editar Dados</Tab>
             <Tab>Enviar Imagem Perfil</Tab>
+            <Tab>Enviar Fotos/Vídeos</Tab>
             {cliente.prestadorDeServicos && <Tab>Enviar Fotos/Vídeos</Tab>}
             {cliente.prestadorDeServicos && <Tab>Ordens de Serviço</Tab>}
           </TabList>
@@ -493,7 +494,13 @@ function App() {
             {cliente.imagem && cliente.imagem.length > 0 && (
               <section className='enviar-fotos-section'>
                 {cliente.imagem.map((imagem, index) => (
-                  <CardPrestadorServicos imageSrc={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`} alt={`Descrição da imagem ${index + 1}`} key={index} />
+                  <div key={index} className="rounded-image-minha-conta">
+                    <img
+                      src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
+                      alt={`Descrição da imagem ${index + 1}`}
+                      key={index}
+                    />
+                  </div>
                 ))}
               </section>
             )}

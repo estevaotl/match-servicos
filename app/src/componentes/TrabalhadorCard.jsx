@@ -14,7 +14,7 @@ const TrabalhadorCard = ({ key, worker }) => {
 
     const currentURL = window.location.href;
     const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
-  
+
     const enviarRequisicao = async () => {
         if (!isLogged) {
             alert("Faça login para entrar em contato");
@@ -66,7 +66,7 @@ const TrabalhadorCard = ({ key, worker }) => {
                         <p className="card-text">Endereço: {worker.endereco[0].rua}  {worker.endereco[0].numero} {worker.endereco[0].bairro} {worker.endereco[0].cidade}</p>
                     </>
                 )}
-                <Link to={`/profile/${worker.id}`} className="btn btn-primary">
+                <Link to={`/profile/${worker.id}`} className="btn btn-primary mb-2">
                     Ver Perfil
                 </Link>
 
