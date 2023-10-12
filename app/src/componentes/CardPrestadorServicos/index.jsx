@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles.css'; // Caminho relativo para o arquivo card.css
+import './styles.css';
 import { Link } from 'react-router-dom';
 
 const CardPrestadorServicos = ({ imageSrc, altText, profissao, idade, endereco, media_avaliacao, key, id }) => {
