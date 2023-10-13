@@ -148,7 +148,7 @@ function App() {
     try {
       const response = await fetch(`${apiURL}/ordemServico/obterPorTrabalhador/${idCliente}`);
       const data = await response.json();
-      setOrdensDeServico(data.cliente);
+      setOrdensDeServico(data.ordens);
     } catch (error) {
       console.error('Erro ao obter as ordens de serviço:', error);
     }
