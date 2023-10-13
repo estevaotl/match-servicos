@@ -31,7 +31,7 @@ const Profile = () => {
               {profileData.imagem.map((imagem, index) => (
                 <div key={index} className="profile-image">
                   <img
-                    imageSrc={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
+                    src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
                     alt={`Descrição da imagem ${index + 1}`}
                     className="rounded-circle ball-image-inner"
                   />
