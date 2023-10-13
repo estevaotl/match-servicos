@@ -144,4 +144,13 @@ class OrdemServicoDAO
 
         return $this->bancoDados->executar($comando, $parametros);
     }
+
+    public function obterOrdensServicoIdTrabalhador($idTrabalhador){
+        $comando = "SELECT * FROM ordem_servico WHERE idTrabalhador = :idTrabalhador AND ativo = 1";
+        $parametros = array(
+            "idTrabalhador" => $idTrabalhador
+        );
+
+        return $this->bancoDados->consultar($comando, $parametros, true);
+    }
 }

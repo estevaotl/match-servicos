@@ -1,5 +1,5 @@
 <?php
-
+// require_once __DIR__ . '/../../../config.php';
 require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
 
 class OrdemServicoController
@@ -38,9 +38,9 @@ class OrdemServicoController
         return $this->service->salvar($ordemServico, $erro);
     }
 
-    public function obterComId($idTrabalhador, $completo = true)
+    public function obterComId($idOS, $completo = true)
     {
-        return $this->service->obterComId($idTrabalhador, $completo);
+        return $this->service->obterComId($idOS, $completo);
     }
 
     public function modificarStatus($idOrdemServico, $statusNovo){
@@ -49,5 +49,9 @@ class OrdemServicoController
 
     public function atualizarValor($idOrdemServico, $valor){
         return $this->service->atualizarValor($idOrdemServico, $valor);
+    }
+
+    public function obterOrdensServicoIdTrabalhador($idTrabalhador){
+        return $this->service->obterOrdensServicoIdTrabalhador($idTrabalhador);
     }
 }

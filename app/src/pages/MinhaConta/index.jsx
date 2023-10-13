@@ -146,7 +146,7 @@ function App() {
   const fetchOrdensDeServico = async () => {
 
     try {
-      const response = await fetch(`${apiURL}/ordemServico/obter/${idCliente}`);
+      const response = await fetch(`${apiURL}/ordemServico/obterPorTrabalhador/${idCliente}`);
       const data = await response.json();
       setOrdensDeServico(data.cliente);
     } catch (error) {
@@ -304,7 +304,6 @@ function App() {
           <TabList>
             <Tab>Editar Dados</Tab>
             <Tab>Enviar Imagem Perfil</Tab>
-            <Tab>Enviar Fotos/Vídeos</Tab>
             {cliente.prestadorDeServicos && <Tab>Enviar Fotos/Vídeos</Tab>}
             {cliente.prestadorDeServicos && <Tab>Ordens de Serviço</Tab>}
           </TabList>

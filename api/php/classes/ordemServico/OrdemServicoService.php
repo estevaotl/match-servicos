@@ -1,4 +1,5 @@
 <?php
+    // require_once __DIR__ . '/../../../config.php';
     require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
 
     class OrdemServicoService{
@@ -36,8 +37,8 @@
             return $this->dao->atualizarCliquesEntrarContato($ordemServico);
         }
 
-        public function obterComId($idTrabalhador, $completo = true){
-            return $this->dao->obterComId($idTrabalhador, $completo);
+        public function obterComId($idOS, $completo = true){
+            return $this->dao->obterComId($idOS, $completo);
         }
 
         public function modificarStatus($idOrdemServico, $statusNovo){
@@ -50,5 +51,9 @@
 
         public function atualizarValor($idOrdemServico, $valor){
             return $this->dao->atualizarValor($idOrdemServico, $valor);
+        }
+
+        public function obterOrdensServicoIdTrabalhador($idTrabalhador){
+            return $this->dao->obterOrdensServicoIdTrabalhador($idTrabalhador);
         }
     }
