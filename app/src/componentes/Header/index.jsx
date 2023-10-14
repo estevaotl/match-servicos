@@ -12,7 +12,6 @@ function Header() {
     return location.pathname === '/'
   }, [location])
 
-
   return (
     <header className="main-header">
       <div className="text-white title-logo">
@@ -30,6 +29,10 @@ function Header() {
               }
               <li className="mb-2">
                 <Link className="header-link" to="/minha-conta">Minha conta </Link>
+              </li>
+
+              <li className="mb-2">
+                <Link className="header-link" onClick={signOut}>Sair</Link>
               </li>
             </>
 
@@ -50,10 +53,6 @@ function Header() {
           )}
         </ul>
       </nav>
-      {
-        signed &&
-        <FaArrowRightFromBracket color='red' size={32} onClick={signOut} />
-      }
 
     </header>
 
