@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 const Profile = () => {
   const { id } = useParams();
   const [profileData, setProfileData] = useState(null);
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${profileData.whatsapp}&text=${whatsappMessage}`;
+  const whatsappMessage = encodeURIComponent(`Olá ${profileData.nome}. Vi seu perfil no site e gostei dos seus serviços prestados. Gostaria de solicitar um orçamento. Como posso proceder?`);
+  const [isLogged, setIsLogged] = useState(sessionStorage.getItem('idCliente') !== null);
+  const navigate = useNavigate();
 
   const currentURL = window.location.href;
   const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
@@ -16,6 +20,45 @@ const Profile = () => {
       .then((data) => setProfileData(data.cliente))
       .catch((error) => console.error('Erro ao obter dados do perfil:', error));
   }, [id]);
+
+  const enviarRequisicao = async () => {
+    if (!isLogged) {
+      alert("Faça login para entrar em contato");
+      navigate('/login'); // Usando navigate para redirecionar
+      return;
+    }
+
+    try {
+        const response = await fetch(`${apiURL}/ordemServico/criar`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            idTrabalhador: worker.id,
+            idCliente: idCliente
+          })
+        });
+
+        const data = await response.json();
+        console.log('Requisição enviada:', data);
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+    }
+  };
+
+  const handleWhatsappClick = (event) => {
+    if (!isLogged) {
+      event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
+      alert("Faça login para entrar em contato");
+      navigate('/login');
+    } else {
+      // Abre o link do WhatsApp em uma nova aba
+      window.open(whatsappLink, '_blank');
+
+      enviarRequisicao();
+    }
+  };
 
   return (
     <div className="profile-container">
@@ -38,6 +81,17 @@ const Profile = () => {
                 </div>
               ))}
             </div>
+
+            <a
+              href={whatsappLink} // Mantém o atributo href para o link do WhatsApp
+              className="btn btn-success contact-button"
+              onClick={handleWhatsappClick} // Usa a função de tratamento de clique personalizada
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
+              Entrar em Contato
+            </a>
           </div>
         ) : (
           <p>Carregando perfil...</p>
