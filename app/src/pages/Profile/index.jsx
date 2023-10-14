@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
 const Profile = () => {
   const { id } = useParams();
   const [profileData, setProfileData] = useState(null);
-  const whatsappLink = `https://api.whatsapp.com/send?phone=${profileData.whatsapp}&text=${whatsappMessage}`;
   const whatsappMessage = encodeURIComponent(`Olá ${profileData.nome}. Vi seu perfil no site e gostei dos seus serviços prestados. Gostaria de solicitar um orçamento. Como posso proceder?`);
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${profileData.whatsapp}&text=${whatsappMessage}`;
   const [isLogged, setIsLogged] = useState(sessionStorage.getItem('idCliente') !== null);
   const navigate = useNavigate();
 
@@ -35,8 +37,8 @@ const Profile = () => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            idTrabalhador: worker.id,
-            idCliente: idCliente
+            idTrabalhador: profileData.id,
+            idCliente: id
           })
         });
 
