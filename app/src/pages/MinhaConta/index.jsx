@@ -24,6 +24,8 @@ function App() {
   const [valorOrdem, setValorOrdem] = useState('');
   const { idCliente } = useAuth();
 
+  const [errorsImagemServico, setErrorsImagemServico] = useState('');
+
   const currentURL = window.location.href;
   const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
 
@@ -42,7 +44,9 @@ function App() {
 
   const navigate = useNavigate();
 
-  const handleSubmitImage = async () => {
+  const handleSubmitImage = async (event) => {
+    event.preventDefault();
+
     const formData = new FormData();
     formData.append('image', file);
     formData.append('idCliente', idCliente);
@@ -55,10 +59,15 @@ function App() {
         if (!response.ok) {
           throw new Error('Erro na requisição');
         }
+
         return response.json();
       })
       .then(data => {
-        console.log(data); // Certifique-se de que você está vendo a resposta aqui
+        if (data.excecao) {
+          setErrorsImagemServico(data.excecao.split('\n'));
+        } else {
+          window.location.reload();
+        }
       })
       .catch(error => {
         console.error('Erro na requisição:', error);
@@ -476,6 +485,13 @@ function App() {
 
           <TabPanel>
             <h2>Enviar Fotos/Vídeos</h2>
+            {errorsImagemServico.length > 0 && (
+              <div className="alert alert-danger mt-3">
+                {errorsImagemServico.map((error, index) => (
+                  <div key={index}>{error}</div>
+                ))}
+              </div>
+            )}
             <form className='form-enviar-fotos' onSubmit={handleSubmitImage}>
               <label className='input-file'>
                 <div className='icon-container'>

@@ -7,6 +7,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const { saveUserSate } = useAuth();
+  const [errors, setErrors] = useState([]);
 
   const currentURL = window.location.href;
   const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
@@ -31,8 +32,12 @@ const LoginPage = () => {
     })
       .then(response => response.json())
       .then(data => {
-        saveUserSate(data.id, data.nome)
-        navigate('/'); // Use navigate('/') para redirecionar para a página inicial
+        if (data.excecao) {
+          setErrors(data.excecao.split('\n'));
+        } else {
+          saveUserSate(data.id, data.nome)
+          navigate('/');
+        }
       })
       .catch(error => {
         // Aqui você pode lidar com erros de requisição
@@ -43,6 +48,13 @@ const LoginPage = () => {
   return (
     <div className='login-container'>
       <h1>LOGIN</h1> <br />
+      {errors.length > 0 && (
+        <div className="alert alert-danger mt-3">
+          {errors.map((error, index) => (
+            <div key={index}>{error}</div>
+          ))}
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="col-md-6 mb-3">
           <label htmlFor="email" className="form-label">Email:</label>
