@@ -80,12 +80,12 @@
 				session_start();
 			}
 
-			$cliente = $this->dao->obterComEmailESenha($email, $senha)[0];
-			if($cliente == null){
+			$cliente = $this->dao->obterComEmailESenha($email, $senha);
+			if(count($cliente) <= 0){
 				throw new Exception('E-mail ou senha incorreta');
 			}
 
-			$_SESSION['idCliente'] = $cliente['id'];
+			$_SESSION['idCliente'] = $cliente[0]['id'];
 		}
 
 		public function deslogar(){

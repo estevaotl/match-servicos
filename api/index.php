@@ -253,15 +253,31 @@ try {
 
     $app->group($apiInicial . '/imagem', function ($app) {
         $app->post('/upload', function (Request $request, Response $response, $args) {
-            $uploadedFile = $request->getUploadedFiles()['image'];
+            try {
+                $uploadedFile = $request->getUploadedFiles()['image'];
 
-            $params = $request->getParsedBody(); // Retorna um array com os dados do POST
+                $params = $request->getParsedBody(); // Retorna um array com os dados do POST
 
-            ImagemFactory::saveImage($uploadedFile, $params['idCliente']);
+                ImagemFactory::saveImage($uploadedFile, $params['idCliente']);
 
-            // Use o resultado da função salvar como necessário
-            $response->getBody()->write("Imagem criada.");
-            return $response;
+                $responseData = [
+                    'resposta' => 'Imagem criada'
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            } catch (\Throwable $th) {
+                $responseData = [
+                    'excecao' => $th->getMessage()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            }
         });
 
         $app->get('/ler/{nomeArquivo}', function ($request, $response, $args) {
