@@ -74,6 +74,17 @@ const Profile = () => {
             <p className="mb-2"><strong>Serviços Prestados:</strong> {profileData.servicosPrestados}</p>
             <p className="mb-2"><strong>WhatsApp:</strong> {profileData.whatsapp}</p>
             <p className="mb-2"><strong>Gênero:</strong> {profileData.genero}</p>
+            <a
+              href={whatsappLink} // Mantém o atributo href para o link do WhatsApp
+              className="btn btn-success contact-button"
+              onClick={handleWhatsappClick} // Usa a função de tratamento de clique personalizada
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
+              Entrar em Contato
+            </a>
+
             <div className="image-gallery">
               {profileData.imagem.map((imagem, index) => (
                 <div key={index} className="profile-image">
@@ -85,17 +96,6 @@ const Profile = () => {
                 </div>
               ))}
             </div>
-
-            <a
-              href={whatsappLink} // Mantém o atributo href para o link do WhatsApp
-              className="btn btn-success contact-button"
-              onClick={handleWhatsappClick} // Usa a função de tratamento de clique personalizada
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
-              Entrar em Contato
-            </a>
           </div>
         ) : (
           <p>Carregando perfil...</p>
