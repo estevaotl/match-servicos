@@ -474,7 +474,7 @@ function App() {
                   <FaCamera size={24} />
                   Selecione imagem
                 </div>
-                <input type="file" onChange={handleFileChangePerfil} />
+                <input type="file" onChange={handleFileChangePerfil} accept="image/jpg, image/png, image/gif, image/jpeg"/>
                 <span>
                   {filePerfil?.name}
                 </span>
@@ -498,7 +498,7 @@ function App() {
                   <FaFileImport size={24} />
                   Selecione o arquivo
                 </div>
-                <input type="file" onChange={handleFileChange} />
+                <input type="file" onChange={handleFileChange} accept="image/jpg, image/png, image/gif, image/jpeg"/>
                 <span>
                   {file?.name}
                 </span>
