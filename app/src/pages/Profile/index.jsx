@@ -74,12 +74,10 @@ const Profile = () => {
             <p className="mb-2"><strong>Serviços Prestados:</strong> {profileData.servicosPrestados}</p>
             <p className="mb-2"><strong>WhatsApp:</strong> {profileData.whatsapp}</p>
             <p className="mb-2"><strong>Gênero:</strong> {profileData.genero}</p>
-            <p className="mb-2"><strong>Gênero:</strong> {profileData.genero}</p>
-            <p className="mb-2"><strong>Gênero:</strong> {profileData.genero}</p>
             {profileData.endereco && profileData.endereco.length > 0 && (
               <>
-                <p className="mb-2"><strong>Cep: {profileData.endereco[0].cep}</strong></p>
-                <p className="mb-2"><strong>Endereço: {profileData.endereco[0].rua}  {profileData.endereco[0].numero} {profileData.endereco[0].bairro} {profileData.endereco[0].cidade}</strong></p>
+                <p className="mb-2"><strong>Cep:</strong> {profileData.endereco[0].cep}</p>
+                <p className="mb-2"><strong>Endereço:</strong> {profileData.endereco[0].rua}  {profileData.endereco[0].numero} {profileData.endereco[0].bairro} {profileData.endereco[0].cidade}</p>
               </>
             )}
             <a
