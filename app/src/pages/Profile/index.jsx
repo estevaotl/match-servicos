@@ -78,8 +78,8 @@ const Profile = () => {
             <p className="mb-2"><strong>Gênero:</strong> {profileData.genero}</p>
             {profileData.endereco && profileData.endereco.length > 0 && (
               <>
-                <p className="mb-2">Cep: {profileData.endereco[0].cep}</p>
-                <p className="mb-2">Endereço: {profileData.endereco[0].rua}  {profileData.endereco[0].numero} {profileData.endereco[0].bairro} {profileData.endereco[0].cidade}</p>
+                <p className="mb-2"><strong>Cep: {profileData.endereco[0].cep}</strong></p>
+                <p className="mb-2"><strong>Endereço: {profileData.endereco[0].rua}  {profileData.endereco[0].numero} {profileData.endereco[0].bairro} {profileData.endereco[0].cidade}</strong></p>
               </>
             )}
             <a
