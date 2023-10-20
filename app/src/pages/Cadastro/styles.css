@@ -41,3 +41,7 @@
 #divs-escondidas-cnpj div{
   width: auto;
 }
+
+.div-erros-consulta-cadastro{
+  width: 50%;
+}

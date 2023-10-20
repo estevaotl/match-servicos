@@ -35,7 +35,7 @@ const LoginPage = () => {
         if (data.excecao) {
           setErrors(data.excecao.split('\n'));
         } else {
-          saveUserSate(data.id, data.nome)
+          saveUserSate(data.id, data.nome, data.ehPrestadorServicos)
           navigate('/');
         }
       })

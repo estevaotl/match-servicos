@@ -6,6 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [signed, setSigned] = useState(false);
   const [idCliente, setIdCliente] = useState('');
   const [nomeCliente, setNomeCliente] = useState('');
+  const [ehPrestadorServicos, setEhPrestadorServicos] = useState('');
 
   useEffect(() => {
     const idClienteStorage = sessionStorage.getItem('idCliente');
@@ -19,22 +20,29 @@ export const AuthProvider = ({ children }) => {
       setNomeCliente(nomeCliente);
     }
 
-
+    const ehPrestadorServicos = sessionStorage.getItem('ehPrestadorServicos');
+    if (ehPrestadorServicos) {
+      setEhPrestadorServicos(ehPrestadorServicos);
+    }
   }, []);
 
-  function saveUserSate(idCliente, nomeCliente) {
+  function saveUserSate(idCliente, nomeCliente, ehPrestadorServicos) {
     sessionStorage.setItem('idCliente', idCliente);
     setIdCliente(idCliente);
     sessionStorage.setItem('nomeCliente', nomeCliente);
     setNomeCliente(nomeCliente);
+    sessionStorage.setItem('ehPrestadorServicos', ehPrestadorServicos);
+    setEhPrestadorServicos(ehPrestadorServicos);
     setSigned(true);
   }
   async function signOut() {
     setSigned(false);
     sessionStorage.removeItem('idCliente');
     sessionStorage.removeItem('nomeCliente');
+    sessionStorage.removeItem('ehPrestadorServicos');
     setIdCliente(false);
     setNomeCliente(false);
+    setEhPrestadorServicos(false);
   }
 
   return (
@@ -44,7 +52,8 @@ export const AuthProvider = ({ children }) => {
         saveUserSate,
         signOut,
         idCliente,
-        nomeCliente
+        nomeCliente,
+        ehPrestadorServicos
       }}
     >
       {children}

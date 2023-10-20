@@ -40,7 +40,7 @@ const Footer = () => {
       <nav>
         <ul>
           <li>
-            <Link className='contact' to="/contato">Contato</Link>
+            <Link className='contact' to="/contato">Alguma dúvida? <br />Entre em contato com o Match Serviços!</Link>
           </li>
           <li>
             <FaWhatsapp size={24}/>

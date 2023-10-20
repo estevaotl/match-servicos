@@ -4,8 +4,11 @@ import './styles.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { useAuth } from '../../contexts/Auth';
 
 const Profile = () => {
+  const { ehPrestadorServicos } = useAuth();
+
   const { id } = useParams();
   const [profileData, setProfileData] = useState(null);
 
@@ -52,15 +55,22 @@ const Profile = () => {
   };
 
   const handleWhatsappClick = (event) => {
-    if (!isLogged) {
+    if(ehPrestadorServicos){
       event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
-      alert("Faça login para entrar em contato");
-      navigate('/login');
+      alert("Não é possivel realizar essa opção. Você é um prestador de serviços!");
     } else {
-      // Abre o link do WhatsApp em uma nova aba
-      window.open(whatsappLink, '_blank');
+      if (!isLogged) {
+        event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
+        alert("Faça login para entrar em contato");
+        navigate('/login');
+      } else {
+        alert("Ao continuar, esteja ciente que uma ordem de serviço será gerada caso não existe nenhuma criada anteriormente. \nEssa ordem de serviço criada será utilizada como controle pelo profissional, via painel do cliente do mesmo. \nVocê receberá um email para controle com essa OS criada e quando a mesma for finalizada.");
 
-      enviarRequisicao();
+        // Abre o link do WhatsApp em uma nova aba
+        window.open(whatsappLink, '_blank');
+
+        enviarRequisicao();
+      }
     }
   };
 
@@ -71,7 +81,7 @@ const Profile = () => {
           <div className="profile">
             <h2 className="mb-3">{profileData.nome}</h2>
             <p className="mb-2"><strong>Email:</strong> {profileData.email}</p>
-            <p className="mb-2"><strong>Serviços Prestados:</strong> {profileData.servicosPrestados}</p>
+            <p className="mb-2"><strong>Serviços Prestados:</strong> {profileData.servicosPrestados}.</p>
             <p className="mb-2"><strong>WhatsApp:</strong> {profileData.whatsapp}</p>
             <p className="mb-2"><strong>Gênero:</strong> {profileData.genero}</p>
             {profileData.endereco && profileData.endereco.length > 0 && (

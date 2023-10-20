@@ -18,6 +18,7 @@ const CadastroPage = () => {
   const [situacaoTributaria, setSituacaoTributaria] = useState('');
   const [servicosPrestados, setServicosPrestados] = useState("");
   const [errors, setErrors] = useState([]);
+  const [errorsConsultaCep, setErrorsConsultaCep] = useState([]);
   const [cep, setCep] = useState('');
   const [endereco, setEndereco] = useState('');
   const [numero, setNumero] = useState('');
@@ -92,7 +93,7 @@ const CadastroPage = () => {
         if (data.excecao) {
           setErrors(data.excecao.split('\n'));
         } else {
-          saveUserSate(data['id'], data['nome'])
+          saveUserSate(data['id'], data['nome'], data['ehPrestadorServicos'])
           navigate('/');
         }
       })
@@ -164,6 +165,10 @@ const CadastroPage = () => {
     } else {
       setCep(formattedCep);
     }
+
+    // Limpar os erros quando o usuário começar a editar o campo CEP
+    setErrorsConsultaCep([]);
+
     setEditandoCep(false); // Defina como false para permitir novas consultas
   };
 
@@ -181,10 +186,12 @@ const CadastroPage = () => {
       } else {
         // CEP inválido ou não encontrado
         setMostrarCamposEndereco(false); // Ocultar campos em caso de erro
+        setErrorsConsultaCep(["Cep não encontrado."]);
       }
     } catch (error) {
       console.error('Erro ao buscar o endereço:', error);
       setMostrarCamposEndereco(false); // Ocultar campos em caso de erro
+      setErrorsConsultaCep(["Cep não encontrado."]);
     }
   };
 
@@ -270,60 +277,113 @@ const CadastroPage = () => {
                 onChange={handleProfissaoChange}
                 className="form-select"
               >
-                <optgroup label="Ciências Agrárias">
-                  <option value="agronomia">Agronomia</option>
-                  <option value="biotecnologia">Biotecnologia</option>
-                  <option value="engenharia agricola">Engenharia Agrícola</option>
-                  <option value="engenharia de alimentos">Engenharia de Alimentos</option>
-                  <option value="engenharia de pesca">Engenharia de Pesca</option>
-                  <option value="engenharia florestal">Engenharia Florestal</option>
-                  <option value="medicina veterinaria">Medicina Veterinária</option>
-                  <option value="zootecnia">Zootecnia</option>
+                <optgroup label="Reparos Elétricos">
+                  <option value="Troca de tomadas e interruptores">Troca de tomadas e interruptores</option>
+                  <option value="Instalação de luminárias">Instalação de luminárias</option>
+                  <option value="Resolução de problemas elétricos simples">Resolução de problemas elétricos simples</option>
+                  <option value="Substituição de disjuntores">Substituição de disjuntores</option>
                 </optgroup>
 
-                <optgroup label="Ciências da Saúde">
-                  <option value="educação fisica">Educação Física</option>
-                  <option value="enfermagem">Enfermagem</option>
-                  <option value="farmacia">Farmácia</option>
-                  <option value="fisioterapia">Fisioterapia</option>
-                  <option value="fonoaudiologia">Fonoaudiologia</option>
-                  <option value="medicina">Medicina</option>
-                  <option value="odontologia">Odontologia</option>
-                  <option value="saude coletiva">Saúde Coletiva</option>
-                  <option value="terapia ocupacional">Terapia Ocupacional</option>
+                <optgroup label="Reparos Hidráulicos">
+                  <option value="Conserto de vazamentos de torneiras e canos">Conserto de vazamentos de torneiras e canos</option>
+                  <option value="Desentupimento de pias e ralos">Desentupimento de pias e ralos</option>
+                  <option value="Instalação ou substituição de torneiras e válvulas">Instalação ou substituição de torneiras e válvulas</option>
                 </optgroup>
 
-                <optgroup label="Ciências Exatas e da Terra">
-                  <option value="ciencia da computação">Ciência da Computação</option>
-                  <option value="fisica">Física</option>
-                  <option value="matematica">Matemática</option>
-                  <option value="quimica">Química</option>
+                <optgroup label="Pintura">
+                  <option value="Pintura de paredes e tetos">Pintura de paredes e tetos</option>
+                  <option value="Pintura de portas e janelas">Pintura de portas e janelas</option>
+                  <option value="Preparação de superfícies, como lixar e aplicar primer">Preparação de superfícies, como lixar e aplicar primer</option>
                 </optgroup>
 
-                <optgroup label="Ciências Humanas">
-                  <option value="geografia">Geografia</option>
-                  <option value="historia">História</option>
-                  <option value="psicologia">Psicologia</option>
-                  <option value="sociologia">Sociologia</option>
-                  <option value="teologia">Teologia</option>
+                <optgroup label="Reparos em Carpintaria">
+                  <option value="Instalação de prateleiras">Instalação de prateleiras</option>
+                  <option value="Reparo de portas e fechaduras">Reparo de portas e fechaduras</option>
+                  <option value="Montagem de móveis">Montagem de móveis</option>
                 </optgroup>
 
-                <optgroup label="Ciências Sociais Aplicadas">
-                  <option value="administração">Administração</option>
-                  <option value="publicidade e propaganda">Publicidade e Propaganda</option>
+                <optgroup label="Reparos em Alvenaria">
+                  <option value="Construção de alvenaria, incluindo paredes de tijolos, blocos ou pedras">Construção de alvenaria, incluindo paredes de tijolos, blocos ou pedras</option>
+                  <option value="Reparação de rachaduras em paredes">Reparação de rachaduras em paredes</option>
+                  <option value="Rejunte de azulejos">Rejunte de azulejos</option>
+                  <option value="Substituição de telhas danificadas">Substituição de telhas danificadas</option>
                 </optgroup>
 
-                <optgroup label="Construção Civil">
-                  <option value="pedreiro">Pedreiro</option>
-                  <option value="eletrecista">Eletrecista</option>
-                  <option value="bombeiro hidraulico">Bombeiro Hidráulico</option>
-                  <option value="servente">Servente de Obras</option>
+                <optgroup label="Montagem e Instalação">
+                  <option value="Montagem de móveis e estantes">Montagem de móveis e estantes</option>
+                  <option value="Instalação de suportes para TV e prateleiras">Instalação de suportes para TV e prateleiras</option>
+                  <option value="Montagem de playgrounds e equipamentos de ginástica">Montagem de playgrounds e equipamentos de ginástica</option>
+                  <option value="Instalação de sistemas de armazenamento">Instalação de sistemas de armazenamento</option>
                 </optgroup>
 
-                <optgroup label="Serviços Gerais">
-                  <option value="mecanico">Mecânico</option>
-                  <option value="mecanico de moto">Mecânico de Moto</option>
-                  <option value="mecanico de carro">Mecânico de Carro</option>
+                <optgroup label="Limpeza de Calhas">
+                  <option value="Remoção de detritos e folhas de calhas">Remoção de detritos e folhas de calhas</option>
+                  <option value="Desobstrução de calhas entupidas">Desobstrução de calhas entupidas</option>
+                </optgroup>
+
+                <optgroup label="Manutenção de Portões e Cercas">
+                  <option value="Lubrificação e reparos em portões">Lubrificação e reparos em portões</option>
+                  <option value="Reparo de cercas danificadas">Reparo de cercas danificadas</option>
+                </optgroup>
+
+                <optgroup label="Instalação de Aparelhos Domésticos">
+                  <option value="Instalação de eletrodomésticos, como máquinas de lavar e secar">Instalação de eletrodomésticos, como máquinas de lavar e secar</option>
+                  <option value="Instalação de ventiladores de teto">Instalação de ventiladores de teto</option>
+                </optgroup>
+
+                <optgroup label="Pequenos Reparos Gerais">
+                  <option value="Troca de maçanetas">Troca de maçanetas</option>
+                  <option value="Ajustes em persianas">Ajustes em persianas</option>
+                  <option value="Substituição de vidros quebrados">Substituição de vidros quebrados</option>
+                </optgroup>
+
+                <optgroup label="Reparos em Telhados">
+                  <option value="Substituição de telhas danificadas">Substituição de telhas danificadas</option>
+                  <option value="Selagem de vazamentos de telhados">Selagem de vazamentos de telhados</option>
+                </optgroup>
+
+                <optgroup label="Construção de Churrasqueiras e Lareiras">
+                  <option value="Construção de churrasqueiras e lareiras de alvenaria sob medida">Construção de churrasqueiras e lareiras de alvenaria sob medida</option>
+                </optgroup>
+
+                <optgroup label="Construção de Calçadas e Passeios">
+                  <option value="Construção de calçadas e passeios em concreto ou pedra">Construção de calçadas e passeios em concreto ou pedra</option>
+                </optgroup>
+
+                <optgroup label="Manutenção de Veículos">
+                  <option value="Troca de óleo">Troca de óleo</option>
+                  <option value="Substituição de freios">Substituição de freios</option>
+                  <option value="Alinhamento e balanceamento">Alinhamento e balanceamento</option>
+                  <option value="Diagnóstico de problemas mecânicos em veículos">Diagnóstico de problemas mecânicos em veículos</option>
+                  <option value="Troca de peças e componentes">Troca de peças e componentes</option>
+                  <option value="Reparo de motores de veículos">Reparo de motores de veículos</option>
+                </optgroup>
+
+                <optgroup label="Serviços de Chaveiro Residencial">
+                  <option value="Instalação, reparo e substituição de fechaduras e chaves em casas e apartamentos">Instalação, reparo e substituição de fechaduras e chaves em casas e apartamentos</option>
+                </optgroup>
+
+                <optgroup label="Chaveiro Automotivo">
+                  <option value="Desbloqueio de veículos">Desbloqueio de veículos</option>
+                  <option value="Cópias de chaves de automóveis">Cópias de chaves de automóveis</option>
+                  <option value="Programação de chaves de transponder">Programação de chaves de transponder</option>
+                </optgroup>
+
+                <optgroup label="Chaveiro Comercial">
+                  <option value="Serviços relacionados a fechaduras de escritórios e estabelecimentos comerciais">Serviços relacionados a fechaduras de escritórios e estabelecimentos comerciais</option>
+                  <option value="Instalação de sistemas de controle de acesso">Instalação de sistemas de controle de acesso</option>
+                </optgroup>
+
+                <optgroup label="Chaves Codificadas">
+                  <option value="Fornecimento de chaves codificadas para veículos modernos com sistemas de segurança avançados">Fornecimento de chaves codificadas para veículos modernos com sistemas de segurança avançados</option>
+                </optgroup>
+
+                <optgroup label="Abertura de Cofres">
+                  <option value="Abertura de cofres e fechaduras de alta segurança em situações de emergência">Abertura de cofres e fechaduras de alta segurança em situações de emergência</option>
+                </optgroup>
+
+                <optgroup label="Outro">
+                  <option value="Serviços variados">Serviços variados</option>
                 </optgroup>
               </select>
 
@@ -381,6 +441,14 @@ const CadastroPage = () => {
           />
         </div>
 
+        {errorsConsultaCep.length > 0 && (
+          <div className="alert alert-danger div-erros-consulta-cadastro">
+            {errorsConsultaCep.map((error, index) => (
+              <span key={index}>{error}</span>
+            ))}
+          </div>
+        )}
+
         {mostrarCamposEndereco && (
           <>
             <div className="col-md-6 mb-3">
@@ -391,6 +459,7 @@ const CadastroPage = () => {
                 id="endereco"
                 value={endereco}
                 onChange={(e) => setEndereco(e.target.value)}
+                disabled
               />
             </div>
 
@@ -424,6 +493,7 @@ const CadastroPage = () => {
                 id="bairro"
                 value={bairro}
                 onChange={(e) => setBairro(e.target.value)}
+                disabled
               />
             </div>
 
@@ -435,6 +505,7 @@ const CadastroPage = () => {
                 id="localidade"
                 value={localidade}
                 onChange={(e) => setLocalidade(e.target.value)}
+                disabled
               />
             </div>
 
@@ -446,6 +517,7 @@ const CadastroPage = () => {
                 id="uf"
                 value={uf}
                 onChange={(e) => setUf(e.target.value)}
+                disabled
               />
             </div>
           </>
