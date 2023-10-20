@@ -7,8 +7,7 @@ import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useAuth } from '../../contexts/Auth';
 
 const Profile = () => {
-  const { ehPrestadorServicos } = useAuth();
-
+  const { idCliente } = useAuth();
   const { id } = useParams();
   const [profileData, setProfileData] = useState(null);
 
@@ -43,7 +42,7 @@ const Profile = () => {
           },
           body: JSON.stringify({
             idTrabalhador: profileData.id,
-            idCliente: id
+            idCliente: idCliente
           })
         });
 
@@ -55,7 +54,7 @@ const Profile = () => {
   };
 
   const handleWhatsappClick = (event) => {
-    if(ehPrestadorServicos){
+    if(sessionStorage.getItem('ehPrestadorServicos') == true){
       event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
       alert("Não é possivel realizar essa opção. Você é um prestador de serviços!");
     } else {

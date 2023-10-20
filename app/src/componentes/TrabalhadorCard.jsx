@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/Auth';
 const TrabalhadorCard = ({ key, worker }) => {
     const whatsappMessage = encodeURIComponent(`Olá ${worker.nome}. Vi seu perfil no site e gostei dos seus serviços prestados. Gostaria de solicitar um orçamento. Como posso proceder?`);
     const whatsappLink = `https://api.whatsapp.com/send?phone=${worker.whatsapp}&text=${whatsappMessage}`;
-    const { idCliente, ehPrestadorServicos } = useAuth();
+    const { idCliente } = useAuth();
 
     const [isLogged, setIsLogged] = useState(sessionStorage.getItem('idCliente') !== null);
     const navigate = useNavigate();
@@ -42,7 +42,7 @@ const TrabalhadorCard = ({ key, worker }) => {
     };
 
     const handleWhatsappClick = (event) => {
-        if(ehPrestadorServicos){
+        if(sessionStorage.getItem('ehPrestadorServicos') == true){
             event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
             alert("Não é possivel realizar essa opção. Você é um prestador de serviços!");
         } else {
