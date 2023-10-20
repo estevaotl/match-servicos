@@ -61,7 +61,10 @@ try {
                 // Preparar uma resposta JSON
                 $responseData = [
                     'id' => $cliente->getId(),
-                    'nome' => $cliente->getNome()
+                    'nome' => $cliente->getNome(),
+                    'ehPrestadorServicos' => $cliente->getPrestadorDeServicos(),
+                    'cidade' => $cliente->getEndereco() instanceof Endereco ? $cliente->getEndereco()->getCidade() : '',
+                    'estado' => $cliente->getEndereco() instanceof Endereco ? $cliente->getEndereco()->getEstado() : ''
                 ];
 
                 // Responder com JSON
@@ -104,7 +107,9 @@ try {
                 $responseData = [
                     'id' => $cliente->getId(),
                     'nome' => $cliente->getNome(),
-                    'ehPrestadorServicos' => $cliente->getPrestadorDeServicos()
+                    'ehPrestadorServicos' => $cliente->getPrestadorDeServicos(),
+                    'cidade' => count($cliente->getEndereco()) > 0 ? $cliente->getEndereco()[0]['cidade'] : array(),
+                    'estado' => count($cliente->getEndereco()) > 0 ? $cliente->getEndereco()[0]['estado'] : array()
                 ];
 
                 // Responder com JSON

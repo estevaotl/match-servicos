@@ -60,7 +60,7 @@ class ClienteController
             $idade = $idade->format('%Y');
 
             $dadosClienteFisico->setIdade($idade);
-    
+
             $cliente->setDadosEspecificos($dadosClienteFisico);
         } else {
             $dadosClienteJuridico = new DadosClienteJuridico();

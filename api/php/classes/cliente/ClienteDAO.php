@@ -37,6 +37,7 @@
             if($cliente->getEndereco() instanceof Endereco){
                 $this->salvarEndereco($cliente);
             }
+
             return $cliente;
         }
 

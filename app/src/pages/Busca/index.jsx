@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import './styles.css';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-
+import { useAuth } from '../../contexts/Auth';
 
 const SearchPage = () => {
+  const { idCliente } = useAuth();
+
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
   const [filteredWorkers, setFilteredWorkers] = useState([]);
   const [selectedProfession, setSelectedProfession] = useState(''); // Add state for selected profession
@@ -177,6 +179,9 @@ const SearchPage = () => {
       <article className='filter'>
         <div className="d-flex">
           <div className="">
+            {idCliente.length <= 0 && (
+              <div className="alert alert-danger">Caso queira uma filtragem pela sua localidade, se logue no site!</div>
+            )}
             <input
               type="text"
               className="form-control me-2 input-servico"
