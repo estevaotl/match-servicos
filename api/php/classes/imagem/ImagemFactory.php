@@ -21,7 +21,12 @@ class ImagemFactory
             $fileType = $uploadedFile->getClientMediaType(); // Tipo de mídia do arquivo (MIME type)
             $fileName = str_replace(' ', '', uniqid() . '_' . $filename);
 
-            $targetDirectory = $_SERVER['DOCUMENT_ROOT'] . '/match-servicos/api/public/dinamica/';
+            if (strpos($_SERVER['HTTP_REFERER'], 'localhost') !== false) {
+                $targetDirectory = $_SERVER['DOCUMENT_ROOT'] . '/match-servicos/api/public/dinamica/';
+            } else {
+                $targetDirectory = $_SERVER['DOCUMENT_ROOT'] . '/public/dinamica/';
+            }
+            
             $targetPath = $targetDirectory . $fileName;
 
             $tempFilePath = $uploadedFile->getStream()->getMetadata('uri');
