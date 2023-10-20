@@ -1,6 +1,10 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
+if (strpos($_SERVER['HTTP_REFERER'], 'localhost') !== false) {
+    require_once __DIR__ . '/../../../config.php';
+} else {
+    require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
+}
 
 abstract class Util
 {

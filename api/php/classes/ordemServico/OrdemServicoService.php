@@ -1,6 +1,10 @@
 <?php
-    // require_once __DIR__ . '/../../../config.php';
-    require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
+
+    if (strpos($_SERVER['HTTP_REFERER'], 'localhost') !== false) {
+        require_once __DIR__ . '/../../../config.php';
+    } else {
+        require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
+    }
 
     class OrdemServicoService{
         private $dao = null;
@@ -43,8 +47,8 @@
 
         public function modificarStatus($idOrdemServico, $statusNovo){
             $ordemServico = $this->obterComId($idOrdemServico)[0]; 
-            $cliente = (new ClienteController())->obterComId($ordemServico['idSolicitante']);
-            (new EmailSender())->enviarEmail($cliente->getEmail(), "Email Transacional", "Bem Vindo");
+            // $cliente = (new ClienteController())->obterComId($ordemServico['idSolicitante']);
+            // (new EmailSender())->enviarEmail($cliente->getEmail(), "Email Transacional", "Bem Vindo");
 
             return $this->dao->modificarStatus($idOrdemServico, $statusNovo);
         }
