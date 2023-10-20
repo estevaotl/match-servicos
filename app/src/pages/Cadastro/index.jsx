@@ -57,6 +57,11 @@ const CadastroPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if(errorsConsultaCep.length > 0){
+      setErrors(['Não é possível seguir com CEP inválido.']);
+      return false;
+    }
+
     fetch(`${apiURL}/clientes/criar`, {
       method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
       headers: {
