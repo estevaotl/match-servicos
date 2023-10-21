@@ -89,4 +89,8 @@ abstract class Util
         echo '<pre>';
         return die(var_dump(...$var));
     }
+
+    public static function enviarEmail($destinatario, $assunto, $mensagem){
+        (new EmailSender())->enviarEmail($destinatario, $assunto, $mensagem);
+    }
 }

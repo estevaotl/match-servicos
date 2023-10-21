@@ -131,17 +131,12 @@ try {
         });
 
         $app->post('/atualizar', function (Request $request, Response $response, $args) {
-            // Obter o corpo da requisição
             $body = $request->getBody()->getContents();
 
-            // Transformar o JSON em array (caso o corpo seja JSON)
             $data = json_decode($body, true);
 
-            // Cria uma instância da classe ClienteController
             $clienteController = new ClienteController();
 
-
-            // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
             $clienteController->salvar($data);
             $cliente = $clienteController->obterComEmail($data['email']);
 
@@ -149,20 +144,19 @@ try {
                 throw new Exception("Cliente não encontrado.");
             }
 
-            // Preparar uma resposta JSON
             $responseData = [
                 'id' => $cliente->getId(),
                 'nome' => $cliente->getNome(),
-                'ehPrestadorServicos' => $cliente->getPrestadorDeServicos()
+                'ehPrestadorServicos' => $cliente->getPrestadorDeServicos(),
+                'cidade' => count($cliente->getEndereco()) > 0 ? $cliente->getEndereco()[0]['cidade'] : array(),
+                'estado' => count($cliente->getEndereco()) > 0 ? $cliente->getEndereco()[0]['estado'] : array()
             ];
 
-            // Responder com JSON
             $response->getBody()->write(json_encode($responseData));
 
             return $response->withHeader('Content-Type', 'application/json');
         });
 
-        // Rota para obter um cliente por ID
         $app->get('/busca', function (Request $request, Response $response, $args) {
             $params = $request->getQueryParams();
 
@@ -330,21 +324,33 @@ try {
 
     $app->group($apiInicial . '/ordemServico', function ($app) {
         $app->post('/criar', function (Request $request, Response $response, $args) {
-            // Obter o corpo da requisição
-            $body = $request->getBody()->getContents();
+            try {
+                // Obter o corpo da requisição
+                $body = $request->getBody()->getContents();
 
-            // Transformar o JSON em array (caso o corpo seja JSON)
-            $data = json_decode($body, true);
+                // Transformar o JSON em array (caso o corpo seja JSON)
+                $data = json_decode($body, true);
 
-            // Cria uma instância da classe ClienteController
-            $ordemServicoController = new OrdemServicoController();
+                // Cria uma instância da classe ClienteController
+                $ordemServicoController = new OrdemServicoController();
 
-            // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
-            $resultado = $ordemServicoController->salvar($data);
+                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
+                $resultado = $ordemServicoController->salvar($data);
 
-            // Use o resultado da função salvar como necessário
-            $response->getBody()->write("Ordem de Serviço criada.");
-            return $response;
+                // Use o resultado da função salvar como necessário
+                $response->getBody()->write("Ordem de Serviço criada.");
+                return $response;
+            } catch (\Throwable $th) {
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'excecao' => $th->getMessage()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            }
         });
 
         $app->get('/obter/{id}', function (Request $request, Response $response, $args) {

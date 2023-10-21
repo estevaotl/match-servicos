@@ -19,9 +19,23 @@
             try {
                 $this->validar($ordemServico, $erro);
 
-                return $this->dao->salvar($ordemServico);
+                $retorno = $this->dao->salvar($ordemServico);
+
+                try {
+                    $clienteController = new ClienteController();
+                    $solicitante = $clienteController->obterComId($ordemServico->getCliente());
+                    $trabalhador = $clienteController->obterComId($ordemServico->getTrabalhador());
+
+                    $mensagem = "Essa é uma mensagem Automática! Olá " . $solicitante->getNome() . ". Gostaríamos de informar que a ordem de serviço " . $ordemServico->getId() . " foi criada neste exato momento. A partir de agora, toda vez que houver uma mudança de status pelo prestador de serviços " . $trabalhador->getNome() . ", você será informado(a). Obrigado por confiar na nossa plataforma! Atenciosamente, Match Serviços.";
+
+                    Util::enviarEmail($solicitante->getEmail(), "Criação de Ordem Serviço", $mensagem);
+                } catch (\Throwable $th) {
+                    Util::logException($th);
+                }
+
+                return $retorno;
             } catch (\Throwable $th) {
-                //throw $th;
+                throw new ControllerException($th->getMessage());
             }
         }
 
@@ -29,8 +43,14 @@
             if(!empty($ordemServico->getTrabalhador()) && !empty($ordemServico->getCliente())){
                 if($this->existeOrdemServicoAberta($ordemServico)){
                     $this->atualizarCliquesEntrarContato($ordemServico);
+
+                    $erro['ordemServicoJaCriada'] = "Já existe uma ordem de serviço criada.";
                 }
             }
+
+            if(count($erro) > 0){
+				throw new Exception(UtilValidacoes::gerarMensagemDeErro($erro, null, "\n"));
+			}
         }
 
         public function existeOrdemServicoAberta(OrdemServico $ordemServico){
@@ -46,9 +66,17 @@
         }
 
         public function modificarStatus($idOrdemServico, $statusNovo){
-            $ordemServico = $this->obterComId($idOrdemServico)[0]; 
-            // $cliente = (new ClienteController())->obterComId($ordemServico['idSolicitante']);
-            // (new EmailSender())->enviarEmail($cliente->getEmail(), "Email Transacional", "Bem Vindo");
+            try {
+                $ordemServico = $this->obterComId($idOrdemServico)[0]; 
+                $solicitante = (new ClienteController())->obterComId($ordemServico['idSolicitante']);
+                $trabalhador = (new ClienteController())->obterComId($ordemServico['idTrabalhador']);
+
+                $mensagem = "Essa é uma mensagem Automática! Olá " . $solicitante->getNome() . ". Gostaríamos de informar que a ordem de serviço " . $idOrdemServico . " sofreu uma atualização pelo prestador de serviços " . $trabalhador->getNome() . ". Novo Status: " . StatusOrdemServico::toString($statusNovo);
+
+                Util::enviarEmail($solicitante->getEmail(), "Atualização de Ordem Serviço", $mensagem);
+            } catch (\Throwable $th) {
+                Util::logException($th);
+            }
 
             return $this->dao->modificarStatus($idOrdemServico, $statusNovo);
         }

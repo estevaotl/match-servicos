@@ -62,5 +62,6 @@ $class_map = array(
     'EnderecoDAO' => '/endereco/EnderecoDAO.php',
     'ControllerException' => '/exception/ControllerException.php',
     'SituacaoTributaria' => '/cliente/SituacaoTributaria.php',
+    'EmailSender' => '/emailSender/PhpMailer.php'
     // Adicione outros mapeamentos de classes aqui
 );
