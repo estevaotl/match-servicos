@@ -42,7 +42,7 @@ const TrabalhadorCard = ({ key, worker }) => {
     };
 
     const handleWhatsappClick = (event) => {
-        if(sessionStorage.getItem('ehPrestadorServicos') == true){
+        if(sessionStorage.getItem('ehPrestadorServicos') == 'true'){
             event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
             alert("Não é possivel realizar essa opção. Você é um prestador de serviços!");
         } else {
