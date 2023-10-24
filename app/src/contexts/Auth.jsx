@@ -82,8 +82,8 @@ export const AuthProvider = ({ children }) => {
         idCliente,
         nomeCliente,
         ehPrestadorServicos,
-        cidade,
-        estado
+        estado,
+        cidade
       }}
     >
       {children}

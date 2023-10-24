@@ -38,15 +38,17 @@ const HomePage = () => {
     if (searchValue) {
       var url = `/busca?q=${searchValue}`;
 
-      if(idCliente.length > 0){
-        if(cidade.length > 0){
-          url += `&cidade=${cidade}`;
-        }
-
+      if(idCliente){
         if(estado.length > 0){
           url += `&estado=${estado}`;
         }
+
+        if(cidade.length > 0){
+          url += `&cidade=${cidade}`;
+        }
       }
+
+      console.log(url);
 
       navigate(url);
     }
