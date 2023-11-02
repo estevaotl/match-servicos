@@ -9,16 +9,10 @@ import { useAuth } from '../../contexts/Auth';
 import { FaFileImport, FaCamera } from 'react-icons/fa6'
 
 function App() {
-  const [email, setEmail] = useState('');
   const [file, setFile] = useState(null);
   const [filePerfil, setFilePerfil] = useState(null);
-  const [nome, setNome] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [genero, setGenero] = useState('');
-  const [prestadorDeServicos, setPrestadorDeServicos] = useState('');
   const [showServicosPrestados, setShowServicosPrestados] = useState(false);
-  const [servicosPrestados, setServicosPrestados] = useState(false);
-  const [cliente, setCliente] = useState('');
+  const [cliente, setCliente] = useState({});
   const [ordensDeServico, setOrdensDeServico] = useState(''); // Estado para armazenar as ordens de serviço
   const [message, setMessage] = useState('');
   const [valorOrdem, setValorOrdem] = useState('');
@@ -38,8 +32,7 @@ function App() {
   };
 
   const handleSelectChange = (e) => {
-    setPrestadorDeServicos(e.target.value);
-    setServicosPrestados(""); // Reinicia os serviços prestados ao trocar a opção
+    setCliente(old => ({ ...old, prestadorDeServicos: e.target.value, servicosPrestados: '' }))
   };
 
   const navigate = useNavigate();
@@ -104,12 +97,12 @@ function App() {
       method: 'POST',
       body: JSON.stringify({
         id: idCliente,
-        nome: (nome ? nome : cliente.nome),
-        email: (email ? email : cliente.email),
-        whatsapp: (whatsapp ? whatsapp : cliente.whatsapp),
-        genero: (genero ? genero : cliente.genero),
-        servicosPrestados: (servicosPrestados ? servicosPrestados : cliente.servicosPrestados),
-        prestadorDeServicos: (prestadorDeServicos ? prestadorDeServicos : cliente.prestadorDeServicos)
+        nome: cliente.nome,
+        email: cliente.email,
+        whatsapp: cliente.whatsapp,
+        genero: cliente.genero,
+        servicosPrestados: cliente.servicosPrestados,
+        prestadorDeServicos: cliente.prestadorDeServicos
       })
     })
       .then(response => {
@@ -322,11 +315,16 @@ function App() {
             <form className='editar-dados-form' onSubmit={handleSubmitDados}>
               <div className="col-md-12 mb-3">
                 <label htmlFor="nome" className="form-label">Nome:</label>
-                <input type="text" className="form-control" id="nome" value={cliente.nome} onChange={(e) => setNome(e.target.value)} />
+                <input type="text" className="form-control" id="nome" value={cliente.nome}
+                  onChange={
+                    (e) => setCliente((old) => ({ ...old, nome: e.target.value }))
+                  } />
               </div>
               <div className="col-md-12 mb-3">
                 <label htmlFor="email" className="form-label">Email:</label>
-                <input type="email" className="form-control" id="email" value={cliente.email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="email" className="form-control" id="email"
+                  value={cliente.email}
+                  onChange={(e) => setCliente((old) => ({ ...old, email: e.target.value }))} />
               </div>
 
               <div className="col-md-12 mb-3">
@@ -352,7 +350,7 @@ function App() {
                     id="servicosPrestados"
                     placeholder="Digite os serviços prestados separados por vírgula (pedreiro, eletricista, etc)"
                     value={cliente.servicosPrestados}
-                    onChange={(e) => setServicosPrestados(e.target.value)}
+                    onChange={(e) => setCliente((old) => ({ ...old, servicosPrestados: e.target.value }))}
                   />
                 </div>
               )}
@@ -366,13 +364,15 @@ function App() {
                   id="whatsapp"
                   placeholder="(XX) XXXXX-XXXX" // Opcional: forneça um placeholder com o formato desejado
                   value={cliente.whatsapp}
-                  onChange={(e) => setWhatsapp(e.target.value)}
+                  onChange={(e) => setCliente((old) => ({ ...old, whatsapp: e.target.value }))}
                 />
               </div>
 
               <div className="col-md-12 mb-3">
                 <label htmlFor="genero" className="form-label">Gênero:</label>
-                <select className="form-select" id="genero" value={cliente.genero} onChange={(e) => setGenero(e.target.value)}>
+                <select className="form-select" id="genero"
+                  value={cliente.genero}
+                  onChange={(e) => setCliente((old) => ({ ...old, genero: e.target.value }))}>
                   <option value="">Selecione</option>
                   <option value="feminino">Feminino</option>
                   <option value="masculino">Masculino</option>
@@ -474,7 +474,7 @@ function App() {
                   <FaCamera size={24} />
                   Selecione imagem
                 </div>
-                <input type="file" onChange={handleFileChangePerfil} accept="image/jpg, image/png, image/gif, image/jpeg"/>
+                <input type="file" onChange={handleFileChangePerfil} accept="image/jpg, image/png, image/gif, image/jpeg" />
                 <span>
                   {filePerfil?.name}
                 </span>
@@ -498,7 +498,7 @@ function App() {
                   <FaFileImport size={24} />
                   Selecione o arquivo
                 </div>
-                <input type="file" onChange={handleFileChange} accept="image/jpg, image/png, image/gif, image/jpeg"/>
+                <input type="file" onChange={handleFileChange} accept="image/jpg, image/png, image/gif, image/jpeg" />
                 <span>
                   {file?.name}
                 </span>
