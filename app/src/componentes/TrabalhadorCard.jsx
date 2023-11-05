@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/Auth';
 
 const TrabalhadorCard = ({ key, worker }) => {
     const whatsappMessage = encodeURIComponent(`Olá ${worker.nome}. Vi seu perfil no site e gostei dos seus serviços prestados. Gostaria de solicitar um orçamento. Como posso proceder?`);
-    const whatsappLink = `https://api.whatsapp.com/send?phone=${worker.whatsapp}&text=${whatsappMessage}`;
+    const whatsappLink = `https://api.whatsapp.com/send?phone=+55${worker.whatsapp}&text=${whatsappMessage}`;
     const { idCliente } = useAuth();
 
     const [isLogged, setIsLogged] = useState(sessionStorage.getItem('idCliente') !== null);

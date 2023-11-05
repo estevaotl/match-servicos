@@ -306,7 +306,7 @@ function App() {
           <TabList>
             <Tab>Editar Dados</Tab>
             <Tab>Enviar Imagem Perfil</Tab>
-            {cliente.prestadorDeServicos && <Tab>Enviar Fotos/Vídeos</Tab>}
+            {cliente.prestadorDeServicos && <Tab>Enviar Fotos</Tab>}
             {cliente.prestadorDeServicos && <Tab>Ordens de Serviço</Tab>}
           </TabList>
 
@@ -530,7 +530,11 @@ function App() {
                     <div className="card">
                       <div className="card-body">
                         <h5 className="card-title">ID da Ordem: {ordem.id}</h5>
-                        <p className="card-text">Id Solicitante: {ordem.idSolicitante}</p>
+                        {ordem.solicitante ? (
+                          <p className="card-text">Solicitante: {ordem.solicitante}</p>
+                        ) : (
+                          <p className="card-text">Solicitante não informado</p>
+                        )}
                         <p className="card-text">Data Criação: {ordem.dataCriacao}</p>
                         <p className="card-text">Valor: {ordem.valor}</p>
                         <div className="form-group">
@@ -547,7 +551,7 @@ function App() {
                           </select>
                         </div>
 
-                        {ordem.status == 2 && ordem.valor == null && (
+                        {ordem.status == 2 && ( ordem.valor <= 0 || ordem.valor == null ) && (
                           <div className="mb-3">
                             <label>Valor:</label>
                             <div className="input-group">

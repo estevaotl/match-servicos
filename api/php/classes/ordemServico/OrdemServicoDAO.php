@@ -151,6 +151,15 @@ class OrdemServicoDAO
             "idTrabalhador" => $idTrabalhador
         );
 
-        return $this->bancoDados->consultar($comando, $parametros, true);
+        $linhas = $this->bancoDados->consultar($comando, $parametros, true);
+        $clienteController = new ClienteController();
+        foreach ($linhas as &$linha) {
+            $cliente = $clienteController->obterComId($linha['idSolicitante']);
+            if($cliente instanceof Cliente){
+                $linha['solicitante'] = $cliente->getNome();
+            }
+        }
+
+        return $linhas;
     }
 }
