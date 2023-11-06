@@ -55,7 +55,6 @@ try {
                 // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
                 $cliente = $clienteController->salvar($data);
 
-                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
                 $clienteController->logar($data['email'], $data['senha']);
 
                 // Preparar uma resposta JSON
@@ -95,7 +94,6 @@ try {
                 // Cria uma instância da classe ClienteController
                 $clienteController = new ClienteController();
 
-                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
                 $clienteController->logar($data['email'], $data['senha']);
                 $cliente = $clienteController->obterComEmail($data['email']);
 
@@ -163,7 +161,6 @@ try {
             // Cria uma instância da classe ClienteController
             $clienteController = new ClienteController();
 
-            // Chama a função 'obterPorId' da classe ClienteController, passando o ID do cliente
             $clientes = $clienteController->obterComRestricoes($params);
 
             $arrayClientes = array();
@@ -205,7 +202,6 @@ try {
             return $response->withHeader('Content-Type', 'application/json');
         });
 
-        // Rota para obter um cliente por ID
         $app->get('/obterParaCarrossel', function (Request $request, Response $response, $args) {
             $params = array(
                 "prestadorServicos"  => true,
@@ -306,7 +302,6 @@ try {
 
                 ImagemFactory::saveImage($uploadedFile, $params['idCliente'], true);
 
-                // Use o resultado da função salvar como necessário
                 $response->getBody()->write("Imagem criada.");
                 return $response;
             } catch (\Throwable $th) {
@@ -331,10 +326,8 @@ try {
                 // Transformar o JSON em array (caso o corpo seja JSON)
                 $data = json_decode($body, true);
 
-                // Cria uma instância da classe ClienteController
                 $ordemServicoController = new OrdemServicoController();
 
-                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
                 $resultado = $ordemServicoController->salvar($data);
 
                 // Use o resultado da função salvar como necessário
@@ -356,15 +349,9 @@ try {
         $app->get('/obter/{id}', function (Request $request, Response $response, $args) {
             $idOS = $args['id']; // Obtém o ID do cliente a partir dos argumentos da URL
 
-            // Cria uma instância da classe ClienteController
             $ordemServicoController = new OrdemServicoController();
 
-            // Chama a função 'obterPorId' da classe ClienteController, passando o ID do cliente
             $ordemServico = $ordemServicoController->obterComId($idOS);
-
-            // if (!$ordemServico instanceof OrdemServico) {
-            //     throw new Exception("Ordem de Serviço não encontrada.");
-            // }
 
             // Responder com JSON
             $response->getBody()->write(json_encode(['ordens' => $ordemServico]));
@@ -376,17 +363,24 @@ try {
         $app->get('/obterPorTrabalhador/{id}', function (Request $request, Response $response, $args) {
             $idTrabalhador = $args['id']; // Obtém o ID do cliente a partir dos argumentos da URL
 
-            // Cria uma instância da classe ClienteController
             $ordemServicoController = new OrdemServicoController();
 
-            // Chama a função 'obterPorId' da classe ClienteController, passando o ID do cliente
             $ordemServico = $ordemServicoController->obterOrdensServicoIdTrabalhador($idTrabalhador);
 
-            // if (!$ordemServico instanceof OrdemServico) {
-            //     throw new Exception("Ordem de Serviço não encontrada.");
-            // }
-
             // Responder com JSON
+            $response->getBody()->write(json_encode(['ordens' => $ordemServico]));
+
+            return $response->withHeader('Content-Type', 'application/json');
+        });
+
+        // Rota para ordem de serviço pelo id do solicitante
+        $app->get('/obterPorSolicitante/{id}', function (Request $request, Response $response, $args) {
+            $idTrabalhador = $args['id'];
+
+            $ordemServicoController = new OrdemServicoController();
+
+            $ordemServico = $ordemServicoController->obterOrdensServicoIdSolicitante($idTrabalhador);
+
             $response->getBody()->write(json_encode(['ordens' => $ordemServico]));
 
             return $response->withHeader('Content-Type', 'application/json');
@@ -428,10 +422,8 @@ try {
                 // Obter o corpo da requisição
                 $params = $request->getParsedBody();
 
-                // Cria uma instância da classe ClienteController
                 $ordemServicoController = new OrdemServicoController();
 
-                // Chama a função 'salvar' da classe ClienteController, passando os parâmetros do POST
                 $resultado = $ordemServicoController->atualizarValor($params['ordemId'], $params['valor']);
 
                 $responseData = [

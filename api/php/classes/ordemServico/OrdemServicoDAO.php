@@ -158,6 +158,30 @@ class OrdemServicoDAO
             if($cliente instanceof Cliente){
                 $linha['solicitante'] = $cliente->getNome();
             }
+
+            $dataCriacao = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", $linha['dataCriacao']);
+            $linha['dataCriacao'] = $dataCriacao->format("d-m-Y");
+        }
+
+        return $linhas;
+    }
+
+    public function obterOrdensServicoIdSolicitante($idSolicitante){
+        $comando = "SELECT * FROM ordem_servico WHERE idSolicitante = :idSolicitante AND ativo = 1";
+        $parametros = array(
+            "idSolicitante" => $idSolicitante
+        );
+
+        $linhas = $this->bancoDados->consultar($comando, $parametros, true);
+        $clienteController = new ClienteController();
+        foreach ($linhas as &$linha) {
+            $cliente = $clienteController->obterComId($linha['idSolicitante']);
+            if($cliente instanceof Cliente){
+                $linha['solicitante'] = $cliente->getNome();
+            }
+
+            $dataCriacao = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", $linha['dataCriacao']);
+            $linha['dataCriacao'] = $dataCriacao->format("d-m-Y");
         }
 
         return $linhas;

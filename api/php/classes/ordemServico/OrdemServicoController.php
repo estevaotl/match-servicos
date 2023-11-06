@@ -58,4 +58,8 @@ class OrdemServicoController
     public function obterOrdensServicoIdTrabalhador($idTrabalhador){
         return $this->service->obterOrdensServicoIdTrabalhador($idTrabalhador);
     }
+
+    public function obterOrdensServicoIdSolicitante($idSolicitante){
+        return $this->service->obterOrdensServicoIdSolicitante($idSolicitante);
+    }
 }

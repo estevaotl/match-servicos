@@ -17,6 +17,7 @@ function App() {
   const [message, setMessage] = useState('');
   const [valorOrdem, setValorOrdem] = useState('');
   const { idCliente } = useAuth();
+  const [ehSolicitante, setEhSolicitante] = useState(false);
 
   const [errorsImagemServico, setErrorsImagemServico] = useState('');
 
@@ -134,9 +135,7 @@ function App() {
         setShowServicosPrestados(data.cliente.prestadorDeServicos);
 
         // Se o usuário for um prestador de serviços, carrega as ordens de serviço
-        if (data.cliente.prestadorDeServicos) {
-          fetchOrdensDeServico();
-        }
+        data.cliente.prestadorDeServicos ? fetchOrdensDeServicoTrabalhador() : fetchOrdensDeServicoSolicitante();
       })
       .catch(error => {
         navigate('/'); // Use navigate('/') para redirecionar para a página inicial
@@ -145,12 +144,25 @@ function App() {
   }, [idCliente]);
 
   // Função para buscar ordens de serviço da API
-  const fetchOrdensDeServico = async () => {
+  const fetchOrdensDeServicoTrabalhador = async () => {
 
     try {
       const response = await fetch(`${apiURL}/ordemServico/obterPorTrabalhador/${idCliente}`);
       const data = await response.json();
       setOrdensDeServico(data.ordens);
+    } catch (error) {
+      console.error('Erro ao obter as ordens de serviço:', error);
+    }
+  };
+
+  // Função para buscar ordens de serviço da API
+  const fetchOrdensDeServicoSolicitante = async () => {
+
+    try {
+      const response = await fetch(`${apiURL}/ordemServico/obterPorSolicitante/${idCliente}`);
+      const data = await response.json();
+      setOrdensDeServico(data.ordens);
+      setEhSolicitante(true);
     } catch (error) {
       console.error('Erro ao obter as ordens de serviço:', error);
     }
@@ -307,7 +319,7 @@ function App() {
             <Tab>Editar Dados</Tab>
             <Tab>Enviar Imagem Perfil</Tab>
             {cliente.prestadorDeServicos && <Tab>Enviar Fotos</Tab>}
-            {cliente.prestadorDeServicos && <Tab>Ordens de Serviço</Tab>}
+            <Tab>Ordens de Serviço</Tab>
           </TabList>
 
           <TabPanel>
@@ -483,43 +495,47 @@ function App() {
             </form>
           </TabPanel>
 
-          <TabPanel>
-            <h2>Enviar Fotos/Vídeos</h2>
-            {errorsImagemServico.length > 0 && (
-              <div className="alert alert-danger mt-3">
-                {errorsImagemServico.map((error, index) => (
-                  <div key={index}>{error}</div>
-                ))}
-              </div>
-            )}
-            <form className='form-enviar-fotos' onSubmit={handleSubmitImage}>
-              <label className='input-file'>
-                <div className='icon-container'>
-                  <FaFileImport size={24} />
-                  Selecione o arquivo
-                </div>
-                <input type="file" onChange={handleFileChange} accept="image/jpg, image/png, image/gif, image/jpeg" />
-                <span>
-                  {file?.name}
-                </span>
-              </label>
-              <button className='btn btn-success submit-button' type="submit">Enviar</button>
-            </form>
-
-            {cliente.imagem && cliente.imagem.length > 0 && (
-              <section className='enviar-fotos-section'>
-                {cliente.imagem.map((imagem, index) => (
-                  <div key={index} className="rounded-image-minha-conta">
-                    <img
-                      src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
-                      alt={`Descrição da imagem ${index + 1}`}
-                      key={index}
-                    />
+          {cliente.prestadorDeServicos && (
+            <>
+              <TabPanel>
+                <h2>Enviar Fotos/Vídeos</h2>
+                {errorsImagemServico.length > 0 && (
+                  <div className="alert alert-danger mt-3">
+                    {errorsImagemServico.map((error, index) => (
+                      <div key={index}>{error}</div>
+                    ))}
                   </div>
-                ))}
-              </section>
-            )}
-          </TabPanel>
+                )}
+                <form className='form-enviar-fotos' onSubmit={handleSubmitImage}>
+                  <label className='input-file'>
+                    <div className='icon-container'>
+                      <FaFileImport size={24} />
+                      Selecione o arquivo
+                    </div>
+                    <input type="file" onChange={handleFileChange} accept="image/jpg, image/png, image/gif, image/jpeg" />
+                    <span>
+                      {file?.name}
+                    </span>
+                  </label>
+                  <button className='btn btn-success submit-button' type="submit">Enviar</button>
+                </form>
+
+                {cliente.imagem && cliente.imagem.length > 0 && (
+                  <section className='enviar-fotos-section'>
+                    {cliente.imagem.map((imagem, index) => (
+                      <div key={index} className="rounded-image-minha-conta">
+                        <img
+                          src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
+                          alt={`Descrição da imagem ${index + 1}`}
+                          key={index}
+                        />
+                      </div>
+                    ))}
+                  </section>
+                )}
+              </TabPanel>
+            </>
+          )}
 
           <TabPanel>
             <h2>Ordens de Serviço</h2>
@@ -536,13 +552,18 @@ function App() {
                           <p className="card-text">Solicitante não informado</p>
                         )}
                         <p className="card-text">Data Criação: {ordem.dataCriacao}</p>
-                        <p className="card-text">Valor: {ordem.valor}</p>
+
+                        {ordem.status == 2 && (
+                          <p className="card-text">Valor: {ordem.valor}</p>
+                        )}
+
                         <div className="form-group">
                           <label>Status:</label>
                           <select
                             className="form-control form-select"
                             value={ordem.status}
                             onChange={(e) => handleStatusChange(ordem.id, e.target.value)}
+                            disabled={ehSolicitante ? true : false}
                           >
                             <option value="0">Em Aberto</option>
                             <option value="1">Em Andamento</option>

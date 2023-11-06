@@ -88,4 +88,8 @@
         public function obterOrdensServicoIdTrabalhador($idTrabalhador){
             return $this->dao->obterOrdensServicoIdTrabalhador($idTrabalhador);
         }
+
+        public function obterOrdensServicoIdSolicitante($idSolicitante){
+            return $this->dao->obterOrdensServicoIdSolicitante($idSolicitante);
+        }
     }
