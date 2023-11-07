@@ -21,7 +21,7 @@ class ClienteController
         $this->service = new ClienteService($clienteDAO);
     }
 
-    public function salvar($dados)
+    public function salvar($dados, $ehAtualizar = false)
     {
         $erro = array();
 
@@ -51,24 +51,26 @@ class ClienteController
             $cliente->setSenha($dados['senha']);
         }
 
-        if (!empty($dados['documento']) && !empty($dados['dataNascimento'])) {
-            $dadosClienteFisico = new DadosClienteFisico();
-            $dadosClienteFisico->setCpf($dados['documento']);
-            $dadosClienteFisico->setDataNascimento($dados['dataNascimento']);
-            $dataNascimento = $dados['dataNascimento'];
-            $idade = date_diff(new DateTime(), new DateTime($dataNascimento));
-            $idade = $idade->format('%Y');
+        if(!$ehAtualizar){
+            if (!empty($dados['documento']) && !empty($dados['dataNascimento'])) {
+                $dadosClienteFisico = new DadosClienteFisico();
+                $dadosClienteFisico->setCpf($dados['documento']);
+                $dadosClienteFisico->setDataNascimento($dados['dataNascimento']);
+                $dataNascimento = $dados['dataNascimento'];
+                $idade = date_diff(new DateTime(), new DateTime($dataNascimento));
+                $idade = $idade->format('%Y');
 
-            $dadosClienteFisico->setIdade($idade);
+                $dadosClienteFisico->setIdade($idade);
 
-            $cliente->setDadosEspecificos($dadosClienteFisico);
-        } else {
-            $dadosClienteJuridico = new DadosClienteJuridico();
-            $dadosClienteJuridico->setCnpj($dados['documento']);
-            $dadosClienteJuridico->setInscricaoEstadual($dados['inscricaoEstadual']);
-            $dadosClienteJuridico->setRazaoSocial($dados['razaoSocial']);
-            $dadosClienteJuridico->setSituacaoTributaria(SituacaoTributaria::stringToEnum($dados['situacaoTributaria']));
-            $cliente->setDadosEspecificos($dadosClienteJuridico);
+                $cliente->setDadosEspecificos($dadosClienteFisico);
+            } elseif (!empty($dados['documento']) && !empty($dados['razaoSocial'])) {
+                $dadosClienteJuridico = new DadosClienteJuridico();
+                $dadosClienteJuridico->setCnpj($dados['documento']);
+                $dadosClienteJuridico->setInscricaoEstadual($dados['inscricaoEstadual']);
+                $dadosClienteJuridico->setRazaoSocial($dados['razaoSocial']);
+                $dadosClienteJuridico->setSituacaoTributaria(SituacaoTributaria::stringToEnum($dados['situacaoTributaria']));
+                $cliente->setDadosEspecificos($dadosClienteJuridico);
+            }
         }
 
         if (isset($dados['ehPrestadorDeServicos']) && $dados['ehPrestadorDeServicos'] == true) {

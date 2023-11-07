@@ -129,30 +129,43 @@ try {
         });
 
         $app->post('/atualizar', function (Request $request, Response $response, $args) {
-            $body = $request->getBody()->getContents();
+            try {
+                $body = $request->getBody()->getContents();
 
-            $data = json_decode($body, true);
+                $data = json_decode($body, true);
 
-            $clienteController = new ClienteController();
+                $clienteController = new ClienteController();
 
-            $clienteController->salvar($data);
-            $cliente = $clienteController->obterComEmail($data['email']);
+                $clienteController->salvar($data, true);
+                $cliente = $clienteController->obterComEmail($data['email']);
 
-            if (!$cliente instanceof Cliente) {
-                throw new Exception("Cliente não encontrado.");
+                if (!$cliente instanceof Cliente) {
+                    throw new Exception("Cliente não encontrado.");
+                }
+
+                $responseData = [
+                    'id' => $cliente->getId(),
+                    'nome' => $cliente->getNome(),
+                    'ehPrestadorServicos' => $cliente->getPrestadorDeServicos(),
+                    'cidade' => count($cliente->getEndereco()) > 0 ? $cliente->getEndereco()[0]['cidade'] : array(),
+                    'estado' => count($cliente->getEndereco()) > 0 ? $cliente->getEndereco()[0]['estado'] : array()
+                ];
+
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
+            } catch (\Throwable $th) {
+                Util::logException($th);
+                // Preparar uma resposta JSON
+                $responseData = [
+                    'excecao' => $th->getMessage()
+                ];
+
+                // Responder com JSON
+                $response->getBody()->write(json_encode($responseData));
+
+                return $response->withHeader('Content-Type', 'application/json');
             }
-
-            $responseData = [
-                'id' => $cliente->getId(),
-                'nome' => $cliente->getNome(),
-                'ehPrestadorServicos' => $cliente->getPrestadorDeServicos(),
-                'cidade' => count($cliente->getEndereco()) > 0 ? $cliente->getEndereco()[0]['cidade'] : array(),
-                'estado' => count($cliente->getEndereco()) > 0 ? $cliente->getEndereco()[0]['estado'] : array()
-            ];
-
-            $response->getBody()->write(json_encode($responseData));
-
-            return $response->withHeader('Content-Type', 'application/json');
         });
 
         $app->get('/busca', function (Request $request, Response $response, $args) {

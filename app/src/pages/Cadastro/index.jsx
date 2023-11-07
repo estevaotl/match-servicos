@@ -24,7 +24,7 @@ const CadastroPage = () => {
   const [numero, setNumero] = useState('');
   const [complemento, setComplemento] = useState('');
   const [bairro, setBairro] = useState('');
-  const [localidade, setLocalidade] = useState('');
+  const [cidade, setCidade] = useState('');
   const [uf, setUf] = useState('');
   const [editandoCep, setEditandoCep] = useState(false);
   const [mostrarCamposEndereco, setMostrarCamposEndereco] = useState(false);
@@ -87,7 +87,7 @@ const CadastroPage = () => {
         endereco: endereco,
         complemento: complemento,
         numero: numero,
-        cidade: localidade,
+        cidade: cidade,
         situacaoTributaria: situacaoTributaria,
         razaoSocial: razaoSocial,
         inscricaoEstadual: inscricaoEstadual
@@ -185,7 +185,7 @@ const CadastroPage = () => {
       if (!data.erro) {
         setEndereco(data.logradouro);
         setBairro(data.bairro);
-        setLocalidade(data.localidade);
+        setCidade(data.localidade);
         setUf(data.uf);
         setMostrarCamposEndereco(true); // Mostrar campos quando o CEP for encontrado
       } else {
@@ -503,13 +503,13 @@ const CadastroPage = () => {
             </div>
 
             <div className="col-md-6 mb-3">
-              <label htmlFor="localidade" className="form-label">Localidade:</label>
+              <label htmlFor="cidade" className="form-label">Cidade:</label>
               <input
                 type="text"
                 className="form-control"
-                id="localidade"
-                value={localidade}
-                onChange={(e) => setLocalidade(e.target.value)}
+                id="cidade"
+                value={cidade}
+                onChange={(e) => setCidade(e.target.value)}
                 disabled
               />
             </div>

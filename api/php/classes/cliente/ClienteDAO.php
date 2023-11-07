@@ -54,6 +54,10 @@
             );
 
             $this->bancoDados->executar($comando, $parametros);
+
+            if($cliente->getEndereco() instanceof Endereco){
+                $this->salvarEndereco($cliente);
+            }
         }
 
         public function existe(Cliente $cliente){
@@ -86,7 +90,7 @@
 		}
 
         private function obterEnderecoCliente($idCliente){
-            $comando = "SELECT * FROM endereco WHERE idCliente = :idCliente";
+            $comando = "SELECT * FROM endereco WHERE idCliente = :idCliente AND ativo = 1";
             $parametros = array(
                 "idCliente" => $idCliente
             );

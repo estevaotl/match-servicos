@@ -20,7 +20,18 @@ function App() {
   const [ehSolicitante, setEhSolicitante] = useState(false);
 
   const [errorsImagemServico, setErrorsImagemServico] = useState('');
-
+  const [errors, setErrors] = useState([]);
+  const [errorsConsultaCep, setErrorsConsultaCep] = useState([]);
+  const [temEndereco, setTemEndereco] = useState(false);
+  const [cep, setCep] = useState('');
+  const [endereco, setEndereco] = useState('');
+  const [numero, setNumero] = useState('');
+  const [complemento, setComplemento] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [uf, setUf] = useState('');
+  const [editandoCep, setEditandoCep] = useState(false);
+  const { saveUserSate } = useAuth();
   const currentURL = window.location.href;
   const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
 
@@ -34,6 +45,14 @@ function App() {
 
   const handleSelectChange = (e) => {
     setCliente(old => ({ ...old, prestadorDeServicos: e.target.value, servicosPrestados: '' }))
+  };
+
+  const handleValueNumero = (e) => {
+    setNumero(e.target.value);
+  };
+
+  const handleValueComplemento = (e) => {
+    setComplemento(e.target.value);
   };
 
   const navigate = useNavigate();
@@ -92,7 +111,13 @@ function App() {
       });
   };
 
-  const handleSubmitDados = async () => {
+  const handleSubmitDados = async (event) => {
+    event.preventDefault();
+
+    if(errorsConsultaCep.length > 0 || cep.length <= 0){
+      setErrors(['Não é possível seguir com CEP inválido.']);
+      return false;
+    }
 
     await fetch(`${apiURL}/clientes/atualizar`, {
       method: 'POST',
@@ -103,17 +128,27 @@ function App() {
         whatsapp: cliente.whatsapp,
         genero: cliente.genero,
         servicosPrestados: cliente.servicosPrestados,
-        prestadorDeServicos: cliente.prestadorDeServicos
+        prestadorDeServicos: cliente.prestadorDeServicos,
+        cep: cep,
+        rua: endereco,
+        bairro: bairro,
+        estado: uf,
+        endereco: endereco,
+        complemento: complemento,
+        numero: numero,
+        cidade: cidade,
       })
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Erro na requisição');
-        }
         return response.json();
       })
       .then(data => {
-        console.log(data); // Certifique-se de que você está vendo a resposta aqui
+        if (data.excecao) {
+          setErrors(data.excecao.split('\n'));
+        } else {
+          saveUserSate(data.id, data.nome, data.ehPrestadorServicos, data.estado, data.cidade)
+          navigate('/');
+        }
       })
       .catch(error => {
         console.error('Erro na requisição:', error);
@@ -136,6 +171,8 @@ function App() {
 
         // Se o usuário for um prestador de serviços, carrega as ordens de serviço
         data.cliente.prestadorDeServicos ? fetchOrdensDeServicoTrabalhador() : fetchOrdensDeServicoSolicitante();
+
+        definirValoresCep(data.cliente);
       })
       .catch(error => {
         navigate('/'); // Use navigate('/') para redirecionar para a página inicial
@@ -296,6 +333,78 @@ function App() {
     }
   };
 
+  const definirValoresCep = (cliente) => {
+    if(cliente.endereco && cliente.endereco.length > 0){
+      setTemEndereco(true);
+
+      setCep(cliente.endereco[0].cep);
+      setEndereco(cliente.endereco[0].rua);
+      setNumero(cliente.endereco[0].numero);
+      setComplemento(cliente.endereco[0].complemento);
+      setBairro(cliente.endereco[0].bairro);
+      setCidade(cliente.endereco[0].cidade);
+      setUf(cliente.endereco[0].estado);
+    }
+  }
+
+  const limparValoresCep = () => {
+    setTemEndereco(false);
+
+    setCep("");
+    setEndereco("");
+    setNumero("");
+    setComplemento("");
+    setBairro("");
+    setCidade("");
+    setUf("");
+  }
+
+  useEffect(() => {
+    if (cep.length === 9 && !editandoCep) {
+      fetchAddress();
+    } else {
+      setTemEndereco(false);
+    }
+  }, [cep, editandoCep]);
+
+  const handleCepChange = (e) => {
+    limparValoresCep();
+  
+    const formattedCep = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+    if (formattedCep.length === 8) {
+      // Se o CEP tiver 8 caracteres numéricos, acrescente o hífen
+      setCep(formattedCep.replace(/(\d{5})(\d{3})/, '$1-$2'));
+    } else {
+      setCep(formattedCep);
+    }
+
+    // Limpar os erros quando o usuário começar a editar o campo CEP
+    setErrorsConsultaCep([]);
+
+    setEditandoCep(false); // Defina como false para permitir novas consultas
+  };
+
+  const fetchAddress = async () => {
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (!data.erro) {
+        setEndereco(data.logradouro);
+        setBairro(data.bairro);
+        setCidade(data.localidade);
+        setUf(data.uf);
+        setTemEndereco(true);
+      } else {
+        setErrorsConsultaCep(["Cep não encontrado."]);
+        setTemEndereco(false);
+      }
+    } catch (error) {
+      setErrorsConsultaCep(["Cep não encontrado."]);
+      setTemEndereco(false);
+    }
+  };
+
   return (
     <div className="minha-conta-container">
       <article id="articleMinhaContaPage">
@@ -310,6 +419,14 @@ function App() {
                   className="rounded-circle ball-image-inner"
                 />
               </div>
+            ))}
+          </div>
+        )}
+
+        {errors.length > 0 && (
+          <div className="alert alert-danger mt-3">
+            {errors.map((error, index) => (
+              <div key={index}>{error}</div>
             ))}
           </div>
         )}
@@ -391,20 +508,28 @@ function App() {
                 </select>
               </div>
 
-              {cliente.endereco && cliente.endereco.length > 0 && (
+              <div className="col-md-12 mb-3">
+                <label htmlFor="cep" className="form-label">CEP:</label>
+                <InputMask
+                  mask="99999-999"
+                  placeholder="99999-999" // Opcional: forneça um placeholder com o formato desejado
+                  type="text"
+                  className="form-control"
+                  id="cep"
+                  value={cep}
+                  onChange={handleCepChange}
+                />
+              </div>
+
+              {temEndereco && (
                 <>
-                  <div className="col-md-12 mb-3">
-                    <label htmlFor="cep" className="form-label">CEP:</label>
-                    <InputMask
-                      mask="99999-999"
-                      placeholder="99999-999" // Opcional: forneça um placeholder com o formato desejado
-                      type="text"
-                      className="form-control"
-                      id="cep"
-                      value={cliente.endereco[0].cep}
-                      disabled
-                    />
-                  </div>
+                  {errorsConsultaCep.length > 0 && (
+                    <div className="alert alert-danger div-erros-consulta-cadastro">
+                      {errorsConsultaCep.map((error, index) => (
+                        <span key={index}>{error}</span>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="col-md-12 mb-3">
                     <label htmlFor="endereco" className="form-label">Endereço:</label>
@@ -412,7 +537,7 @@ function App() {
                       type="text"
                       className="form-control"
                       id="endereco"
-                      value={cliente.endereco[0].rua}
+                      value={endereco}
                       disabled
                     />
                   </div>
@@ -423,8 +548,8 @@ function App() {
                       type="text"
                       className="form-control"
                       id="numero"
-                      value={cliente.endereco[0].numero}
-                      disabled
+                      value={numero}
+                      onChange={handleValueNumero}
                     />
                   </div>
 
@@ -434,8 +559,8 @@ function App() {
                       type="text"
                       className="form-control"
                       id="complemento"
-                      value={cliente.endereco[0].complemento}
-                      disabled
+                      value={complemento}
+                      onChange={handleValueComplemento}
                     />
                   </div>
 
@@ -445,18 +570,18 @@ function App() {
                       type="text"
                       className="form-control"
                       id="bairro"
-                      value={cliente.endereco[0].bairro}
+                      value={bairro}
                       disabled
                     />
                   </div>
 
                   <div className="col-md-12 mb-3">
-                    <label htmlFor="localidade" className="form-label">Cidade:</label>
+                    <label htmlFor="cidade" className="form-label">Cidade:</label>
                     <input
                       type="text"
                       className="form-control"
-                      id="localidade"
-                      value={cliente.endereco[0].cidade}
+                      id="cidade"
+                      value={cidade}
                       disabled
                     />
                   </div>
@@ -467,7 +592,7 @@ function App() {
                       type="text"
                       className="form-control"
                       id="uf"
-                      value={cliente.endereco[0].estado}
+                      value={uf}
                       disabled
                     />
                   </div>

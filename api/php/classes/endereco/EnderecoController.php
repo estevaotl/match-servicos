@@ -1,64 +1,34 @@
 <?php
+    if (strpos($_SERVER['HTTP_REFERER'], 'localhost') !== false) {
+        require_once __DIR__ . '/../../../config.php';
+    } else {
+        require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
+    }
 
-if (strpos($_SERVER['HTTP_REFERER'], 'localhost') !== false) {
-    require_once __DIR__ . '/../../../config.php';
-} else {
-    require_once($_SERVER['DOCUMENT_ROOT']."/config.php");
-}
+    class EnderecoController
+    {
+        private $service = null;
 
-class EnderecoController
-{
-    // private $service = null;
+        public function __construct(BancoDados $conexao = null)
+        {
+            if (isset($conexao))
+                $bancoDados = $conexao;
+            else
+                $bancoDados = BDSingleton::get();
 
-    // public function __construct(BancoDados $conexao = null){
-    // 	if(isset($conexao))
-    // 		$bancoDados = $conexao;
-    // 	else
-    // 		$bancoDados = BDSingleton::get();
+            $enderecoDAO = new EnderecoDAO($bancoDados);
+            $this->service = new EnderecoService($enderecoDAO);
+        }
 
-    // 	$enderecoDAO = new EnderecoDAO($bancoDados);
-    // 	$this->service = new EnderecoService($enderecoDAO);
-    // }
+        public function obterComId($idEndereco, $completo = true){
+            return $this->service->obterComId($idEndereco, $completo);
+        }
 
-    // public function salvar($cliente){
-    //     $erro = array();
+        public function existeEnderecoAtivoCliente($idCliente){
+            return $this->service->existeEnderecoAtivoCliente($idCliente);
+        }
 
-    //     $endereco = new Endereco();
-
-    //     $enderecoCliente = $cliente->getEndereco();
-
-    //     if(isset($enderecoCliente->getId())){
-    //         $endereco->setId($enderecoCliente->getId());
-    //     }
-
-    //     if(isset($enderecoCliente->getCep())){
-    //         $endereco->setCEP($enderecoCliente->getCep());
-    //     }
-
-    //     if(isset($enderecoCliente->getRua())){
-    //         $endereco->setRua($enderecoCliente->getRua());
-    //     }
-
-    //     if(isset($enderecoCliente->getComplemento())){
-    //         $endereco->setComplemento($enderecoCliente->getComplemento());
-    //     }
-
-    //     if(isset($enderecoCliente->getCidade())){
-    //         $endereco->setCidade($enderecoCliente->getCidade());
-    //     }
-
-    //     if(isset($enderecoCliente->getBairro())){
-    //         $endereco->setBairro($enderecoCliente->getBairro());
-    //     }
-
-    //     if(isset($enderecoCliente->getEstado())){
-    //         $endereco->setEstado($enderecoCliente->getEstado());
-    //     }
-
-    //     if(isset($enderecoCliente->getNumero())){
-    //         $endereco->setNumero($enderecoCliente->getNumero());
-    //     }
-
-    //     return $this->service->salvar($endereco, $erro);
-    // }
-}
+        public function desativarEnderecoCliente($idCliente){
+            return $this->service->desativarEnderecoCliente($idCliente);
+        }
+    }
