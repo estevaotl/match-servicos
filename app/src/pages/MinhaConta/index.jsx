@@ -397,7 +397,7 @@ function App() {
                     <label htmlFor="cep" className="form-label">CEP:</label>
                     <InputMask
                       mask="99999-999"
-                      maskPlaceholder=""
+                      placeholder="99999-999" // Opcional: forneça um placeholder com o formato desejado
                       type="text"
                       className="form-control"
                       id="cep"

@@ -423,7 +423,7 @@ const CadastroPage = () => {
             type="tel"
             className="form-control"
             id="whatsapp"
-            placeholder="(XX) XXXXX-XXXX" // Opcional: forneça um placeholder com o formato desejado
+            placeholder="(99) 99999-9999" // Opcional: forneça um placeholder com o formato desejado
             value={whatsapp}
             onChange={(e) => setWhatsapp(e.target.value)}
           />
@@ -437,12 +437,12 @@ const CadastroPage = () => {
           <label htmlFor="cep" className="form-label">CEP:</label>
           <InputMask
             mask="99999-999"
-            maskPlaceholder=""
             type="text"
             className="form-control"
             id="cep"
             value={cep}
             onChange={handleCepChange}
+            placeholder="99999-999" // Opcional: forneça um placeholder com o formato desejado
           />
         </div>
 
