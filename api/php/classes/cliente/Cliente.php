@@ -108,7 +108,8 @@
                 'imagem' => $this->getImagem(),
                 'servicosPrestados' => $this->getServicosPrestados(),
                 'endereco' => $this->getEndereco(),
-                'imagemPerfil' => $this->getImagemPerfil()
+                'imagemPerfil' => $this->getImagemPerfil(),
+                'dadosEspecificos' => $this->getDadosEspecificos()
             ];
         }
 
