@@ -103,9 +103,9 @@ const HomePage = () => {
                     }
                     altText={`Imagem de ${prestador.nome}`}
                     profissao={prestador.servicosPrestados}
-                    idade={prestador.idade}
                     endereco={`${prestador.endereco[0].rua}, ${prestador.endereco[0].numero}, ${prestador.endereco[0].bairro}, ${prestador.endereco[0].cidade}, ${prestador.endereco[0].estado}`}
-                    media_avaliacao={prestador.media_avaliacao}
+                    nome={prestador.nome}
+                    email={prestador.email}
                     key={prestadorIndex}
                     id={prestador.id}
                   >
