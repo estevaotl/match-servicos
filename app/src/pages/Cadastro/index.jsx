@@ -57,7 +57,7 @@ const CadastroPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if(errorsConsultaCep.length > 0){
+    if(errorsConsultaCep.length > 0 || cep.length <= 0){
       setErrors(['Não é possível seguir com CEP inválido.']);
       return false;
     }
