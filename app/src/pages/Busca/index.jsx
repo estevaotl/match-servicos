@@ -186,10 +186,10 @@ const SearchPage = () => {
 
             <Autocomplete
               placeholder="Digite o serviço desejado"
-              value={currentSearchQuery}
               onSelectJob={(value) => setCurrentSearchQuery(value)}
               exibirBotaoPesquisa={false}
               classeInputBusca="input-servico"
+              value={currentSearchQuery}
             />
 
             <label htmlFor="profissao" className="form-label">

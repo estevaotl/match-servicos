@@ -49,8 +49,6 @@ const HomePage = () => {
         }
       }
 
-      console.log(url);
-
       navigate(url);
     }
   };

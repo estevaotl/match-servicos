@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import "./style.css";
 
@@ -58,6 +58,11 @@ const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
 
+    useEffect(() => {
+        // Defina o valor inicial do input apenas na montagem do componente
+        setInputValue(value !== '' ? value : '');
+    }, [value]);
+
     const handleInputChange = (e) => {
         const value = e.target.value;
         setInputValue(value);
@@ -77,18 +82,17 @@ const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true
     };
 
     return (
-
-        <div className={`${exibirBotaoPesquisa != false ? "autocomplete search-box" : ''}`}>
+        <div className={`${exibirBotaoPesquisa !== false ? "autocomplete search-box" : ''}`}>
             <input
                 type="text"
                 className={`form-control me-2 ${classeInputBusca !== '' ? classeInputBusca : ''}`}
                 placeholder="Digite o serviço desejado"
-                value={value !== '' ? value : inputValue}
+                value={inputValue}
                 onChange={handleInputChange}
             />
 
             {showSuggestions && (
-                <div className="suggestions">
+                <div className={`${exibirBotaoPesquisa !== false ? 'suggestions' : "suggestions-busca"}`}>
                     {jobList
                         .filter((job) => job.toLowerCase().includes(inputValue.toLowerCase()))
                         .map((suggestion, index) => (
