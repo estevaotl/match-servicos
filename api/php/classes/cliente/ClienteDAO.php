@@ -247,6 +247,8 @@
                 $parametros['cidade'] = "%" . $restricoes['cidade'] . "%";
             }
 
+            $comando = $comando . $from . $join . $where . $groupBy;
+
             return $this->bancoDados->obterObjetos($comando, array($this, 'transformarEmObjeto'), $parametros, $orderBy, $limit);
         }
 
