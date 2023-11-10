@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import "./style.css";
 
-const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true, classeInputBusca = '', value}) => {
+const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true, classeInputBusca = '', value = ''}) => {
     const jobList = [
         'Troca de tomadas e interruptores',
         'Instalação de luminárias',
