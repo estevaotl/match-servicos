@@ -223,7 +223,7 @@ try {
 
             $clienteController = new ClienteController();
 
-            $clientes = $clienteController->obterComRestricoes($params);
+            $clientes = $clienteController->obterComRestricoes($params, 9);
 
             $arrayClientes = array();
             if (count($clientes) > 0) {

@@ -117,7 +117,7 @@
             return $this->dao->obterComId($id, $completo);
         }
 
-		public function obterComRestricoes($restricoes = array()){
-            return $this->dao->obterComRestricoes($restricoes);
+		public function obterComRestricoes($restricoes = array(), $limit = ''){
+            return $this->dao->obterComRestricoes($restricoes, $limit);
         }
     }

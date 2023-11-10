@@ -195,7 +195,7 @@
 			return $this->bancoDados->obterObjeto($comando, array($this, 'transformarEmObjeto'), $parametros, $completo);
 		}
 
-        public function obterComRestricoes($restricoes = array()){
+        public function obterComRestricoes($restricoes = array(), $limit = ''){
             $comando = "SELECT cliente.* ";
             $from = " FROM cliente ";
             $where = " WHERE cliente.ativo = 1 ";
@@ -247,9 +247,7 @@
                 $parametros['cidade'] = "%" . $restricoes['cidade'] . "%";
             }
 
-            $comando = $comando . $from . $join . $where . $groupBy;
-
-            return $this->bancoDados->obterObjetos($comando, array($this, 'transformarEmObjeto'), $parametros, $orderBy);
+            return $this->bancoDados->obterObjetos($comando, array($this, 'transformarEmObjeto'), $parametros, $orderBy, $limit);
         }
 
         public function existeEmail($cliente){

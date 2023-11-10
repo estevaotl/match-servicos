@@ -135,7 +135,7 @@ class ClienteController
         return $this->service->obterComId($id, $completo);
     }
 
-    public function obterComRestricoes($parametros)
+    public function obterComRestricoes($parametros, $limit = '')
     {
         $restricoes = array();
 
@@ -167,6 +167,6 @@ class ClienteController
             $restricoes['cidade'] = $parametros['cidade'];
         }
 
-        return $this->service->obterComRestricoes($restricoes);
+        return $this->service->obterComRestricoes($restricoes, $limit);
     }
 }
