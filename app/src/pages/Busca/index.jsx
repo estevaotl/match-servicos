@@ -5,6 +5,7 @@ import './styles.css';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useAuth } from '../../contexts/Auth';
+import Autocomplete from '../../componentes/AutoComplete';
 
 const SearchPage = () => {
   const { idCliente } = useAuth();
@@ -182,12 +183,13 @@ const SearchPage = () => {
             {idCliente.length <= 0 && (
               <div className="alert alert-danger">Caso queira uma filtragem pela sua localidade, se logue no site!</div>
             )}
-            <input
-              type="text"
-              className="form-control me-2 input-servico"
+
+            <Autocomplete
               placeholder="Digite o serviço desejado"
               value={currentSearchQuery}
-              onChange={(e) => setCurrentSearchQuery(e.target.value)}
+              onSelectJob={(value) => setCurrentSearchQuery(value)}
+              exibirBotaoPesquisa={false}
+              classeInputBusca="input-servico"
             />
 
             <label htmlFor="profissao" className="form-label">

@@ -276,7 +276,7 @@ class BancoDados
 	{
 		if ($orderBy != '')
 			$comando .= " order by $orderBy";
-		if (isset($limit))
+		if (!empty($limit))
 			$comando .= " limit $offset, $limit";
 		$linhas = $this->consultar($comando, $parametros);
 		$objetos = array();

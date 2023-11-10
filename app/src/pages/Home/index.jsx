@@ -8,6 +8,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import { prestadoresServicosMocked } from './mock';
 import { FaSearch } from 'react-icons/fa';
 import { useAuth } from '../../contexts/Auth';
+import Autocomplete from '../../componentes/AutoComplete';
 
 const ITEMS_PER_PAGE = 3; // Número de itens por página no carrossel
 
@@ -76,18 +77,10 @@ const HomePage = () => {
         <img src={icone_engenharia} alt="Logo" />
       </section>
 
-      <div className="search-box">
-        <input
-          type="text"
-          className="form-control me-2"
-          placeholder="Digite o serviço desejado"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-        <button className="btn btn-primary" type="button" onClick={handleSearch}>
-          <FaSearch size={20} color='#fff' />
-        </button>
-      </div>
+      <Autocomplete
+        onSelectJob={selectedJob => setSearchValue(selectedJob)}
+        onSearch={handleSearch}
+      />
 
       <article id="articleCardTrabalhadorHomePage">
         <Carousel className='carrossel'>
