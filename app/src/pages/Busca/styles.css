@@ -53,3 +53,20 @@
   height: fit-content;
   margin-bottom: 8px;
 }
+
+/* Mantenha a sua estilização atual */
+
+@media only screen and (max-width: 768px) {
+  .container-busca {
+    flex-direction: column;
+  }
+
+  .container-resultado-busca {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .filter {
+    max-width: 100%;
+  }
+}
