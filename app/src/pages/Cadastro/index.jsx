@@ -280,7 +280,7 @@ const CadastroPage = () => {
                 multiple
                 value={selectedProfissoes}
                 onChange={handleProfissaoChange}
-                className="form-select"
+                className="form-select select-profissoes"
               >
                 <optgroup label="Reparos Elétricos">
                   <option value="Troca de tomadas e interruptores">Troca de tomadas e interruptores</option>
