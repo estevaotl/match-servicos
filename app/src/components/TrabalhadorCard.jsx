@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Modal, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../contexts/Auth';
 
@@ -89,7 +88,7 @@ const TrabalhadorCard = ({ key, worker, navigate }) => {
                     onClick={handleWhatsappClick}
                     className="btn btn-success contact-button"
                 >
-                    <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
+                    {/* <FontAwesomeIcon icon={faWhatsapp} className="me-2" /> */}
                     Entrar em Contato
                 </Button>
 

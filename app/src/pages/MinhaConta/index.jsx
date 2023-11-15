@@ -4,7 +4,6 @@ import 'react-tabs/style/react-tabs.css';
 import './styles.css';
 import { useNavigate } from 'react-router-dom'; // Importe o useNavigate
 import InputMask from 'react-input-mask';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Importe o CSS do Bootstrap
 import { useAuth } from '../../contexts/Auth';
 import { FaFileImport, FaCamera } from 'react-icons/fa6'
 

@@ -1,0 +1,8 @@
+@import '~bootstrap/scss/bootstrap';
+@import '~@splidejs/react-splide/css';
+
+@media (min-width: 1200px) {
+  .w-xl-50 {
+      width: 50% !important;
+  }
+}

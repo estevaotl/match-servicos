@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaSearch } from 'react-icons/fa';
-import "./style.css";
+import { Search } from 'react-bootstrap-icons';
+import { Button, FormControl, InputGroup, ListGroup } from 'react-bootstrap';
 
-const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true, classeInputBusca = '', value = ''}) => {
+const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true, classeInputBusca = '', value = '' }) => {
     const jobList = [
         'Troca de tomadas e interruptores',
         'Instalação de luminárias',
@@ -77,42 +77,64 @@ const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true
 
     const handleSearchClick = () => {
         setShowSuggestions(false);
-        if(onSearch)
+        if (onSearch)
             onSearch(inputValue);
     };
 
     return (
-        <div className={`${exibirBotaoPesquisa !== false ? "autocomplete search-box" : ''}`}>
-            <input
-                type="text"
-                className={`form-control me-2 ${classeInputBusca !== '' ? classeInputBusca : ''}`}
-                placeholder="Digite o serviço desejado"
-                value={inputValue}
-                onChange={handleInputChange}
-            />
+        <>
+            <InputGroup
+                className={`
+                    p-0
+                    ${exibirBotaoPesquisa !== false ? "autocomplete search-box" : ''}
+                `}
+            >
+                <FormControl
+                    size="lg"
+                    value={inputValue}
+                    aria-describedby="search"
+                    onChange={handleInputChange}
+                    placeholder="Digite o serviço desejado"
+                    aria-label="Digite o serviço desejado"
+                    className={`${classeInputBusca !== '' ? classeInputBusca : ''}`}
+                />
+
+                {exibirBotaoPesquisa && (
+                    <Button
+                        id="search"
+                        onClick={handleSearchClick}
+                        size="lg"
+                    >
+                        <Search />
+                    </Button>
+                )}
+            </InputGroup>
 
             {showSuggestions && (
-                <div className={`${exibirBotaoPesquisa !== false ? 'suggestions' : "suggestions-busca"}`}>
+                <ListGroup
+                    className={`
+                        p-0 flex-column flex-shrink-1
+                        overflow-scroll  position-absolute top-100
+                        z-1
+                    `}
+                    style={{
+                        maxHeight: '228px',
+                    }}
+                >
                     {jobList
                         .filter((job) => job.toLowerCase().includes(inputValue.toLowerCase()))
                         .map((suggestion, index) => (
-                            <div
+                            <ListGroup.Item
                                 key={index}
-                                className="suggestion-item"
+                                action
                                 onClick={() => handleSelectSuggestion(suggestion)}
                             >
                                 {suggestion}
-                            </div>
+                            </ListGroup.Item>
                         ))}
-                </div>
+                </ListGroup>
             )}
-
-            {exibirBotaoPesquisa && (
-                <button className="btn btn-primary" type="button" onClick={handleSearchClick}>
-                    <FaSearch size={20} color="#fff" />
-                </button>
-            )}
-        </div>
+        </>
     );
 };
 

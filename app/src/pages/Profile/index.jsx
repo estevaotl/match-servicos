@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import './styles.css';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAuth } from '../../contexts/Auth';
 import { Modal, Button } from 'react-bootstrap';
 
@@ -107,7 +106,7 @@ const Profile = () => {
           className="btn btn-success contact-button"
           onClick={handleWhatsappClick}
         >
-          <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
+          {/* <FontAwesomeIcon icon={faWhatsapp} className="me-2" /> */}
           Entrar em Contato
         </button>
       </div>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import TrabalhadorCard from '../../componentes/TrabalhadorCard';
+import TrabalhadorCard from '../../components/TrabalhadorCard';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useAuth } from '../../contexts/Auth';
-import Autocomplete from '../../componentes/AutoComplete';
+import Autocomplete from '../../components/AutoComplete';
 
 const SearchPage = () => {
   const { idCliente } = useAuth();

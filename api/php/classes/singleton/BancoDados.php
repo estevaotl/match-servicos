@@ -381,6 +381,7 @@ class BancoDados
 
 			return $preparado;
 		} catch (Exception $e) {
+			die($e->getMessage());
 
 			// Caso o objeto(conexão) atual tenha sido criado para salvar um erro em uma query feita em uma outra conexão, getSalvandoErro() deveria ser true
 			// Nesta situação apenas lançamos uma nova exceção para evitar um possível loop de tentativas falhas em salvar o erro na última query
