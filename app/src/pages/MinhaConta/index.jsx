@@ -671,10 +671,10 @@ function App() {
                     <div className="card">
                       <div className="card-body">
                         <h5 className="card-title">ID da Ordem: {ordem.id}</h5>
-                        {ordem.solicitante ? (
-                          <p className="card-text">Solicitante: {ordem.solicitante}</p>
+                        {ordem.trabalhador ? (
+                          <p className="card-text">Trabalhador: <a href={`/profile/${ordem.idTrabalhador}`} target='_blank'>{ordem.trabalhador}</a></p>
                         ) : (
-                          <p className="card-text">Solicitante não informado</p>
+                          <p className="card-text">Trabalhador não informado</p>
                         )}
                         <p className="card-text">Data Criação: {ordem.dataCriacao}</p>
 

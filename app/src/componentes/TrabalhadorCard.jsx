@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { Modal, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../contexts/Auth';
 
-const TrabalhadorCard = ({ key, worker }) => {
+const TrabalhadorCard = ({ key, worker, navigate }) => {
     const whatsappMessage = encodeURIComponent(`Olá ${worker.nome}. Vi seu perfil no site e gostei dos seus serviços prestados. Gostaria de solicitar um orçamento. Como posso proceder?`);
     const whatsappLink = `https://api.whatsapp.com/send?phone=+55${worker.whatsapp}&text=${whatsappMessage}`;
     const { idCliente } = useAuth();
 
     const [isLogged, setIsLogged] = useState(sessionStorage.getItem('idCliente') !== null);
-    const navigate = useNavigate();
-
-    const currentURL = window.location.href;
-    const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     const enviarRequisicao = async () => {
         if (!isLogged) {
-            alert("Faça login para entrar em contato");
-            navigate('/login'); // Usando navigate para redirecionar
+            setAlertMessage("Faça login para entrar em contato");
             return;
         }
 
         try {
+            // Certifique-se de definir apiURL corretamente
+            const apiURL = window.location.href.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
+
             const response = await fetch(`${apiURL}/ordemServico/criar`, {
                 method: 'POST',
                 headers: {
@@ -35,36 +36,43 @@ const TrabalhadorCard = ({ key, worker }) => {
             });
 
             const data = await response.json();
-            console.log('Requisição enviada:', data);
         } catch (error) {
             console.error('Erro na requisição:', error);
         }
     };
 
-    const handleWhatsappClick = (event) => {
-        if(sessionStorage.getItem('ehPrestadorServicos') == 'true'){
-            event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
-            alert("Não é possivel realizar essa opção. Você é um prestador de serviços!");
+    const handleWhatsappClick = () => {
+        if (sessionStorage.getItem('ehPrestadorServicos') === 'true') {
+            setAlertMessage("Não é possível realizar essa opção. Você é um prestador de serviços!");
         } else {
             if (!isLogged) {
-                event.preventDefault(); // Impede o link de abrir a aba do WhatsApp
-                alert("Faça login para entrar em contato");
-                navigate('/login');
+                setAlertMessage("Faça login para entrar em contato");
             } else {
-                alert("Ao continuar, esteja ciente que uma ordem de serviço será gerada caso não existe nenhuma criada anteriormente. \nEssa ordem de serviço criada será utilizada como controle pelo profissional, via painel do cliente do mesmo. \nVocê receberá um email para controle com essa OS criada e quando a mesma for finalizada.");
-
-                // Abre o link do WhatsApp em uma nova aba
-                window.open(whatsappLink, '_blank');
-
-                enviarRequisicao();
+                setShowConfirmation(true);
             }
         }
     };
 
+    const handleConfirmation = () => {
+        setShowConfirmation(false);
+        window.open(whatsappLink, '_blank');
+        enviarRequisicao();
+    };
+
+    const handleCancel = () => {
+        setShowConfirmation(false);
+    };
 
     return (
         <div className="card m-2" key={key}>
             <div className="card-body">
+                {/* Bootstrap Alert */}
+                {alertMessage && (
+                    <Alert variant="danger" onClose={() => setAlertMessage('')} dismissible>
+                        {alertMessage}
+                    </Alert>
+                )}
+
                 <h4 className="card-title">{worker.nome}</h4>
                 <p className="card-text">Email: {worker.email}</p>
                 {worker.endereco && worker.endereco.length > 0 && (
@@ -77,17 +85,31 @@ const TrabalhadorCard = ({ key, worker }) => {
                     Ver Perfil
                 </Link>
 
-                <a
-                    href={whatsappLink} // Mantém o atributo href para o link do WhatsApp
+                <Button
+                    onClick={handleWhatsappClick}
                     className="btn btn-success contact-button"
-                    onClick={handleWhatsappClick} // Usa a função de tratamento de clique personalizada
-                    target='_blank'
-                    rel='noopener noreferrer'
                 >
                     <FontAwesomeIcon icon={faWhatsapp} className="me-2" />
                     Entrar em Contato
-                </a>
+                </Button>
 
+                {/* React Bootstrap Modal for Confirmation */}
+                <Modal show={showConfirmation} onHide={handleCancel}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Confirmação</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Ao continuar, esteja ciente que uma ordem de serviço será gerada...
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCancel}>
+                            Cancelar
+                        </Button>
+                        <Button variant="primary" onClick={handleConfirmation}>
+                            Confirmar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         </div>
     );

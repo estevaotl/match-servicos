@@ -175,9 +175,9 @@ class OrdemServicoDAO
         $linhas = $this->bancoDados->consultar($comando, $parametros, true);
         $clienteController = new ClienteController();
         foreach ($linhas as &$linha) {
-            $cliente = $clienteController->obterComId($linha['idSolicitante']);
+            $cliente = $clienteController->obterComId($linha['idTrabalhador']);
             if($cliente instanceof Cliente){
-                $linha['solicitante'] = $cliente->getNome();
+                $linha['trabalhador'] = $cliente->getNome();
             }
 
             $dataCriacao = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", $linha['dataCriacao']);
