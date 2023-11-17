@@ -284,7 +284,6 @@ const CadastroPage = () => {
                       <SelectProfissoes />
                     )}
                   </Form.Group>
-
                 </div>
               </fieldset>
 
@@ -332,11 +331,9 @@ const CadastroPage = () => {
                 <legend>Endereço</legend>
 
                 <Row>
-                  <Col className="mb-3">
-                    <InputGroup>
-                      <InputGroup.Text>
-                        <GeoAlt />
-                      </InputGroup.Text>
+                  <div className="d-flex flex-row align-items-start mb-4">
+                    <GeoAlt className="me-3 flex-shrink-0" size={24} />
+                    <Form.Group className="form-outline flex-grow-1 mb-0">
                       <InputMask
                         mask="99999-999"
                         type="text"
@@ -346,91 +343,91 @@ const CadastroPage = () => {
                         onChange={handleCepChange}
                         placeholder="12456-789"
                       />
-                    </InputGroup>
-                    <Form.Label htmlFor="cep" className="form-label">CEP</Form.Label>
-                  </Col>
+                      <Form.Label htmlFor="cep" className="form-label">CEP</Form.Label>
 
-                  {errorsConsultaCep.length > 0 && (
-                    <Alert variant="danger" className="div-erros-consulta-cadastro">
-                      {errorsConsultaCep.map((error, index) => (
-                        <span key={index}>{error}</span>
-                      ))}
-                    </Alert>
-                  )}
+                      {errorsConsultaCep.length > 0 && (
+                        <Alert variant="danger" className="div-erros-consulta-cadastro">
+                          {errorsConsultaCep.map((error, index) => (
+                            <span key={index}>{error}</span>
+                          ))}
+                        </Alert>
+                      )}
 
-                  {mostrarCamposEndereco && (
-                    <>
-                      <Col xs={6} className="mb-3">
-                        <Form.Control
-                          type="text"
-                          className="form-control"
-                          id="endereco"
-                          value={endereco}
-                          onChange={(e) => setEndereco(e.target.value)}
-                          disabled
-                        />
-                        <Form.Label htmlFor="endereco" className="form-label">Endereço</Form.Label>
-                      </Col>
+                      {mostrarCamposEndereco && (
+                        <Row>
+                          <Col xs={6} className="mb-3">
+                            <Form.Control
+                              type="text"
+                              className="form-control"
+                              id="endereco"
+                              value={endereco}
+                              onChange={(e) => setEndereco(e.target.value)}
+                              disabled
+                            />
+                            <Form.Label htmlFor="endereco" className="form-label">Endereço</Form.Label>
+                          </Col>
 
-                      <Col xs={6} className="mb-3">
-                        <Form.Control
-                          type="text"
-                          className="form-control"
-                          id="numero"
-                          value={numero}
-                          onChange={(e) => setNumero(e.target.value)}
-                        />
-                        <Form.Label htmlFor="numero" className="form-label">Número</Form.Label>
-                      </Col>
+                          <Col xs={6} className="mb-3">
+                            <Form.Control
+                              type="text"
+                              className="form-control"
+                              id="numero"
+                              value={numero}
+                              onChange={(e) => setNumero(e.target.value)}
+                            />
+                            <Form.Label htmlFor="numero" className="form-label">Número</Form.Label>
+                          </Col>
 
-                      <Col xs={6} className="mb-3">
-                        <Form.Control
-                          type="text"
-                          className="form-control"
-                          id="complemento"
-                          value={complemento}
-                          onChange={(e) => setComplemento(e.target.value)}
-                        />
-                        <Form.Label htmlFor="complemento" className="form-label">Complemento</Form.Label>
-                      </Col>
+                          <Col xs={6} className="mb-3">
+                            <Form.Control
+                              type="text"
+                              className="form-control"
+                              id="complemento"
+                              value={complemento}
+                              onChange={(e) => setComplemento(e.target.value)}
+                            />
+                            <Form.Label htmlFor="complemento" className="form-label">Complemento</Form.Label>
+                          </Col>
 
-                      <Col xs={6} className="mb-3">
-                        <Form.Control
-                          type="text"
-                          className="form-control"
-                          id="bairro"
-                          value={bairro}
-                          onChange={(e) => setBairro(e.target.value)}
-                          disabled
-                        />
-                        <Form.Label htmlFor="bairro" className="form-label">Bairro</Form.Label>
-                      </Col>
+                          <Col xs={6} className="mb-3">
+                            <Form.Control
+                              type="text"
+                              className="form-control"
+                              id="bairro"
+                              value={bairro}
+                              onChange={(e) => setBairro(e.target.value)}
+                              disabled
+                            />
+                            <Form.Label htmlFor="bairro" className="form-label">Bairro</Form.Label>
+                          </Col>
 
-                      <Col xs={6} className="mb-3">
-                        <Form.Control
-                          type="text"
-                          className="form-control"
-                          id="cidade"
-                          value={cidade}
-                          onChange={(e) => setCidade(e.target.value)}
-                          disabled
-                        />
-                        <Form.Label htmlFor="cidade" className="form-label">Cidade</Form.Label>
-                      </Col>
+                          <Col xs={6} className="mb-3">
+                            <Form.Control
+                              type="text"
+                              className="form-control"
+                              id="cidade"
+                              value={cidade}
+                              onChange={(e) => setCidade(e.target.value)}
+                              disabled
+                            />
+                            <Form.Label htmlFor="cidade" className="form-label">Cidade</Form.Label>
+                          </Col>
 
-                      <Col xs={6} className="mb-3">
-                        <Form.Control
-                          type="text"
-                          className="form-control"
-                          id="uf"
-                          value={uf}
-                          onChange={(e) => setUf(e.target.value)}
-                          disabled
-                        />
-                        <Form.Label htmlFor="uf" className="form-label">UF</Form.Label>
-                      </Col>
-                    </>
-                  )}
+                          <Col xs={6} className="mb-3">
+                            <Form.Control
+                              type="text"
+                              className="form-control"
+                              id="uf"
+                              value={uf}
+                              onChange={(e) => setUf(e.target.value)}
+                              disabled
+                            />
+                            <Form.Label htmlFor="uf" className="form-label">UF</Form.Label>
+                          </Col>
+                        </Row>
+                      )}
+                    </Form.Group>
+                  </div>
                 </Row>
               </fieldset>
 
@@ -470,7 +467,7 @@ const CadastroPage = () => {
             </div>
           </Row>
         </Form>
-      </Container>
+      </Container >
     </>
   );
 };
