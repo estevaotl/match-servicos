@@ -1,18 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CardPrestadorServicos from '../../components/CardPrestadorServicos'; // Caminho relativo para o arquivo Card.js
-import Carousel from 'react-bootstrap/Carousel';
-import { useAuth } from '../../contexts/Auth';
-import { Container } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
 import Hero from '../../components/Hero';
 import CarrosselPrestadorServicos from '../../components/CarrosselPrestadorServicos';
 
-const ITEMS_PER_PAGE = 3; // Número de itens por página no carrossel
-
 const HomePage = () => {
-  const { idCliente, estado, cidade } = useAuth();
-  const [searchValue, setSearchValue] = useState('');
-  const navigate = useNavigate();
   const [prestadoresServicos, setPrestadoresServicos] = useState([]);
 
   const currentURL = window.location.href;
@@ -20,6 +10,7 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchPrestadoresServicos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchPrestadoresServicos = async () => {

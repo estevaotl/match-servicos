@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useLocation, } from 'react-router-dom';
 import { useAuth } from '../../contexts/Auth';
 import { Container, Nav, Navbar, Button } from 'react-bootstrap';
-import { BoxArrowRight, List } from 'react-bootstrap-icons';
+import { BoxArrowRight } from 'react-bootstrap-icons';
 
 function Header() {
   const location = useLocation();
@@ -20,7 +20,7 @@ function Header() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="d-flex justify-content-between w-100">
             {signed ? (
-              <Container fluid className="d-flex  flex-column flex-lg-row flex-align-end">
+              <Container fluid className="d-flex  flex-column flex-lg-row justify-content-end">
                 <Navbar.Brand className="p-1">Olá, {nomeCliente}</Navbar.Brand>
                 {!isHomePage &&
                   <Nav.Link href="/">Página Inicial</Nav.Link>
