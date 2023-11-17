@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import InputMask from 'react-input-mask';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/Auth';
-import { Alert, Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
-import { Envelope, GeoAlt, Lock, Person, PersonVcard, PersonWorkspace, Tools, Whatsapp } from 'react-bootstrap-icons';
+import { Alert, Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { EnvelopeAt, GeoAlt, Lock, Person, PersonVcard, PersonWorkspace, Tools, Whatsapp } from 'react-bootstrap-icons';
 import SelectProfissoes from '../../components/SelectProfissoes';
 
 const CadastroPage = () => {
@@ -248,7 +248,7 @@ const CadastroPage = () => {
                 </div>
 
                 <div className="d-flex flex-row align-items-center mb-4">
-                  <Envelope className="me-3" size={24} />
+                  <EnvelopeAt className="me-3" size={24} />
                   <Form.Group className="form-outline flex-fill mb-0">
                     <Form.Control
                       id="email"

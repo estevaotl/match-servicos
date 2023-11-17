@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/Auth';
 import { Button, Container, Form, Row } from "react-bootstrap";
+import { EnvelopeAt, Lock } from 'react-bootstrap-icons';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -49,26 +50,32 @@ const LoginPage = () => {
       <h2 className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-5">Login</h2>
       <Form onSubmit={handleSubmit} className="w-75 w-lg-50 m-auto">
         <Row>
-          <Form.Group className="form-outline">
-            <Form.Control
-              id="email"
-              type="email"
-              placeholder="Seu Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Form.Label htmlFor="email">Email</Form.Label>
-          </Form.Group>
-          <Form.Group className="form-outline">
-            <Form.Control
-              id="senha"
-              type="password"
-              placeholder="********"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-            <Form.Label htmlFor="senha">Senha</Form.Label>
-          </Form.Group>
+          <div className="d-flex flex-row align-items-center mb-4">
+            <EnvelopeAt className="me-3" size={24} />
+            <Form.Group className="form-outline flex-fill mb-0">
+              <Form.Control
+                id="email"
+                type="email"
+                placeholder="Seu Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Form.Label htmlFor="email">Email</Form.Label>
+            </Form.Group>
+          </div>
+          <div className="d-flex flex-row align-items-center mb-4">
+            <Lock className="me-3" size={24} />
+            <Form.Group className="form-outline flex-fill mb-0">
+              <Form.Control
+                id="senha"
+                type="password"
+                placeholder="********"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
+              <Form.Label htmlFor="senha">Senha</Form.Label>
+            </Form.Group>
+          </div>
 
           {errors.length > 0 && (
             <div className="alert alert-danger mt-3">
