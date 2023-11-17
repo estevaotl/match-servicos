@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './styles.css';
-import { useNavigate } from 'react-router-dom'; // Importe o useNavigate
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/Auth';
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -18,14 +18,11 @@ const LoginPage = () => {
     event.preventDefault();
 
     fetch(`${apiURL}/clientes/logar`, {
-      method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
       },
       body: JSON.stringify({
-        // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
-        // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
         email: email,
         senha: senha
       })
@@ -40,37 +37,55 @@ const LoginPage = () => {
         }
       })
       .catch(error => {
-        // Aqui você pode lidar com erros de requisição
         console.error(error);
       });
   };
 
   return (
-    <div className='login-container'>
-      <h1>LOGIN</h1> <br />
-      {errors.length > 0 && (
-        <div className="alert alert-danger mt-3">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="email" className="form-label">Email:</label>
-          <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="senha" className="form-label">Senha:</label>
-          <input type="password" className="form-control" id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
-        </div>
-        <div className="button-container-article-login-page">
-          <button type="submit" className="btn btn-success larger-button">Entrar</button>
-          <button type="submit" className="btn btn-success larger-button">Esqueceu sua senha?</button>
-        </div>
-      </form>
+    <Container style={{
+      marginTop: '10rem',
+      marginBottom: '10rem'
+    }}>
+      <h2 className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-5">Login</h2>
+      <Form onSubmit={handleSubmit} className="w-75 w-lg-50 m-auto">
+        <Row>
+          <Form.Group className="form-outline">
+            <Form.Control
+              id="email"
+              type="email"
+              placeholder="Seu Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Form.Label htmlFor="email">Email</Form.Label>
+          </Form.Group>
+          <Form.Group className="form-outline">
+            <Form.Control
+              id="senha"
+              type="password"
+              placeholder="********"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+            <Form.Label htmlFor="senha">Senha</Form.Label>
+          </Form.Group>
 
-    </div>
+          {errors.length > 0 && (
+            <div className="alert alert-danger mt-3">
+              {errors.map((error, index) => (
+                <div key={index}>{error}</div>
+              ))}
+            </div>
+          )}
+        </Row>
+
+        <div className="d-flex justify-content-end mb-5">
+          <Button type="submit" className="me-2 a">Entrar</Button>
+          <Button type="submit" variant="outline-secondary">Esqueceu sua senha?</Button>
+        </div>
+
+      </Form>
+    </Container>
   );
 };
 
