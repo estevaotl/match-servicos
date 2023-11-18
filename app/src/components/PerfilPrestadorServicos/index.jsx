@@ -1,9 +1,15 @@
-import { Button, Card, Col, Image, Ratio, Row } from "react-bootstrap";
+import { Button, Card, Col, Image, Ratio, Row, Spinner } from "react-bootstrap";
 import { Whatsapp } from "react-bootstrap-icons";
 
 export default function PerfilPrestadorServicos({ prestador, onClick }) {
     if (!prestador) {
-        return <p>Carregando perfil...</p>;
+        return (
+            <Row className="justify-content-center">
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </Row>
+        );
     }
 
     const { nome, email, imagemPerfil, servicosPrestados, whatsapp, genero, endereco } = prestador;
