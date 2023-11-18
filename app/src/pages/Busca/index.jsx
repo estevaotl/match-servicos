@@ -180,6 +180,7 @@ const SearchPage = () => {
               <SelectProfissoes
                 value={selectedProfession}
                 onChange={handleProfessionChange}
+                defaultOption="Selecione uma profissão"
               />
             </Form.Group>
 

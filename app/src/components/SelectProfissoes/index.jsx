@@ -6,7 +6,8 @@ export default function SelectProfissoes({
     multiple = null,
     filter = null,
     onChange,
-    value
+    value,
+    defaultOption = null
 }) {
     const [selectedProfissoes, setSelectedProfissoes] = useState([]);
 
@@ -57,7 +58,7 @@ export default function SelectProfissoes({
                 value={filter ? selectedProfissoes : value}
                 onChange={filter ? handleProfissaoChange : onChange}
             >
-                <ProfissoesOptions defaultOption="Selecione uma profissão" />
+                <ProfissoesOptions defaultOption={defaultOption} />
             </Form.Select>
             <Form.Label htmlFor="profissao">Serviços Prestados</Form.Label>
             {filter && (
