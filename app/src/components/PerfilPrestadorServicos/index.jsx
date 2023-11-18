@@ -4,9 +4,14 @@ import { Whatsapp } from "react-bootstrap-icons";
 export default function PerfilPrestadorServicos({ prestador, onClick }) {
     if (!prestador) {
         return (
-            <Row className="justify-content-center">
+            <Row
+                className="justify-content-center"
+                style={{
+                    margin: '20rem 0'
+                }}
+            >
                 <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">Carregando...</span>
                 </Spinner>
             </Row>
         );

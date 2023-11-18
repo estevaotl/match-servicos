@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
-import { opcoesProfissoes } from './profissoes';
 import { Badge, CloseButton, Form } from "react-bootstrap";
+import ProfissoesOptions from "../ProfissoesOptions";
 
-export default function SelectProfissoes() {
+export default function SelectProfissoes({
+    multiple = null,
+    filter = null,
+    onChange,
+    value
+}) {
     const [selectedProfissoes, setSelectedProfissoes] = useState([]);
 
     // Função para formatar a lista de profissões com tags removíveis
@@ -45,25 +50,21 @@ export default function SelectProfissoes() {
     return (
         <>
             <Form.Select
-                multiple
+                multiple={multiple}
                 id="profissao"
                 name="profissao"
                 aria-label="Profissões"
-                value={selectedProfissoes}
-                onChange={handleProfissaoChange}
+                value={filter ? selectedProfissoes : value}
+                onChange={filter ? handleProfissaoChange : onChange}
             >
-                {opcoesProfissoes.map(({ categoria, itens }, index) => {
-                    return (
-                        <optgroup key={index} label={categoria}>
-                            {itens.map((nome, index) => <option key={index} value={nome}>{nome}</option>)}
-                        </optgroup>
-                    )
-                })}
+                <ProfissoesOptions defaultOption="Selecione uma profissão" />
             </Form.Select>
             <Form.Label htmlFor="profissao">Serviços Prestados</Form.Label>
-            <div className="f-flex flex-wrap">
-                {formatSelectedProfissoes()}
-            </div>
+            {filter && (
+                <div className="f-flex flex-wrap">
+                    {formatSelectedProfissoes()}
+                </div>
+            )}
         </>
     );
 }

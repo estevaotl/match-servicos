@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Search } from 'react-bootstrap-icons';
 import { Button, FormControl, InputGroup, ListGroup } from 'react-bootstrap';
 
-const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true, classeInputBusca = '', value = '' }) => {
+const Autocomplete = ({
+    onSelectJob,
+    onSearch = null,
+    exibirBotaoPesquisa = true,
+    value = '',
+    size = null
+}) => {
     const jobList = [
         'Troca de tomadas e interruptores',
         'Instalação de luminárias',
@@ -83,20 +89,14 @@ const Autocomplete = ({ onSelectJob, onSearch = null, exibirBotaoPesquisa = true
 
     return (
         <>
-            <InputGroup
-                className={`
-                    p-0
-                    ${exibirBotaoPesquisa !== false ? "autocomplete search-box" : ''}
-                `}
-            >
+            <InputGroup className="p-0">
                 <FormControl
-                    size="lg"
+                    size={size}
                     value={inputValue}
                     aria-describedby="search"
                     onChange={handleInputChange}
                     placeholder="Digite o serviço desejado"
                     aria-label="Digite o serviço desejado"
-                    className={`${classeInputBusca !== '' ? classeInputBusca : ''}`}
                 />
 
                 {exibirBotaoPesquisa && (

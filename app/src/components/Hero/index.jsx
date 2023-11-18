@@ -61,6 +61,7 @@ export default function Hero() {
                     className="pt-5 w-100 w-xl-50 mx-auto position-relative"
                 >
                     <Autocomplete
+                        size="lg"
                         onSelectJob={selectedJob => setSearchValue(selectedJob)}
                         onSearch={handleSearch}
                     />

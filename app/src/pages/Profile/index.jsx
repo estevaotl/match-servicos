@@ -19,8 +19,13 @@ const Profile = () => {
     const fetchProfileData = async () => {
       try {
         const response = await fetch(`${apiURL}/clientes/obter/${id}`);
-        const data = await response.json();
-        setProfileData(data.cliente);
+        const { cliente } = await response.json();
+
+        cliente.imagemPerfil = cliente.imagemPerfil.length > 0
+          ? `${apiURL}/imagem/ler/${cliente.imagemPerfil[0].nomeArquivo}`
+          : `${apiURL}/imagem/ler/icone_person.png`;
+
+        setProfileData(cliente);
       } catch (error) {
         console.error('Erro ao obter dados do perfil:', error);
       }

@@ -281,7 +281,10 @@ const CadastroPage = () => {
                     <Form.Label htmlFor="tipo-cliente">Por favor, escolha uma opção acima</Form.Label>
 
                     {usuarioTipo === "prestador" && (
-                      <SelectProfissoes />
+                      <SelectProfissoes
+                        multiple
+                        filter
+                      />
                     )}
                   </Form.Group>
                 </div>
@@ -346,7 +349,7 @@ const CadastroPage = () => {
                       <Form.Label htmlFor="cep" className="form-label">CEP</Form.Label>
 
                       {errorsConsultaCep.length > 0 && (
-                        <Alert variant="danger" className="div-erros-consulta-cadastro">
+                        <Alert variant="danger">
                           {errorsConsultaCep.map((error, index) => (
                             <span key={index}>{error}</span>
                           ))}
