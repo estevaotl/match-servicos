@@ -1,7 +1,7 @@
 import { Button, Card, Col, Image, Ratio, Row, Spinner } from "react-bootstrap";
 import { Whatsapp } from "react-bootstrap-icons";
 
-export default function PerfilPrestadorServicos({ prestador, onClick }) {
+export default function PerfilPrestadorServicos({ prestador, onClick, apiURL = null }) {
     if (!prestador) {
         return (
             <Row
@@ -17,7 +17,7 @@ export default function PerfilPrestadorServicos({ prestador, onClick }) {
         );
     }
 
-    const { nome, email, imagemPerfil, servicosPrestados, whatsapp, genero, endereco } = prestador;
+    const { nome, email, imagemPerfil, servicosPrestados, whatsapp, genero, endereco, imagem } = prestador;
     const { cep, rua, numero, bairro, cidade, estado } = endereco[0];
 
     return (
@@ -105,7 +105,16 @@ export default function PerfilPrestadorServicos({ prestador, onClick }) {
             </Row>
             <Row>
                 <Col className="mb-5">
-
+                    <Row>
+                        <Col sm={4}>
+                            {imagem.map((imagem, index) => (
+                                <img
+                                    src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
+                                    alt={`Descrição da imagem ${index + 1}`}
+                                />
+                            ))}
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </>

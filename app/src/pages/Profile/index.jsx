@@ -93,6 +93,7 @@ const Profile = () => {
       <PerfilPrestadorServicos
         prestador={profileData}
         onClick={handleWhatsappClick}
+        apiURL={apiURL}
       />
 
       <Modal show={showConfirmation} onHide={handleCancel}>
