@@ -156,7 +156,7 @@ function App() {
 
   useEffect(() => {
     if (!idCliente){
-      return;
+      window.location.href = '/';
     }
 
     fetch(`${apiURL}/clientes/obter/${idCliente}`, {

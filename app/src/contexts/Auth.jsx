@@ -64,13 +64,13 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('ehPrestadorServicos');
     sessionStorage.removeItem('estado');
     sessionStorage.removeItem('cidade');
-    setIdCliente(false);
-    setNomeCliente(false);
+    setIdCliente("");
+    setNomeCliente("");
     setEhPrestadorServicos(false);
-    setEstado(false);
-    setCidade(false);
+    setEstado("");
+    setCidade("");
 
-    window.location.reload();
+    window.location.href = '/';
   }
 
   return (
