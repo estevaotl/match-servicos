@@ -155,6 +155,9 @@ function App() {
   };
 
   useEffect(() => {
+    if (!idCliente){
+      return;
+    }
 
     fetch(`${apiURL}/clientes/obter/${idCliente}`, {
       method: 'GET', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
