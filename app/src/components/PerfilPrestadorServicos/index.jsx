@@ -103,19 +103,16 @@ export default function PerfilPrestadorServicos({ prestador, onClick, apiURL = n
                     </Card>
                 </Col>
             </Row>
-            <Row>
-                <Col className="mb-5">
-                    <Row>
-                        <Col sm={4}>
-                            {imagem.map((imagem, index) => (
-                                <img
-                                    src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
-                                    alt={`Descrição da imagem ${index + 1}`}
-                                />
-                            ))}
-                        </Col>
-                    </Row>
-                </Col>
+            <Row className="flex-wrap row-gap-3 mb-5">
+                {imagem.map((imagem, index) => (
+                    <Col lg="4">
+                        <Image
+                            src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
+                            alt={`Descrição da imagem ${index + 1}`}
+                            className="w-100"
+                        />
+                    </Col>
+                ))}
             </Row>
         </>
     );

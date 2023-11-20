@@ -655,6 +655,7 @@ function App() {
                           src={`${apiURL}/imagem/ler/${imagem.nomeArquivo}`}
                           alt={`Descrição da imagem ${index + 1}`}
                           key={index}
+                          className="object-fit-contain"
                         />
                       </div>
                     ))}
