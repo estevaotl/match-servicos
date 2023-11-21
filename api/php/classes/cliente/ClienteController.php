@@ -112,7 +112,7 @@ class ClienteController
             $cliente->setEndereco($endereco);
         }
 
-        return $this->service->salvar($cliente, $erro);
+        return $this->service->salvar($cliente, $ehAtualizar);
     }
 
     public function logar($email, $senha)
