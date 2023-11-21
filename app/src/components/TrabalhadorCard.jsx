@@ -97,7 +97,9 @@ const TrabalhadorCard = ({ key, worker }) => {
                         <Modal.Header closeButton>
                             <Modal.Title>Confirmação</Modal.Title>
                         </Modal.Header>
-                        <Modal.Body>Ao continuar, esteja ciente que uma ordem de serviço será gerada...</Modal.Body>
+                        <Modal.Body>
+                            Ao continuar, esteja ciente que uma ordem de serviço será gerada caso não existe nenhuma criada anteriormente. <br/><br/>Essa ordem de serviço criada será utilizada como controle pelo profissional, via painel do cliente do mesmo. <br/><br/>Você receberá um email para controle com essa OS criada e quando a mesma for finalizada.
+                        </Modal.Body>
                         <Modal.Footer>
                             <Button variant="secondary" onClick={handleCancel}>
                                 Cancelar
