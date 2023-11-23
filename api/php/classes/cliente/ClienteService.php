@@ -30,7 +30,7 @@
 
 			if(!$ehAtualizar){
 				if($cliente->getDadosEspecificos() instanceof DadosClienteFisico){
-					if($cliente->getDadosEspecificos()->getCPF() == "" || !UtilValidacoes::validarCPF($cliente->getDadosEspecificos()->getCPF()))
+					if($cliente->getDadosEspecificos()->getCPF() == "")
 						$erro['cpfcnpj'] = "O CPF digitado é inválido";
 
 					if($this->dao->existeCpf($cliente->getDadosEspecificos()))
@@ -40,6 +40,9 @@
 						$erro['idade'] = "Você precisa ter ao menos 18 anos";
 
 				} else if($cliente->getDadosEspecificos() instanceof DadosClienteJuridico){
+					if($cliente->getDadosEspecificos()->getCNPJ() == "")
+						$erro['cpfcnpj'] = "O CNPJ digitado é inválido";
+
 					if(mb_strlen($cliente->getDadosEspecificos()->getRazaoSocial()) < 1)
 						$erro['razaoSocial'] = "Preencha a razão social";
 
@@ -52,8 +55,6 @@
 
 					if(mb_strlen($cliente->getDadosEspecificos()->getCNPJ()) < 1)
 						$erro['cpfcnpj'] = "Preencha o CNPJ corretamente";
-					elseif(!UtilValidacoes::validarCNPJ($cliente->getDadosEspecificos()->getCNPJ()))
-						$erro['cpfcnpj'] = "O CNPJ digitado é inválido";
 					elseif($this->dao->existeCnpj($cliente))
 						$erro['cpfcnpj'] = "CNPJ já cadastrado";
 				} else {
