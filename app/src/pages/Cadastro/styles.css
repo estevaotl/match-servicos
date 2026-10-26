@@ -1,51 +1,58 @@
-
-.larger-button {
-  width: 200px;
-  margin: 0 10px;
-}
-
-.cadastro-container{
-  display: flex;
-  flex:1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 16px 0;
-}
-.cadastro-container form{
-  display: flex;
-  flex:1;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.cadastro-container form .register-button{
-  margin-left: auto;
-  margin-right: 25%;
-  /* align-self: flex-end; */
-}
-
-.selected-profissoes-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px; /* Espaçamento entre as opções */
-  max-width: 100%; /* O máximo de largura permitida */
-  margin-top: 10px;
-}
-
-#divs-escondidas-cpf div{
-  width: auto;
-}
-
-#divs-escondidas-cnpj div{
-  width: auto;
-}
-
-.div-erros-consulta-cadastro{
-  width: 50%;
-}
-
-.select-profissoes{
-  height: 200px;
+.register-progress { display: flex; justify-content: space-between; gap: 8px; padding: 0; margin: 0 0 31px; list-style: none; }
+.register-progress li { flex: 1; min-width: 0; }
+.register-progress button { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px; padding: 0; border: 0; background: transparent; font-size: 11px; color: #596579; font-weight: 700; text-align: left; cursor: pointer; }
+.register-progress button > span:first-child { display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border: 1px solid #d7ddeb; border-radius: 50%; font-size: 12px; }
+.register-progress button[aria-current="step"] { color: #254ce0; }
+.register-progress button[aria-current="step"] > span:first-child { border-color: #254ce0; background: #254ce0; color: #fff; }
+.register-progress button:disabled { color: #727c90; cursor: default; }
+.register-step-label { display: block; margin-bottom: 9px; font-size: 11px; font-weight: 750; color: #596579; }
+.register-page .auth-form-heading { margin-bottom: 23px; }
+.register-page .auth-form-heading h1 { font-size: 31px; }
+.register-step-content { display: grid; gap: 17px; }
+.auth-role-group, .auth-entity-group { min-width: 0; padding: 0; margin: 0; border: 0; }
+.auth-role-group legend, .auth-entity-group legend { float: none; width: auto; padding: 0; margin: 0 0 10px; font-size: 12px; font-weight: 750; }
+.auth-role-group > div { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.auth-role-option { position: relative; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 15px 12px; border: 1px solid #d7ddeb; border-radius: 10px; cursor: pointer; }
+.auth-role-option input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.auth-role-option:focus-within { outline: 3px solid #254ce0; outline-offset: 4px; }
+.auth-role-option.is-selected { background: #f0edfc; border-color: #254ce0; }
+.auth-role-option .role-icon { color: #254ce0; font-size: 22px; margin-bottom: 10px; }
+.auth-role-option strong { font-size: 12px; font-weight: 800; line-height: 1.5; }
+.auth-role-option > span:not(.role-icon):not(.role-selected) { font-size: 10px; color: #596579; line-height: 1.6; margin-top: 4px; }
+.role-selected { position: absolute; top: 14px; right: 12px; display: grid; place-items: center; width: 19px; height: 19px; border-radius: 50%; border: 1px solid #c6cedf; color: #fff; }
+.is-selected .role-selected { background: #254ce0; border-color: #254ce0; }
+.auth-entity-group label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 15px; margin-right: 10px; border: 1px solid #d7ddeb; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.auth-entity-group label.is-selected { background: #f0edfc; border-color: #254ce0; color: #254ce0; }
+.auth-entity-group input { accent-color: #254ce0; width: 15px; height: 15px; }
+.register-services > .auth-field-hint { margin-top: 7px; }
+.register-service-tags { display: flex; flex-wrap: wrap; gap: 7px; list-style: none; padding: 0; margin: 12px 0 0; }
+.register-service-tags:empty { margin: 0; }
+.register-service-tags li { display: inline-flex; align-items: center; max-width: 100%; padding-left: 12px; border: 1px solid #d4dcff; border-radius: 7px; background: #f0edfc; color: #254ce0; font-size: 11px; font-weight: 700; }
+.register-service-tags li span { min-width: 0; overflow-wrap: anywhere; }
+.register-service-tags button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border: 0; border-radius: 7px; background: transparent; color: #254ce0; cursor: pointer; }
+.register-postcode { display: flex; gap: 10px; }
+.register-postcode input { flex: 1; min-width: 0; }
+.register-postcode button { flex-shrink: 0; border: 1px solid #d4dcff; border-radius: 8px; padding: 10px 13px; color: #254ce0; background: #f0edfc; font-size: 11px; font-weight: 750; cursor: pointer; }
+.register-postcode button:disabled { cursor: wait; opacity: .7; }
+.register-form .register-step-content > .auth-field-hint { margin-top: -10px; }
+.register-postal-message { background: #f1f4fa; border-radius: 8px; margin: 0; padding: 12px; color: #536078; font-size: 12px; line-height: 1.7; }
+.register-postal-message.is-error { background: #fff0f2; color: #aa2137; }
+.register-account-summary { display: flex; align-items: center; gap: 12px; padding: 15px 0 0; border-top: 1px solid #e4e8f0; font-size: 11px; line-height: 1.7; color: #596579; }
+.register-account-summary > svg { color: #254ce0; width: 21px; height: 21px; flex-shrink: 0; }
+.register-account-summary strong { display: block; color: #172742; font-weight: 750; overflow-wrap: anywhere; }
+.register-actions { display: flex; align-items: center; gap: 12px; margin-top: 5px; }
+.register-actions .auth-primary { flex: 1; width: auto; }
+.register-review { margin-top: -12px; margin-bottom: 15px; }
+.register-page .auth-switch { margin-top: 22px; }
+@media (max-width: 500px) {
+  .register-progress { margin-bottom: 23px; gap: 6px; }
+  .register-progress button { flex-direction: column; align-items: flex-start; gap: 6px; font-size: 10px; }
+  .register-page .auth-form-heading h1 { font-size: 28px; }
+  .auth-role-option { padding: 14px 10px; }
+  .auth-role-option strong { font-size: 11px; }
+  .auth-role-option > span:not(.role-icon):not(.role-selected) { font-size: 10px; }
+  .register-postcode { flex-wrap: wrap; }
+  .register-postcode button { min-height: 44px; }
+  .register-actions { gap: 8px; }
+  .register-actions .auth-secondary { padding-inline: 13px; gap: 8px; }
 }

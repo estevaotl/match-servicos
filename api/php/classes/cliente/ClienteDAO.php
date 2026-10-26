@@ -42,10 +42,11 @@
         }
 
         public function atualizar(Cliente $cliente){
-            $comando = " UPDATE cliente SET email = :email, whatsapp = :whatsapp, genero = :genero, prestadorServico = :prestadorServico, servicosPrestados = :servicosPrestados WHERE cliente.id = :idCliente ";
+            $comando = " UPDATE cliente SET nome = :nome, email = :email, whatsapp = :whatsapp, genero = :genero, prestadorServico = :prestadorServico, servicosPrestados = :servicosPrestados WHERE cliente.id = :idCliente ";
 
             $parametros = array(
                 "idCliente" => $cliente->getId(),
+                "nome" => $cliente->getNome(),
                 "email" => $cliente->getEmail(),
                 "genero" => $cliente->getGenero(),
                 "whatsapp" => $cliente->getWhatsapp(),

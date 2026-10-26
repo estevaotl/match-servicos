@@ -1,536 +1,138 @@
-import React, { useState, useEffect } from 'react';
-import InputMask from 'react-input-mask';
-import { Link, useNavigate } from 'react-router-dom'; // Importe o useNavigate
-import './styles.css';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { FiArrowLeft, FiArrowRight, FiArrowUpRight, FiCheck, FiHome, FiTool, FiX } from 'react-icons/fi';
 import { useAuth } from '../../contexts/Auth';
+import { AuthStory, FormErrors, FormField, PasswordField } from '../../auth/components';
+import { digitsOnly, formatDocument, formatPhone, formatPostcode, registrationPayload, safeDestination, validateRegistration } from '../../auth/data';
+import { useAuthSubmission } from '../../auth/hooks';
+import { stateOptions } from '../../marketplace/data';
+import { serviceOptions } from '../../marketplace/services';
+import './styles.css';
 
-const CadastroPage = () => {
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [genero, setGenero] = useState('');
-  const [senha, setSenha] = useState('');
-  const [prestadorDeServicos, setPrestadorDeServicos] = useState('');
-  const [documento, setDocumento] = useState('');
-  const [inscricaoEstadual, setInscricaoEstadual] = useState('');
-  const [razaoSocial, setRazaoSocial] = useState('');
-  const [situacaoTributaria, setSituacaoTributaria] = useState('');
-  const [servicosPrestados, setServicosPrestados] = useState("");
-  const [errors, setErrors] = useState([]);
-  const [errorsConsultaCep, setErrorsConsultaCep] = useState([]);
-  const [cep, setCep] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [numero, setNumero] = useState('');
-  const [complemento, setComplemento] = useState('');
-  const [bairro, setBairro] = useState('');
-  const [cidade, setCidade] = useState('');
-  const [uf, setUf] = useState('');
-  const [editandoCep, setEditandoCep] = useState(false);
-  const [mostrarCamposEndereco, setMostrarCamposEndereco] = useState(false);
+const stepNames = ['Sua conta', 'Seu perfil', 'Seu endereço'];
+const stepTitles = ['Vamos criar sua conta.', 'Seu perfil, do seu jeito.', 'Onde vai ser seu match?'];
+const stepDescriptions = ['Escolha como você quer começar e preencha seus dados de acesso.', 'Complete sua identificação e conte um pouco mais sobre você.', 'Informe seu endereço para encontrar bons encontros na sua região.'];
+
+export default function CadastroPage() {
+  const [params] = useSearchParams();
+  const [form, setForm] = useState({ tipo: params.get('tipo') === 'profissional' ? 'profissional' : 'cliente', entidade: 'pessoa', nome: '', email: '', whatsapp: '', senha: '', confirmacao: '', documento: '', dataNascimento: '', genero: '', razaoSocial: '', situacaoTributaria: '', inscricaoEstadual: '', servicos: [], cep: '', rua: '', numero: '', complemento: '', bairro: '', cidade: '', estado: '' });
+  const [step, setStep] = useState(0);
+  const [errors, setErrors] = useState({});
+  const [postalStatus, setPostalStatus] = useState('idle');
+  const [postalMessage, setPostalMessage] = useState('');
+  const { submitting, serverErrors, submit, clearServerErrors } = useAuthSubmission();
   const { saveUserSate } = useAuth();
-  const [selectedProfissoes, setSelectedProfissoes] = useState([]);
-
-  const currentURL = window.location.href;
-  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
-
-  const handleChangeDocumento = (value) => {
-    // Remove caracteres não numéricos
-    const numericValue = value.replace(/\D/g, '');
-
-    if (numericValue.length <= 11) {
-      // CPF
-      setDocumento(numericValue.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'));
-    } else if (numericValue.length <= 14) {
-      // CNPJ
-      setDocumento(numericValue.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5'));
-    }
-  };
-
-  const handleSelectChange = (e) => {
-    setPrestadorDeServicos(e.target.value);
-    setServicosPrestados(""); // Reinicia os serviços prestados ao trocar a opção
-  };
-
   const navigate = useNavigate();
+  const formRef = useRef(null);
+  const heading = useRef(null);
+  const previousStep = useRef(0);
+  const lookup = useRef(null);
+  const lookupVersion = useRef(0);
+  const destination = safeDestination(params.get('redirect'));
+  const loginURL = `/login${destination !== '/' ? `?${new URLSearchParams({ redirect: destination })}` : ''}`;
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if(errorsConsultaCep.length > 0 || cep.length <= 0){
-      setErrors(['Não é possível seguir com CEP inválido.']);
-      return false;
-    }
-
-    fetch(`${apiURL}/clientes/criar`, {
-      method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
-      headers: {
-        'Content-Type': 'application/json',
-        // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
-      },
-      body: JSON.stringify({
-        // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
-        // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
-        nome: nome,
-        email: email,
-        dataNascimento: dataNascimento,
-        whatsapp: whatsapp,
-        genero: genero,
-        senha: senha,
-        ehPrestadorDeServicos: prestadorDeServicos == "prestadorSim" ? true : false,
-        documento: documento,
-        servicosPrestados: document.getElementById('servicosPrestados') != null ? document.getElementById('servicosPrestados').value : '',
-        cep: cep,
-        rua: endereco,
-        bairro: bairro,
-        estado: uf,
-        endereco: endereco,
-        complemento: complemento,
-        numero: numero,
-        cidade: cidade,
-        situacaoTributaria: situacaoTributaria,
-        razaoSocial: razaoSocial,
-        inscricaoEstadual: inscricaoEstadual
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.excecao) {
-          setErrors(data.excecao.split('\n'));
-        } else {
-          saveUserSate(data.id, data.nome, data.ehPrestadorServicos, data.estado, data.cidade)
-          navigate('/');
-        }
-      })
-      .catch(error => {
-        // Aqui você pode lidar com erros de requisição
-        console.error(error);
-      });
-  };
-
-  const renderCamposAdicionais = () => {
-    if (documento.length === 14) {
-      // CPF
-      return (
-        <div className="col-md-6 mb-3" id="divs-escondidas-cpf">
-          <div className="col-md-6 mb-3">
-            <label htmlFor="dataNascimento" className="form-label">Data de Nascimento:</label>
-            <input type="date" className="form-control" id="dataNascimento" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
-          </div>
-          <div className="col-md-6 mb-3">
-            <label htmlFor="genero" className="form-label">Gênero:</label>
-            <select className="form-select" id="genero" value={genero} onChange={(e) => setGenero(e.target.value)}>
-              <option value="">Selecione</option>
-              <option value="feminino">Feminino</option>
-              <option value="masculino">Masculino</option>
-            </select>
-          </div>
-        </div>
-      );
-    } else if (documento.length === 18) {
-      // CNPJ
-      return (
-        <div className="col-md-6 mb-3" id="divs-escondidas-cnpj">
-          <div className="col-md-6 mb-3">
-            <label htmlFor="inscricaoEstadual" className="form-label">Inscrição Estadual:</label>
-            <input type="text" className="form-control" id="inscricaoEstadual" value={inscricaoEstadual} onChange={(e) => setInscricaoEstadual(e.target.value)} />
-          </div>
-          <div className="col-md-6 mb-3">
-            <label htmlFor="razaoSocial" className="form-label">Razão Social:</label>
-            <input type="text" className="form-control" id="razaoSocial" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} />
-          </div>
-          <div className="col-md-6 mb-3">
-            <label htmlFor="situacaoTributaria" className="form-label">Situação Tributária:</label>
-            <select className="form-select" id="situacaoTributaria" value={situacaoTributaria} onChange={(e) => setSituacaoTributaria(e.target.value)}>
-              <option value="">Selecione</option>
-              <option value="contribuinte">Contribuinte</option>
-              <option value="naoContribuinte">Não Contribuinte</option>
-              <option value="isento">Isento</option>
-            </select>
-          </div>
-        </div>
-      );
-    }
-  };
-
+  useEffect(() => () => { lookupVersion.current += 1; lookup.current?.abort(); }, []);
   useEffect(() => {
-    if (cep.length === 9 && !editandoCep) {
-      fetchAddress();
-    } else {
-      // Se o CEP estiver sendo editado ou for menor que 9 caracteres, esconda os campos
-      setMostrarCamposEndereco(false);
+    if (previousStep.current !== step) {
+      heading.current?.focus({ preventScroll: true });
+      heading.current?.scrollIntoView({ block: 'start', behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      previousStep.current = step;
     }
-  }, [cep, editandoCep]);
+  }, [step]);
 
-  const handleCepChange = (e) => {
-    const formattedCep = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
-    if (formattedCep.length === 8) {
-      // Se o CEP tiver 8 caracteres numéricos, acrescente o hífen
-      setCep(formattedCep.replace(/(\d{5})(\d{3})/, '$1-$2'));
-    } else {
-      setCep(formattedCep);
-    }
-
-    // Limpar os erros quando o usuário começar a editar o campo CEP
-    setErrorsConsultaCep([]);
-
-    setEditandoCep(false); // Defina como false para permitir novas consultas
-  };
-
-  const fetchAddress = async () => {
+  function update(name, value) {
+    setForm(current => ({ ...current, [name]: value }));
+    setErrors(current => ({ ...current, [name]: '' })); clearServerErrors();
+  }
+  function changeEntity(entity) {
+    setForm(current => ({ ...current, entidade: entity, documento: '', dataNascimento: '', genero: '', razaoSocial: '', situacaoTributaria: '', inscricaoEstadual: '' }));
+    setErrors({}); clearServerErrors();
+  }
+  function changePostcode(value) {
+    lookupVersion.current += 1; lookup.current?.abort();
+    setPostalStatus('idle'); setPostalMessage('');
+    setForm(current => ({ ...current, cep: formatPostcode(value), rua: '', bairro: '', cidade: '', estado: '' }));
+    setErrors(current => ({ ...current, cep: '', rua: '', bairro: '', cidade: '', estado: '' })); clearServerErrors();
+  }
+  async function lookupPostcode() {
+    const postcode = digitsOnly(form.cep);
+    if (postcode.length !== 8) { setErrors(current => ({ ...current, cep: 'Informe um CEP com 8 números.' })); formRef.current?.querySelector('[data-field="cep"]')?.focus(); return; }
+    lookup.current?.abort();
+    const version = ++lookupVersion.current;
+    const controller = new AbortController(); lookup.current = controller;
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    setPostalStatus('loading'); setPostalMessage('');
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const response = await fetch(`https://viacep.com.br/ws/${postcode}/json/`, { signal: controller.signal });
+      if (!response.ok) throw new Error('Consulta indisponível');
       const data = await response.json();
-
-      if (!data.erro) {
-        setEndereco(data.logradouro);
-        setBairro(data.bairro);
-        setCidade(data.localidade);
-        setUf(data.uf);
-        setMostrarCamposEndereco(true); // Mostrar campos quando o CEP for encontrado
-      } else {
-        // CEP inválido ou não encontrado
-        setMostrarCamposEndereco(false); // Ocultar campos em caso de erro
-        setErrorsConsultaCep(["Cep não encontrado."]);
-      }
+      if (version !== lookupVersion.current) return;
+      if (data.erro) { setPostalStatus('invalid'); setPostalMessage('CEP não encontrado. Confira os números e tente novamente.'); return; }
+      if (!data.localidade || !data.uf) throw new Error('Resposta inválida');
+      setForm(current => ({ ...current, rua: data.logradouro || '', bairro: data.bairro || '', cidade: data.localidade, estado: data.uf }));
+      setPostalStatus('found'); setPostalMessage('Endereço encontrado. Confira e complete os dados abaixo.');
+      setErrors(current => ({ ...current, cep: '', rua: '', bairro: '', cidade: '', estado: '' }));
     } catch (error) {
-      console.error('Erro ao buscar o endereço:', error);
-      setMostrarCamposEndereco(false); // Ocultar campos em caso de erro
-      setErrorsConsultaCep(["Cep não encontrado."]);
+      if (version === lookupVersion.current) { setPostalStatus('unavailable'); setPostalMessage('Não conseguimos consultar o CEP. Você pode preencher o endereço abaixo.'); }
+    } finally { clearTimeout(timeout); }
+  }
+  function addService(value) { if (value) update('servicos', form.servicos.includes(value) ? form.servicos : [...form.servicos, value]); }
+  function inputProps(name) { return { id: `register-${name}`, 'data-field': name, value: form[name], onChange: event => update(name, event.target.value), disabled: submitting, 'aria-invalid': Boolean(errors[name]), 'aria-describedby': errors[name] ? `register-${name}-error` : undefined }; }
+  function focusError(nextErrors) { formRef.current?.querySelector(`[data-field="${Object.keys(nextErrors)[0]}"]`)?.focus(); }
+
+  async function handleSubmit(event) {
+    event.preventDefault(); clearServerErrors();
+    const nextErrors = validateRegistration(form, step);
+    if (step === 2 && postalStatus === 'invalid') nextErrors.cep = 'Confira o CEP antes de criar sua conta.';
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length) { focusError(nextErrors); return; }
+    if (step < 2) { setStep(step + 1); return; }
+    for (let previous = 0; previous < 2; previous += 1) {
+      const previousErrors = validateRegistration(form, previous);
+      if (Object.keys(previousErrors).length) { setErrors(previousErrors); setStep(previous); return; }
     }
-  };
+    if (postalStatus === 'loading') return;
+    await submit('criar', registrationPayload(form), session => {
+      saveUserSate(session.id, session.nome, session.ehPrestadorServicos, session.estado, session.cidade);
+      navigate(destination === '/' ? '/minha-conta' : destination, { replace: true });
+    });
+  }
 
-  const handleProfissaoChange = (event) => {
-    const optionValue = event.target.value;
-    if (!selectedProfissoes.includes(optionValue)) {
-      setSelectedProfissoes([...selectedProfissoes, optionValue]);
-    }
-  };
-
-  const handleRemoveProfissao = (profissaoToRemove) => {
-    const updatedProfissoes = selectedProfissoes.filter(
-      (profissao) => profissao !== profissaoToRemove
-    );
-    setSelectedProfissoes(updatedProfissoes);
-  };
-
-  // Atualiza o campo "servicosPrestados" com as opções selecionadas
-  useEffect(() => {
-    const servicosPrestadosInput = document.getElementById('servicosPrestados');
-    if (servicosPrestadosInput) {
-      servicosPrestadosInput.value = selectedProfissoes.join(', ');
-    }
-  }, [selectedProfissoes]);
-
-  // Função para formatar a lista de profissões com tags removíveis
-  const formatSelectedProfissoes = () => {
-    return selectedProfissoes.map((profissao) => (
-      <span key={profissao} className="badge bg-primary selected-profissao">
-        {profissao}
-        <button
-          type="button"
-          className="btn-close"
-          aria-label="Remover"
-          onClick={() => handleRemoveProfissao(profissao)}
-        ></button>
-      </span>
-    ));
-  };
-
-  return (
-    <div className='cadastro-container'>
-      <h1>CADASTRO</h1>
-      {errors.length > 0 && (
-        <div className="alert alert-danger mt-3">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="nome" className="form-label">Nome:</label>
-          <input type="text" className="form-control" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} />
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="email" className="form-label">Email:</label>
-          <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="prestadorDeServicos" className="form-label">Prestador de Serviços:</label>
-          <select
-            className="form-select"
-            id="prestadorDeServicos"
-            value={prestadorDeServicos}
-            onChange={handleSelectChange}
-          >
-            <option value="">Selecione</option>
-            <option value="prestadorSim">Sim</option>
-            <option value="prestadorNao">Não</option>
-          </select>
-        </div>
-
-        {prestadorDeServicos === "prestadorSim" && (
-          <div className="col-md-6 mb-3">
-            <label htmlFor="profissao" className="form-label">Serviços Prestados:</label>
-            <div>
-              <select
-                id="profissao"
-                name="profissao"
-                multiple
-                value={selectedProfissoes}
-                onChange={handleProfissaoChange}
-                className="form-select select-profissoes"
-              >
-                <optgroup label="Reparos Elétricos">
-                  <option value="Troca de tomadas e interruptores">Troca de tomadas e interruptores</option>
-                  <option value="Instalação de luminárias">Instalação de luminárias</option>
-                  <option value="Resolução de problemas elétricos simples">Resolução de problemas elétricos simples</option>
-                  <option value="Substituição de disjuntores">Substituição de disjuntores</option>
-                </optgroup>
-
-                <optgroup label="Reparos Hidráulicos">
-                  <option value="Conserto de vazamentos de torneiras e canos">Conserto de vazamentos de torneiras e canos</option>
-                  <option value="Desentupimento de pias e ralos">Desentupimento de pias e ralos</option>
-                  <option value="Instalação ou substituição de torneiras e válvulas">Instalação ou substituição de torneiras e válvulas</option>
-                </optgroup>
-
-                <optgroup label="Pintura">
-                  <option value="Pintura de paredes e tetos">Pintura de paredes e tetos</option>
-                  <option value="Pintura de portas e janelas">Pintura de portas e janelas</option>
-                  <option value="Preparação de superfícies, como lixar e aplicar primer">Preparação de superfícies, como lixar e aplicar primer</option>
-                </optgroup>
-
-                <optgroup label="Reparos em Carpintaria">
-                  <option value="Instalação de prateleiras">Instalação de prateleiras</option>
-                  <option value="Reparo de portas e fechaduras">Reparo de portas e fechaduras</option>
-                  <option value="Montagem de móveis">Montagem de móveis</option>
-                </optgroup>
-
-                <optgroup label="Reparos em Alvenaria">
-                  <option value="Construção de alvenaria, incluindo paredes de tijolos, blocos ou pedras">Construção de alvenaria, incluindo paredes de tijolos, blocos ou pedras</option>
-                  <option value="Reparação de rachaduras em paredes">Reparação de rachaduras em paredes</option>
-                  <option value="Rejunte de azulejos">Rejunte de azulejos</option>
-                  <option value="Substituição de telhas danificadas">Substituição de telhas danificadas</option>
-                </optgroup>
-
-                <optgroup label="Montagem e Instalação">
-                  <option value="Montagem de móveis e estantes">Montagem de móveis e estantes</option>
-                  <option value="Instalação de suportes para TV e prateleiras">Instalação de suportes para TV e prateleiras</option>
-                  <option value="Montagem de playgrounds e equipamentos de ginástica">Montagem de playgrounds e equipamentos de ginástica</option>
-                  <option value="Instalação de sistemas de armazenamento">Instalação de sistemas de armazenamento</option>
-                </optgroup>
-
-                <optgroup label="Limpeza de Calhas">
-                  <option value="Remoção de detritos e folhas de calhas">Remoção de detritos e folhas de calhas</option>
-                  <option value="Desobstrução de calhas entupidas">Desobstrução de calhas entupidas</option>
-                </optgroup>
-
-                <optgroup label="Manutenção de Portões e Cercas">
-                  <option value="Lubrificação e reparos em portões">Lubrificação e reparos em portões</option>
-                  <option value="Reparo de cercas danificadas">Reparo de cercas danificadas</option>
-                </optgroup>
-
-                <optgroup label="Instalação de Aparelhos Domésticos">
-                  <option value="Instalação de eletrodomésticos, como máquinas de lavar e secar">Instalação de eletrodomésticos, como máquinas de lavar e secar</option>
-                  <option value="Instalação de ventiladores de teto">Instalação de ventiladores de teto</option>
-                </optgroup>
-
-                <optgroup label="Pequenos Reparos Gerais">
-                  <option value="Troca de maçanetas">Troca de maçanetas</option>
-                  <option value="Ajustes em persianas">Ajustes em persianas</option>
-                  <option value="Substituição de vidros quebrados">Substituição de vidros quebrados</option>
-                </optgroup>
-
-                <optgroup label="Reparos em Telhados">
-                  <option value="Substituição de telhas danificadas">Substituição de telhas danificadas</option>
-                  <option value="Selagem de vazamentos de telhados">Selagem de vazamentos de telhados</option>
-                </optgroup>
-
-                <optgroup label="Construção de Churrasqueiras e Lareiras">
-                  <option value="Construção de churrasqueiras e lareiras de alvenaria sob medida">Construção de churrasqueiras e lareiras de alvenaria sob medida</option>
-                </optgroup>
-
-                <optgroup label="Construção de Calçadas e Passeios">
-                  <option value="Construção de calçadas e passeios em concreto ou pedra">Construção de calçadas e passeios em concreto ou pedra</option>
-                </optgroup>
-
-                <optgroup label="Manutenção de Veículos">
-                  <option value="Troca de óleo">Troca de óleo</option>
-                  <option value="Substituição de freios">Substituição de freios</option>
-                  <option value="Alinhamento e balanceamento">Alinhamento e balanceamento</option>
-                  <option value="Diagnóstico de problemas mecânicos em veículos">Diagnóstico de problemas mecânicos em veículos</option>
-                  <option value="Troca de peças e componentes">Troca de peças e componentes</option>
-                  <option value="Reparo de motores de veículos">Reparo de motores de veículos</option>
-                </optgroup>
-
-                <optgroup label="Serviços de Chaveiro Residencial">
-                  <option value="Instalação, reparo e substituição de fechaduras e chaves em casas e apartamentos">Instalação, reparo e substituição de fechaduras e chaves em casas e apartamentos</option>
-                </optgroup>
-
-                <optgroup label="Chaveiro Automotivo">
-                  <option value="Desbloqueio de veículos">Desbloqueio de veículos</option>
-                  <option value="Cópias de chaves de automóveis">Cópias de chaves de automóveis</option>
-                  <option value="Programação de chaves de transponder">Programação de chaves de transponder</option>
-                </optgroup>
-
-                <optgroup label="Chaveiro Comercial">
-                  <option value="Serviços relacionados a fechaduras de escritórios e estabelecimentos comerciais">Serviços relacionados a fechaduras de escritórios e estabelecimentos comerciais</option>
-                  <option value="Instalação de sistemas de controle de acesso">Instalação de sistemas de controle de acesso</option>
-                </optgroup>
-
-                <optgroup label="Chaves Codificadas">
-                  <option value="Fornecimento de chaves codificadas para veículos modernos com sistemas de segurança avançados">Fornecimento de chaves codificadas para veículos modernos com sistemas de segurança avançados</option>
-                </optgroup>
-
-                <optgroup label="Abertura de Cofres">
-                  <option value="Abertura de cofres e fechaduras de alta segurança em situações de emergência">Abertura de cofres e fechaduras de alta segurança em situações de emergência</option>
-                </optgroup>
-
-                <optgroup label="Outro">
-                  <option value="Serviços variados">Serviços variados</option>
-                </optgroup>
-              </select>
-
-              <div className="selected-profissoes-container">
-                {formatSelectedProfissoes()}
-              </div>
-              <input
-                type="hidden"
-                id="servicosPrestados"
-                name="servicosPrestados"
-                value={selectedProfissoes.join(', ')}
-              />
-            </div>
-          </div>
-        )}
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="documento" className="form-label">CPF/CNPJ:</label>
-          <input
-            type="text"
-            className="form-control"
-            id="documento"
-            value={documento}
-            onChange={(e) => handleChangeDocumento(e.target.value)}
-          />
-        </div>
-        {renderCamposAdicionais()}
-        <div className="col-md-6 mb-3">
-          <label htmlFor="whatsapp" className="form-label">WhatsApp:</label>
-          <InputMask
-            mask="(99) 99999-9999" // Máscara para número de telefone do WhatsApp
-            type="tel"
-            className="form-control"
-            id="whatsapp"
-            placeholder="(99) 99999-9999" // Opcional: forneça um placeholder com o formato desejado
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
-          />
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="senha" className="form-label">Senha:</label>
-          <input type="password" className="form-control" id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="cep" className="form-label">CEP:</label>
-          <InputMask
-            mask="99999-999"
-            type="text"
-            className="form-control"
-            id="cep"
-            value={cep}
-            onChange={handleCepChange}
-            placeholder="99999-999" // Opcional: forneça um placeholder com o formato desejado
-          />
-        </div>
-
-        {errorsConsultaCep.length > 0 && (
-          <div className="alert alert-danger div-erros-consulta-cadastro">
-            {errorsConsultaCep.map((error, index) => (
-              <span key={index}>{error}</span>
-            ))}
-          </div>
-        )}
-
-        {mostrarCamposEndereco && (
-          <>
-            <div className="col-md-6 mb-3">
-              <label htmlFor="endereco" className="form-label">Endereço:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="endereco"
-                value={endereco}
-                onChange={(e) => setEndereco(e.target.value)}
-                disabled
-              />
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <label htmlFor="numero" className="form-label">Número:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="numero"
-                value={numero}
-                onChange={(e) => setNumero(e.target.value)}
-              />
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <label htmlFor="complemento" className="form-label">Complemento:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="complemento"
-                value={complemento}
-                onChange={(e) => setComplemento(e.target.value)}
-              />
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <label htmlFor="bairro" className="form-label">Bairro:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="bairro"
-                value={bairro}
-                onChange={(e) => setBairro(e.target.value)}
-                disabled
-              />
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <label htmlFor="cidade" className="form-label">Cidade:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="cidade"
-                value={cidade}
-                onChange={(e) => setCidade(e.target.value)}
-                disabled
-              />
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <label htmlFor="uf" className="form-label">UF:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="uf"
-                value={uf}
-                onChange={(e) => setUf(e.target.value)}
-                disabled
-              />
-            </div>
-          </>
-        )}
-        <button type="submit" className="btn btn-success register-button">Cadastrar</button>
-      </form>
+  return <div className="auth-page register-page">
+    <Link className="auth-back" to="/"><FiArrowLeft aria-hidden="true" />Voltar ao início</Link>
+    <div className="auth-layout auth-layout--register">
+      <AuthStory registration professional={form.tipo === 'profissional'} />
+      <section className="auth-content" aria-labelledby="register-heading">
+        <ol className="register-progress" aria-label="Etapas do cadastro">{stepNames.map((name, index) => <li key={name}><button type="button" disabled={index > step || submitting} aria-current={index === step ? 'step' : undefined} onClick={() => { setStep(index); setErrors({}); }}><span>{index < step ? <FiCheck aria-hidden="true" /> : index + 1}</span><span>{name}</span></button></li>)}</ol>
+        <div className="auth-form-heading"><span className="register-step-label">Passo {step + 1} de 3</span><h1 ref={heading} id="register-heading" tabIndex={-1}>{stepTitles[step]}</h1><p>{stepDescriptions[step]}</p></div>
+        <FormErrors errors={serverErrors} />
+        {serverErrors.some(error => /CPF|CNPJ|razão|inscrição|e-?mail|senha|idade|cadastrado/i.test(error)) && <button className="auth-text-button register-review" onClick={() => setStep(serverErrors.some(error => /e-?mail|senha/i.test(error)) ? 0 : 1)}>Revisar meus dados <FiArrowRight aria-hidden="true" /></button>}
+        <form ref={formRef} className="auth-form register-form" noValidate onSubmit={handleSubmit} aria-busy={submitting}>
+          {step === 0 && <div className="register-step-content">
+            <fieldset className="auth-role-group"><legend>Como você quer usar o Match?</legend><div>{[['cliente','Quero contratar','Encontrar quem resolve.',FiHome],['profissional','Quero oferecer serviços','Apresentar o meu talento.',FiTool]].map(([value,title,description,Icon]) => <label key={value} className={`auth-role-option ${form.tipo === value ? 'is-selected' : ''}`}><input type="radio" name="account-type" value={value} checked={form.tipo === value} onChange={() => update('tipo', value)} aria-label={title} disabled={submitting} /><span className="role-icon"><Icon aria-hidden="true" /></span><strong>{title}</strong><span>{description}</span><span className="role-selected" aria-hidden="true">{form.tipo === value && <FiCheck />}</span></label>)}</div></fieldset>
+            <FormField id="register-nome" label={form.entidade === 'empresa' ? 'Nome de contato' : 'Seu nome'} error={errors.nome}><input {...inputProps('nome')} autoComplete="name" placeholder="Como podemos chamar você?" required /></FormField>
+            <div className="auth-field-grid"><FormField id="register-email" label="E-mail" error={errors.email}><input {...inputProps('email')} type="email" autoComplete="email" placeholder="Seu e-mail" required /></FormField><FormField id="register-whatsapp" label="WhatsApp" error={errors.whatsapp}><input {...inputProps('whatsapp')} onChange={event => update('whatsapp', formatPhone(event.target.value))} type="tel" autoComplete="tel-national" placeholder="(00) 00000-0000" required /></FormField></div>
+            <div className="auth-field-grid"><PasswordField id="register-senha" fieldName="senha" value={form.senha} onChange={event => update('senha', event.target.value)} hint="Pelo menos 8 caracteres." error={errors.senha} autoComplete="new-password" disabled={submitting} /><PasswordField id="register-confirmacao" fieldName="confirmacao" label="Confirmar senha" value={form.confirmacao} onChange={event => update('confirmacao', event.target.value)} error={errors.confirmacao} autoComplete="new-password" disabled={submitting} /></div>
+          </div>}
+          {step === 1 && <div className="register-step-content">
+            <fieldset className="auth-entity-group"><legend>Tipo de cadastro</legend><label className={form.entidade === 'pessoa' ? 'is-selected' : ''}><input type="radio" name="entity-type" value="pessoa" checked={form.entidade === 'pessoa'} onChange={() => changeEntity('pessoa')} />Pessoa física</label><label className={form.entidade === 'empresa' ? 'is-selected' : ''}><input type="radio" name="entity-type" value="empresa" checked={form.entidade === 'empresa'} onChange={() => changeEntity('empresa')} />Empresa</label></fieldset>
+            <FormField id="register-documento" label={form.entidade === 'empresa' ? 'CNPJ' : 'CPF'} error={errors.documento}><input {...inputProps('documento')} onChange={event => update('documento', formatDocument(event.target.value, form.entidade))} inputMode="numeric" placeholder={form.entidade === 'empresa' ? '00.000.000/0000-00' : '000.000.000-00'} required /></FormField>
+            {form.entidade === 'pessoa' ? <div className="auth-field-grid"><FormField id="register-dataNascimento" label="Data de nascimento" error={errors.dataNascimento}><input {...inputProps('dataNascimento')} type="date" autoComplete="bday" required /></FormField><FormField id="register-genero" label="Gênero (opcional)"><select {...inputProps('genero')}><option value="">Prefiro não informar</option><option value="feminino">Feminino</option><option value="masculino">Masculino</option></select></FormField></div> : <><FormField id="register-razaoSocial" label="Razão social" error={errors.razaoSocial}><input {...inputProps('razaoSocial')} autoComplete="organization" required /></FormField><div className="auth-field-grid"><FormField id="register-situacaoTributaria" label="Situação tributária" error={errors.situacaoTributaria}><select {...inputProps('situacaoTributaria')} required><option value="">Selecione</option><option value="contribuinte">Contribuinte</option><option value="naoContribuinte">Não contribuinte</option><option value="isento">Isento</option></select></FormField>{form.situacaoTributaria !== 'isento' && <FormField id="register-inscricaoEstadual" label={`Inscrição estadual${form.situacaoTributaria === 'contribuinte' ? '' : ' (opcional)'}`} error={errors.inscricaoEstadual}><input {...inputProps('inscricaoEstadual')} /></FormField>}</div></>}
+            {form.tipo === 'profissional' && <div className="register-services"><FormField id="register-service" label="Quais serviços você oferece?" error={errors.servicos}><select id="register-service" data-field="servicos" value="" onChange={event => addService(event.target.value)} aria-invalid={Boolean(errors.servicos)} aria-describedby={errors.servicos ? 'register-service-error' : 'register-service-hint'}><option value="">Adicionar um serviço</option>{serviceOptions.map(service => <option value={service} key={service}>{service}</option>)}</select></FormField><span className="auth-field-hint" id="register-service-hint">Você pode adicionar mais de um serviço.</span><ul className="register-service-tags">{form.servicos.map(service => <li key={service}><span>{service}</span><button type="button" aria-label={`Remover serviço: ${service}`} onClick={() => update('servicos', form.servicos.filter(item => item !== service))}><FiX aria-hidden="true" /></button></li>)}</ul></div>}
+          </div>}
+          {step === 2 && <div className="register-step-content">
+            <FormField id="register-cep" label="CEP" error={errors.cep}><div className="register-postcode"><input {...inputProps('cep')} onChange={event => changePostcode(event.target.value)} inputMode="numeric" autoComplete="postal-code" placeholder="00000-000" required /><button type="button" onClick={lookupPostcode} disabled={postalStatus === 'loading' || submitting}>{postalStatus === 'loading' ? 'Buscando…' : 'Buscar endereço'}</button></div></FormField>
+            <span className="auth-field-hint">A consulta usa o ViaCEP. Você também pode preencher o endereço manualmente.</span>
+            {postalMessage && <p className={`register-postal-message ${postalStatus === 'invalid' ? 'is-error' : ''}`} role={postalStatus === 'invalid' ? 'alert' : 'status'}>{postalMessage}</p>}
+            <div className="auth-field-grid auth-field-grid--address"><FormField id="register-rua" label="Rua ou avenida" error={errors.rua}><input {...inputProps('rua')} autoComplete="address-line1" required /></FormField><FormField id="register-numero" label="Número" error={errors.numero}><input {...inputProps('numero')} placeholder="123 ou S/N" required /></FormField></div>
+            <div className="auth-field-grid"><FormField id="register-bairro" label="Bairro" error={errors.bairro}><input {...inputProps('bairro')} required /></FormField><FormField id="register-complemento" label="Complemento (opcional)"><input {...inputProps('complemento')} autoComplete="address-line2" placeholder="Apartamento, bloco…" /></FormField></div>
+            <div className="auth-field-grid"><FormField id="register-cidade" label="Cidade" error={errors.cidade}><input {...inputProps('cidade')} autoComplete="address-level2" required /></FormField><FormField id="register-estado" label="Estado" error={errors.estado}><select {...inputProps('estado')} autoComplete="address-level1" required><option value="">Selecione</option>{stateOptions.map(([code,name]) => <option key={code} value={code}>{name}</option>)}</select></FormField></div>
+            <div className="register-account-summary"><FiCheck aria-hidden="true" /><span>{form.tipo === 'profissional' ? 'Perfil para oferecer serviços' : 'Conta para encontrar profissionais'}<strong>{form.nome} · {form.entidade === 'pessoa' ? 'Pessoa física' : 'Empresa'}</strong></span></div>
+          </div>}
+          <div className="register-actions">{step > 0 && <button className="auth-secondary" type="button" disabled={submitting} onClick={() => { setErrors({}); setStep(step - 1); }}><FiArrowLeft aria-hidden="true" />Voltar</button>}<button className="auth-primary" type="submit" disabled={submitting || (step === 2 && postalStatus === 'loading')}>{submitting ? 'Criando sua conta…' : step < 2 ? 'Continuar' : 'Criar minha conta'}<FiArrowUpRight aria-hidden="true" /></button></div>
+        </form>
+        <div className="auth-switch"><span>Já tem uma conta?</span><Link to={loginURL}>Entrar <FiArrowRight aria-hidden="true" /></Link></div>
+      </section>
     </div>
-  );
-};
-
-export default CadastroPage;
+  </div>;
+}

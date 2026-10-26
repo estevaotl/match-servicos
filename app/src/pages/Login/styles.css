@@ -1,25 +1,3 @@
-
-.login-container{
-  display: flex;
-  flex:1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.login-container form{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-.login-container form .button-container-article-login-page {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.login-container form .button-container-article-login-page .larger-button {
-  width: 200px;
-  margin: 0 10px;
-}
+.login-help-row { display: flex; justify-content: flex-end; margin: -10px 0 -3px; }
+.login-recovery { padding: 25px; }
+.login-recovery p { color: #596579; font-size: 13px; line-height: 1.8; margin: 0 0 23px; }

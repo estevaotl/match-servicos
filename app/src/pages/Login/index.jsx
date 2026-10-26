@@ -1,77 +1,56 @@
-import React, { useState } from 'react';
-import './styles.css';
-import { useNavigate } from 'react-router-dom'; // Importe o useNavigate
+import React, { useRef, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { FiArrowLeft, FiArrowRight, FiArrowUpRight } from 'react-icons/fi';
 import { useAuth } from '../../contexts/Auth';
+import { AuthStory, FormErrors, FormField, PasswordField } from '../../auth/components';
+import { isEmail, safeDestination } from '../../auth/data';
+import { useAuthSubmission } from '../../auth/hooks';
+import MarketplaceDialog from '../../marketplace/Dialog';
+import './styles.css';
 
-const LoginPage = () => {
+export default function LoginPage() {
+  const [params] = useSearchParams();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [errors, setErrors] = useState({});
+  const [recoveryOpen, setRecoveryOpen] = useState(false);
   const { saveUserSate } = useAuth();
-  const [errors, setErrors] = useState([]);
-
-  const currentURL = window.location.href;
-  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
-
+  const { submitting, serverErrors, submit, clearServerErrors } = useAuthSubmission();
   const navigate = useNavigate();
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const destination = safeDestination(params.get('redirect'));
+  const registerURL = `/cadastrar${destination !== '/' ? `?${new URLSearchParams({ redirect: destination })}` : ''}`;
 
-  const handleSubmit = (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
+    const nextErrors = {};
+    if (!isEmail(email)) nextErrors.email = 'Informe um e-mail válido.';
+    if (!senha) nextErrors.senha = 'Informe sua senha.';
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length) { (nextErrors.email ? emailRef.current : passwordRef.current?.querySelector('input'))?.focus(); return; }
+    await submit('logar', { email: email.trim(), senha }, session => {
+      saveUserSate(session.id, session.nome, session.ehPrestadorServicos, session.estado, session.cidade);
+      navigate(destination, { replace: true });
+    });
+  }
 
-    fetch(`${apiURL}/clientes/logar`, {
-      method: 'POST', // ou 'GET', 'PUT', 'DELETE', etc., dependendo do tipo de requisição que você deseja fazer
-      headers: {
-        'Content-Type': 'application/json',
-        // Aqui você pode adicionar quaisquer outros cabeçalhos necessários
-      },
-      body: JSON.stringify({
-        // Aqui você pode adicionar os dados que deseja enviar no corpo da requisição
-        // Por exemplo, se estiver enviando um objeto com os campos 'nome' e 'email':
-        email: email,
-        senha: senha
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.excecao) {
-          setErrors(data.excecao.split('\n'));
-        } else {
-          saveUserSate(data.id, data.nome, data.ehPrestadorServicos, data.estado, data.cidade)
-          navigate('/');
-        }
-      })
-      .catch(error => {
-        // Aqui você pode lidar com erros de requisição
-        console.error(error);
-      });
-  };
-
-  return (
-    <div className='login-container'>
-      <h1>LOGIN</h1> <br />
-      {errors.length > 0 && (
-        <div className="alert alert-danger mt-3">
-          {errors.map((error, index) => (
-            <div key={index}>{error}</div>
-          ))}
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="email" className="form-label">Email:</label>
-          <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="senha" className="form-label">Senha:</label>
-          <input type="password" className="form-control" id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
-        </div>
-        <div className="button-container-article-login-page">
-          <button type="submit" className="btn btn-success larger-button">Entrar</button>
-          <button type="submit" className="btn btn-success larger-button">Esqueceu sua senha?</button>
-        </div>
-      </form>
-
+  return <div className="auth-page login-page">
+    <Link className="auth-back" to="/"><FiArrowLeft aria-hidden="true" />Voltar ao início</Link>
+    <div className="auth-layout">
+      <AuthStory />
+      <section className="auth-content" aria-labelledby="login-heading">
+        <div className="auth-form-heading"><h1 id="login-heading">Entre na sua conta.</h1><p>Seu próximo bom encontro começa aqui.</p></div>
+        <FormErrors errors={serverErrors} />
+        <form className="auth-form" noValidate onSubmit={handleSubmit} aria-busy={submitting}>
+          <FormField id="login-email" label="E-mail" error={errors.email}><input ref={emailRef} id="login-email" type="email" value={email} onChange={event => { setEmail(event.target.value); setErrors({ ...errors, email: '' }); clearServerErrors(); }} autoComplete="username" placeholder="Seu e-mail" disabled={submitting} required aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'login-email-error' : undefined} /></FormField>
+          <div ref={passwordRef}><PasswordField id="login-password" value={senha} onChange={event => { setSenha(event.target.value); setErrors({ ...errors, senha: '' }); clearServerErrors(); }} error={errors.senha} disabled={submitting} /></div>
+          <div className="login-help-row"><button type="button" className="auth-text-button" onClick={() => setRecoveryOpen(true)}>Esqueceu sua senha?</button></div>
+          <button className="auth-primary" type="submit" disabled={submitting}>{submitting ? 'Entrando…' : 'Entrar na minha conta'}<FiArrowUpRight aria-hidden="true" /></button>
+        </form>
+        <div className="auth-switch"><span>Ainda não tem uma conta?</span><Link to={registerURL}>Criar minha conta <FiArrowRight aria-hidden="true" /></Link></div>
+      </section>
     </div>
-  );
-};
-
-export default LoginPage;
+    {recoveryOpen && <MarketplaceDialog title="Precisa de ajuda para entrar?" onClose={() => setRecoveryOpen(false)}><div className="login-recovery"><p>A recuperação automática por e-mail ainda não está disponível. Entre em contato com a equipe do Match Serviços para receber orientação sobre o acesso à sua conta.</p><Link className="auth-primary" to="/contato">Falar com a equipe <FiArrowUpRight aria-hidden="true" /></Link></div></MarketplaceDialog>}
+  </div>;
+}

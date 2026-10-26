@@ -1,107 +1,13 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #B0C4DE !important;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-:root {
-  --primary-color: #34CB79;
-  --title-color: #322153;
-  --text-color: #6C6C80;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: #F0F0F5;
-  -webkit-font-smoothing: antialiased;
-  color: var(--text-color);
-}
-
-body, input, button {
-  font-family: Roboto, Arial, Helvetica, sans-serif;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: var(--title-color);
-  font-family: Ubuntu;
-}
-:root {
-  /* font-size: 80%; */
-}
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-htm,body, #root {
-  height:100vh;
-}
-
-body{
-  background: var(--color-background);
-}
-
-#root{
-  display:flex;
-  --color-background: #F0F0F7;
-  --color-primary-lighter: #9871F5;
-  --color-primary-light: #916BEA;
-  --color-primary: #8257E5;
-  --color-primary-dark: #774DD6;
-  --color-primary-darker: #6842C2;
-  --color-secundary: #04D361;
-  --color-secundary-dark: #04BF58;
-  --color-title-in-primary: #FFFFFF;
-  --color-text-in-primary: #D4C2FF;
-  --color-text-title: #32264D;
-  --color-text-complement: #9C98A6;
-  --color-text-base: #6A6180;
-  --color-line-in-white: #E6E6F0;
-  --color-input-background: #F8F8FC;
-  --color-button-text: #FFFFFF;
-  --color-box-base: #FFFFFF;
-  --color-box-footer: #FAFAFC;
-
-}
-.button{
-  width: 100%;
-  background: var(--color-secundary);
-  color:var(--color-button-text);
-  border:0;
-  border-radius: 0.2rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  transition: background-color 0.2s;
-}
-.button:hover{
-  background: var(--color-secundary-dark);
-}
-
-.container{
-  width: 90vw;
-  max-width: 700px;
-}
-
-@media(min-width:700px){
-  :root{
-    /* font-size:62.5%; */
-  }
-}
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root { --primary-color: #254ce0; --title-color: #172742; --text-color: #596579; --color-background: #fbfcff; --color-primary-lighter: #d4dcff; --color-primary-light: #5674ec; --color-primary: #254ce0; --color-primary-dark: #1736b7; --color-primary-darker: #132b92; --color-secundary: #254ce0; --color-secundary-dark: #1736b7; --color-title-in-primary: #fff; --color-text-in-primary: #e4eaff; --color-text-title: #172742; --color-text-complement: #667287; --color-text-base: #596579; --color-line-in-white: #e4e8f0; --color-input-background: #f7f8fc; --color-button-text: #fff; --color-box-base: #fff; --color-box-footer: #f3f5fa; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #fbfcff; color: #172742; font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body, input, button, select, textarea { font-family: 'Manrope', sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Bricolage Grotesque', sans-serif; color: #172742; }
+button, a, input, select, textarea { touch-action: manipulation; }
+:focus-visible { outline: 3px solid #254ce0; outline-offset: 4px; }
+#root { min-height: 100vh; }
+.button { width: 100%; background: var(--color-secundary); color: white; border: 0; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; min-height: 44px; }
+.button:hover { background: var(--color-secundary-dark); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

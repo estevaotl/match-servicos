@@ -1,395 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import TrabalhadorCard from '../../componentes/TrabalhadorCard';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { FiArrowUpRight, FiArrowRight, FiHeart, FiMapPin, FiSearch, FiSliders, FiX } from 'react-icons/fi';
+import { categories } from '../Home/catalog';
+import { ProfessionalCard, categoryIcons } from '../../marketplace/components';
+import { demoProfessionals, fetchJSON, isLocalPreview, matchesProfessional, stateOptions, toProfessional } from '../../marketplace/data';
+import { useFavorites, useMarketplaceResource } from '../../marketplace/hooks';
+import { serviceOptions } from '../../marketplace/services';
 import './styles.css';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-import { useAuth } from '../../contexts/Auth';
-import Autocomplete from '../../componentes/AutoComplete';
+import '../../marketplace/styles.css';
 
-const SearchPage = () => {
-  const { idCliente } = useAuth();
+export default function SearchPage() {
+  const [params, setParams] = useSearchParams();
+  const q = params.get('q') || '';
+  const city = params.get('cidade') || '';
+  const state = params.get('estado') || '';
+  const profession = params.get('profissaoEspecifica') || '';
+  const category = params.get('categoria') || 'todos';
+  const order = params.get('ordem') || 'padrao';
+  const onlyFavorites = params.get('favoritos') === '1';
+  const [form, setForm] = useState({ q, cidade: city, estado: state, profissaoEspecifica: profession });
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const { favorites, toggleFavorite } = useFavorites();
+  useEffect(() => setForm({ q, cidade: city, estado: state, profissaoEspecifica: profession }), [q, city, state, profession]);
 
-  const [currentSearchQuery, setCurrentSearchQuery] = useState('');
-  const [filteredWorkers, setFilteredWorkers] = useState([]);
-  const [selectedProfession, setSelectedProfession] = useState(''); // Add state for selected profession
-  const [ufs, setUfs] = useState([]);
-  const [selectedEstado, setSelectedEstado] = useState('');
-  const [cities, setCities] = useState([]);
-  const [selectedCidade, setSelectedCidade] = useState([]);
-
-  const currentURL = window.location.href;
-  const apiURL = currentURL.includes('localhost') ? process.env.REACT_APP_API_URL_DEV : process.env.REACT_APP_API_URL_PROD;
-
-  const navigate = useNavigate();
-
-  const handleProfessionChange = (event) => {
-    setSelectedProfession(event.target.value);
-  };
-
-  const handleCidadeChange = (event) => {
-    setSelectedCidade(event.target.value);
-  };
-
-  const fetchData = async (query = '', profession = '', estado = '', cidade = '') => {
+  const requestKey = JSON.stringify([q, city, state, profession]);
+  const loader = useCallback(async signal => {
+    const query = new URLSearchParams({ q });
+    if (city) query.set('cidade', city);
+    if (state) query.set('estado', state);
+    if (profession) query.set('profissaoEspecifica', profession);
     try {
-      const encodedQuery = encodeURIComponent(query); // Use the `query` parameter
-      const encodedProfession = encodeURIComponent(profession); // Include the selected profession
-      const encodedEstado = encodeURIComponent(estado); // Include the selected profession
-      const encodedCidade = encodeURIComponent(cidade); // Include the selected profession
-
-      var url = `${apiURL}/clientes/busca?q=${encodedQuery}`;
-      // if (age > 18) {
-      //     const encodedMinAge = encodeURIComponent(age);
-      //     url += `&idade=${encodedMinAge}`;
-      // }
-
-      if (profession) { // Add the profession to the URL if it's selected
-        url += `&profissaoEspecifica=${encodedProfession}`;
-      }
-
-      if (estado) { // Add the profession to the URL if it's selected
-        url += `&estado=${encodedEstado}`;
-      }
-
-      if (cidade) { // Add the profession to the URL if it's selected
-        url += `&cidade=${encodedCidade}`;
-      }
-
-      const response = await fetch(url);
-
-      const data = await response.json();
-
-      setFilteredWorkers(data.cliente);
+      const data = await fetchJSON(`/clientes/busca?${query.toString()}`, signal);
+      if (!Array.isArray(data.cliente)) throw new Error('Resposta inválida');
+      return { people: data.cliente.map(toProfessional), demo: false };
     } catch (error) {
-      setFilteredWorkers([]);
+      if (!isLocalPreview()) throw error;
+      return { people: demoProfessionals, demo: true };
     }
-  };
+  }, [q, city, state, profession]);
+  const resource = useMarketplaceResource(requestKey, loader);
+  const data = resource.value;
+  const people = useMemo(() => {
+    let result = data?.people || [];
+    const filters = { q, cidade: city, estado: state, profissaoEspecifica: profession, categoria: category };
+    result = result.filter(person => matchesProfessional(person, filters) && (!onlyFavorites || favorites.includes(String(person.id))));
+    if (order === 'nome') result = [...result].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    if (order === 'avaliacao') result = [...result].sort((a, b) => Number((b.rating || '0').replace(',', '.')) - Number((a.rating || '0').replace(',', '.')));
+    return result;
+  }, [data, q, city, state, profession, category, onlyFavorites, favorites, order]);
 
-  const handleClear = () => {
-    // Redirecionar para a URL /busca
-    window.location.href = '/busca';
-  };
+  function updateParam(name, value) {
+    const next = new URLSearchParams(params);
+    if (value && value !== 'todos' && value !== 'padrao') next.set(name, value); else next.delete(name);
+    setParams(next);
+  }
+  function applyFilters(event) {
+    event.preventDefault();
+    const next = new URLSearchParams(params);
+    for (const [key, value] of Object.entries(form)) { if (value.trim()) next.set(key, value.trim()); else next.delete(key); }
+    setParams(next); setFiltersOpen(false);
+  }
+  function clearFilters() { setParams({}); setFiltersOpen(false); }
+  const hasFilters = Boolean(q || city || state || profession || category !== 'todos' || onlyFavorites);
 
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const query = urlSearchParams.get('q');
-    // const ageRange = urlSearchParams.get('idade');
-    const profissaoEspecifica = urlSearchParams.get('profissaoEspecifica');
-    const estado = urlSearchParams.get('estado');
-    const cidade = urlSearchParams.get('cidade');
-
-    setCurrentSearchQuery(query || '');
-    // setMinAge(ageRange || 18);
-    setSelectedProfession(profissaoEspecifica || '');
-    setSelectedEstado(estado || '');
-    setSelectedCidade(cidade || '');
-
-    // Use the `query` parameter in the initial API request
-    fetchData(query, profissaoEspecifica, estado, cidade); // Pass `query` as an argument to fetchData
-  }, []);
-
-  const fetchEstados = async () => {
-    try {
-      var url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados`;
-
-      const response = await fetch(url);
-
-      const data = await response.json();
-
-      setUfs(data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleEstadoChange = (event) => {
-    setSelectedEstado(event.target.value);
-
-    if (event.target.value.length > 0) {
-      fetchCidadeEstado(event.target.value);
-    } else {
-      setSelectedCidade([]);
-    }
-  };
-
-  const fetchCidadeEstado = async (estado) => {
-    try {
-      var url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`
-
-      const response = await fetch(url);
-
-      const data = await response.json();
-
-      setCities(data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleFilter = () => {
-    var url = `/busca?q=${currentSearchQuery}`;
-    // if (minAge > 18) {
-    //     url += `&idade=${minAge}`;
-    // }
-
-    if (selectedProfession) {
-      url += `&profissaoEspecifica=${selectedProfession}`;
-    }
-
-    if (selectedEstado) {
-      url += `&estado=${selectedEstado}`;
-    }
-
-    if (selectedCidade) {
-      url += `&cidade=${selectedCidade}`;
-    }
-
-    navigate(url); // Include the selected profession in the URL
-    fetchData(currentSearchQuery, selectedProfession, selectedEstado, selectedCidade); // Pass the selected profession to fetchData
-  };
-
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const estado = urlSearchParams.get('estado');
-    const cidade = urlSearchParams.get('cidade');
-
-    setSelectedEstado(estado || '');
-    setSelectedCidade(cidade || '');
-
-    fetchEstados();
-
-    if (estado != null) {
-      fetchCidadeEstado(estado);
-    }
-  }, []);
-
-  return (
-    <div className="container-busca">
-      <div className="container-resultado-busca flex-grow-1 d-flex flex-wrap">
-        {filteredWorkers.length === 0 && (
-          <div className="empty-container alert alert-warning">
-            Nenhum trabalhador encontrado
-          </div>
-        )}
-        {filteredWorkers.length > 0 && filteredWorkers.map(worker => (
-          <TrabalhadorCard key={worker.id} worker={worker} />
-        ))}
-      </div>
-
-      <article className='filter'>
-        <div className="d-flex">
-          <div className="">
-            {idCliente.length <= 0 && (
-              <div className="alert alert-danger">Caso queira uma filtragem pela sua localidade, se logue no site!</div>
-            )}
-
-            <Autocomplete
-              placeholder="Digite o serviço desejado"
-              onSelectJob={(value) => setCurrentSearchQuery(value)}
-              exibirBotaoPesquisa={false}
-              classeInputBusca="input-servico"
-              value={currentSearchQuery}
-            />
-
-            <label htmlFor="profissao" className="form-label">
-              Serviços Prestados:
-              <OverlayTrigger
-                placement="top"
-                overlay={
-                  <Tooltip id="tooltip-profissao">
-                    Caso selecione uma profissão nesse select, a pesquisa anterior será desconsiderada.
-                  </Tooltip>
-                }
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-exclamation-circle-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                </svg>
-              </OverlayTrigger>
-            </label>
-            <select
-              id="profissao"
-              name="profissao"
-              value={selectedProfession}
-              onChange={handleProfessionChange} // Handle profession change
-              className="form-select"
-            >
-              <option value="">Selecione a profissão</option>
-              <optgroup label="Reparos Elétricos">
-                  <option value="Troca de tomadas e interruptores">Troca de tomadas e interruptores</option>
-                  <option value="Instalação de luminárias">Instalação de luminárias</option>
-                  <option value="Resolução de problemas elétricos simples">Resolução de problemas elétricos simples</option>
-                  <option value="Substituição de disjuntores">Substituição de disjuntores</option>
-                </optgroup>
-
-                <optgroup label="Reparos Hidráulicos">
-                  <option value="Conserto de vazamentos de torneiras e canos">Conserto de vazamentos de torneiras e canos</option>
-                  <option value="Desentupimento de pias e ralos">Desentupimento de pias e ralos</option>
-                  <option value="Instalação ou substituição de torneiras e válvulas">Instalação ou substituição de torneiras e válvulas</option>
-                </optgroup>
-
-                <optgroup label="Pintura">
-                  <option value="Pintura de paredes e tetos">Pintura de paredes e tetos</option>
-                  <option value="Pintura de portas e janelas">Pintura de portas e janelas</option>
-                  <option value="Preparação de superfícies, como lixar e aplicar primer">Preparação de superfícies, como lixar e aplicar primer</option>
-                </optgroup>
-
-                <optgroup label="Reparos em Carpintaria">
-                  <option value="Instalação de prateleiras">Instalação de prateleiras</option>
-                  <option value="Reparo de portas e fechaduras">Reparo de portas e fechaduras</option>
-                  <option value="Montagem de móveis">Montagem de móveis</option>
-                </optgroup>
-
-                <optgroup label="Reparos em Alvenaria">
-                  <option value="Construção de alvenaria, incluindo paredes de tijolos, blocos ou pedras">Construção de alvenaria, incluindo paredes de tijolos, blocos ou pedras</option>
-                  <option value="Reparação de rachaduras em paredes">Reparação de rachaduras em paredes</option>
-                  <option value="Rejunte de azulejos">Rejunte de azulejos</option>
-                  <option value="Substituição de telhas danificadas">Substituição de telhas danificadas</option>
-                </optgroup>
-
-                <optgroup label="Montagem e Instalação">
-                  <option value="Montagem de móveis e estantes">Montagem de móveis e estantes</option>
-                  <option value="Instalação de suportes para TV e prateleiras">Instalação de suportes para TV e prateleiras</option>
-                  <option value="Montagem de playgrounds e equipamentos de ginástica">Montagem de playgrounds e equipamentos de ginástica</option>
-                  <option value="Instalação de sistemas de armazenamento">Instalação de sistemas de armazenamento</option>
-                </optgroup>
-
-                <optgroup label="Limpeza de Calhas">
-                  <option value="Remoção de detritos e folhas de calhas">Remoção de detritos e folhas de calhas</option>
-                  <option value="Desobstrução de calhas entupidas">Desobstrução de calhas entupidas</option>
-                </optgroup>
-
-                <optgroup label="Manutenção de Portões e Cercas">
-                  <option value="Lubrificação e reparos em portões">Lubrificação e reparos em portões</option>
-                  <option value="Reparo de cercas danificadas">Reparo de cercas danificadas</option>
-                </optgroup>
-
-                <optgroup label="Instalação de Aparelhos Domésticos">
-                  <option value="Instalação de eletrodomésticos, como máquinas de lavar e secar">Instalação de eletrodomésticos, como máquinas de lavar e secar</option>
-                  <option value="Instalação de ventiladores de teto">Instalação de ventiladores de teto</option>
-                </optgroup>
-
-                <optgroup label="Pequenos Reparos Gerais">
-                  <option value="Troca de maçanetas">Troca de maçanetas</option>
-                  <option value="Ajustes em persianas">Ajustes em persianas</option>
-                  <option value="Substituição de vidros quebrados">Substituição de vidros quebrados</option>
-                </optgroup>
-
-                <optgroup label="Reparos em Telhados">
-                  <option value="Substituição de telhas danificadas">Substituição de telhas danificadas</option>
-                  <option value="Selagem de vazamentos de telhados">Selagem de vazamentos de telhados</option>
-                </optgroup>
-
-                <optgroup label="Construção de Churrasqueiras e Lareiras">
-                  <option value="Construção de churrasqueiras e lareiras de alvenaria sob medida">Construção de churrasqueiras e lareiras de alvenaria sob medida</option>
-                </optgroup>
-
-                <optgroup label="Construção de Calçadas e Passeios">
-                  <option value="Construção de calçadas e passeios em concreto ou pedra">Construção de calçadas e passeios em concreto ou pedra</option>
-                </optgroup>
-
-                <optgroup label="Manutenção de Veículos">
-                  <option value="Troca de óleo">Troca de óleo</option>
-                  <option value="Substituição de freios">Substituição de freios</option>
-                  <option value="Alinhamento e balanceamento">Alinhamento e balanceamento</option>
-                  <option value="Diagnóstico de problemas mecânicos em veículos">Diagnóstico de problemas mecânicos em veículos</option>
-                  <option value="Troca de peças e componentes">Troca de peças e componentes</option>
-                  <option value="Reparo de motores de veículos">Reparo de motores de veículos</option>
-                </optgroup>
-
-                <optgroup label="Serviços de Chaveiro Residencial">
-                  <option value="Instalação, reparo e substituição de fechaduras e chaves em casas e apartamentos">Instalação, reparo e substituição de fechaduras e chaves em casas e apartamentos</option>
-                </optgroup>
-
-                <optgroup label="Chaveiro Automotivo">
-                  <option value="Desbloqueio de veículos">Desbloqueio de veículos</option>
-                  <option value="Cópias de chaves de automóveis">Cópias de chaves de automóveis</option>
-                  <option value="Programação de chaves de transponder">Programação de chaves de transponder</option>
-                </optgroup>
-
-                <optgroup label="Chaveiro Comercial">
-                  <option value="Serviços relacionados a fechaduras de escritórios e estabelecimentos comerciais">Serviços relacionados a fechaduras de escritórios e estabelecimentos comerciais</option>
-                  <option value="Instalação de sistemas de controle de acesso">Instalação de sistemas de controle de acesso</option>
-                </optgroup>
-
-                <optgroup label="Chaves Codificadas">
-                  <option value="Fornecimento de chaves codificadas para veículos modernos com sistemas de segurança avançados">Fornecimento de chaves codificadas para veículos modernos com sistemas de segurança avançados</option>
-                </optgroup>
-
-                <optgroup label="Abertura de Cofres">
-                  <option value="Abertura de cofres e fechaduras de alta segurança em situações de emergência">Abertura de cofres e fechaduras de alta segurança em situações de emergência</option>
-                </optgroup>
-
-                <optgroup label="Outro">
-                  <option value="Serviços variados">Serviços variados</option>
-                </optgroup>
-            </select>
-            <br />
-
-            <label htmlFor="estadoSelect" className="form-label">Selecione um Estado:</label>
-            <select
-              id="estadoSelect"
-              value={selectedEstado}
-              onChange={handleEstadoChange}
-              className="form-select"
-            >
-              <option value="">Selecione um Estado</option>
-              {ufs.map((estado, index) => (
-                <option key={index} value={estado.sigla}>
-                  {estado.nome}
-                </option>
-              ))}
-            </select>
-            <br />
-
-            {selectedEstado && (
-              <>
-                <label htmlFor="cidadeSelect" className="form-label">Selecione uma cidade:</label>
-                <select
-                  id="cidadeSelect"
-                  value={selectedCidade}
-                  onChange={handleCidadeChange} // Implemente a função handleCidadeChange
-                  className="form-select"
-                >
-                  <option value="">Selecione a cidade</option>
-                  {cities.map((cidade, index) => (
-                    <option key={cidade.id} value={cidade.nome}>
-                      {cidade.nome}
-                    </option>
-                  ))}
-                </select>
-              </>
-            )}
-
-            <div className='button-container'>
-              <button
-                className="btn btn-warning  mt-3"
-                type="button"
-                onClick={handleClear}
-              >
-                Limpar
-              </button>
-              <button
-                className="btn btn-primary  mt-3"
-                type="button"
-                onClick={handleFilter}>
-                Filtrar
-              </button>
-            </div>
-          </div>
-
+  return <div className="marketplace-page search-page">
+    <nav className="market-breadcrumb" aria-label="Caminho da página"><Link to="/">Início</Link><span>/</span><span>Encontrar um profissional</span></nav>
+    <section className="search-heading"><div><h1>Alguém aí<br />sabe fazer.</h1><p>Encontre quem transforma o seu próximo projeto em coisa feita.</p></div><div className="search-heading-art" aria-hidden="true"><FiSearch /><span>Seu próximo<br /><strong>bom encontro.</strong></span><FiArrowUpRight /></div></section>
+    <form className="market-search-bar" onSubmit={applyFilters}>
+      <div className="market-field"><FiSearch aria-hidden="true" /><div><label htmlFor="search-query">O que você precisa?</label><input type="search" id="search-query" value={form.q} onChange={event => setForm({ ...form, q: event.target.value })} placeholder="Pintura, montagem, um vazamento…" /></div></div>
+      <div className="market-field market-field--city"><FiMapPin aria-hidden="true" /><div><label htmlFor="search-city">Sua cidade</label><input id="search-city" value={form.cidade} onChange={event => setForm({ ...form, cidade: event.target.value })} placeholder="Onde vamos resolver?" /></div></div>
+      <button className="market-primary" type="submit">Buscar profissionais <FiArrowUpRight aria-hidden="true" /></button>
+    </form>
+    <div className="search-categories" aria-label="Especialidades">{categories.map(item => { const Icon = categoryIcons[item.icon]; return <button key={item.id} aria-pressed={category === item.id} className={category === item.id ? 'is-active' : ''} onClick={() => updateParam('categoria', item.id)}><Icon aria-hidden="true" />{item.label}</button>; })}</div>
+    <div className="search-layout">
+      <aside className="search-filters"><button className="filter-mobile-toggle" aria-expanded={filtersOpen} aria-controls="search-filter-content" onClick={() => setFiltersOpen(!filtersOpen)}><FiSliders aria-hidden="true" />Refinar a busca {filtersOpen ? <FiX /> : <FiArrowRight />}</button>
+        <div id="search-filter-content" className={filtersOpen ? 'filter-content is-open' : 'filter-content'}>
+          <div className="filter-title"><h2>Do seu jeito.</h2><FiSliders aria-hidden="true" /></div>
+          <form onSubmit={applyFilters}>
+            <label htmlFor="filter-service">Serviço específico</label><select id="filter-service" value={form.profissaoEspecifica} onChange={event => setForm({ ...form, profissaoEspecifica: event.target.value })}><option value="">Todos os serviços</option>{serviceOptions.map(service => <option value={service} key={service}>{service}</option>)}</select>
+            <label htmlFor="filter-state">Estado</label><select id="filter-state" value={form.estado} onChange={event => setForm({ ...form, estado: event.target.value, cidade: '' })}><option value="">Todos os estados</option>{stateOptions.map(([code, name]) => <option key={code} value={code}>{name}</option>)}</select>
+            <label htmlFor="filter-city">Cidade</label><input id="filter-city" value={form.cidade} onChange={event => setForm({ ...form, cidade: event.target.value })} placeholder="Digite a cidade" />
+            <p className="filter-helper">O serviço específico tem prioridade sobre o texto da busca.</p>
+            <button type="submit" className="market-primary">Aplicar filtros <FiArrowRight aria-hidden="true" /></button>
+            {hasFilters && <button type="button" className="market-subtle" onClick={clearFilters}>Limpar filtros</button>}
+          </form>
+          <div className="filter-favorites"><label><input type="checkbox" checked={onlyFavorites} onChange={event => updateParam('favoritos', event.target.checked ? '1' : '')} />Só meus favoritos <FiHeart aria-hidden="true" /></label><p>Seus favoritos ficam salvos neste navegador.</p></div>
+          <div className="filter-tip"><span className="filter-tip-symbol" aria-hidden="true">↗</span><h3>Um bom match começa na conversa.</h3><p>Compare os trabalhos e combine escopo, prazo e valor diretamente com o profissional.</p></div>
         </div>
-      </article>
-
+      </aside>
+      <section className="search-results" aria-label="Resultados da busca">
+        <div className="search-results-toolbar"><div><h2>{resource.state === 'loading' ? 'Encontrando talentos…' : `${people.length} ${people.length === 1 ? 'profissional' : 'profissionais'}`}</h2><p>{city ? `Para projetos em ${city}${state ? `, ${state}` : ''}` : 'Seu projeto merece estar em boas mãos.'}</p></div><div><label className="visually-hidden" htmlFor="result-order">Ordenar profissionais</label><select id="result-order" value={order} onChange={event => updateParam('ordem', event.target.value)}><option value="padrao">Ordem padrão</option><option value="avaliacao">Mais avaliados</option><option value="nome">Nome, de A a Z</option></select></div></div>
+        {data?.demo && <div className="market-preview-note">Prévia local: perfis, localização, portfólios e avaliações são fictícios. Experimente os exemplos de Nova Friburgo, RJ.</div>}
+        <div aria-live="polite" aria-busy={resource.state === 'loading'}>{resource.state === 'loading' ? <div className="results-skeleton" aria-label="Carregando profissionais">{[1,2,3].map(item => <div key={item} />)}</div> : resource.state === 'error' ? <div className="market-empty"><FiSearch /><h3>Não conseguimos carregar os profissionais.</h3><p>O serviço está indisponível neste momento. Tente recarregar a página em instantes.</p></div> : people.length ? <div className="search-results-grid">{people.map(person => <div className="result-tile" key={person.id}><ProfessionalCard person={person} returnQuery={params.toString()} /><button className={`favorite-button ${favorites.includes(String(person.id)) ? 'is-favorite' : ''}`} onClick={() => toggleFavorite(person.id)} aria-pressed={favorites.includes(String(person.id))} aria-label={`${favorites.includes(String(person.id)) ? 'Remover' : 'Salvar'} ${person.nome} ${favorites.includes(String(person.id)) ? 'dos' : 'nos'} favoritos`}><FiHeart aria-hidden="true" /></button></div>)}</div> : <div className="market-empty"><FiSearch aria-hidden="true" /><h3>{onlyFavorites ? 'Nenhum favorito nesta busca.' : 'Esse encontro ainda não aconteceu.'}</h3><p>{onlyFavorites ? 'Salve os perfis que você gostou ou desative o filtro de favoritos.' : 'Experimente outra especialidade ou amplie a região da busca.'}</p><button className="market-subtle" onClick={clearFilters}>Ver todos os profissionais <FiArrowRight aria-hidden="true" /></button></div>}</div>
+      </section>
     </div>
-  );
-};
-
-export default SearchPage;
+    <section className="search-pro-callout"><div><h2>É você quem sabe fazer?</h2><p>Seu talento também pode aparecer por aqui.</p></div><Link to="/cadastrar?tipo=profissional">Criar meu perfil <FiArrowUpRight aria-hidden="true" /></Link></section>
+  </div>;
+}

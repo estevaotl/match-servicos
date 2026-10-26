@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigationType } from 'react-router-dom';
 import HomePage from './pages/Home';
 import CadastroPage from './pages/Cadastro';
 import LoginPage from './pages/Login';
@@ -12,13 +12,24 @@ import "./App.css";
 import Header from './componentes/Header';
 import { AuthProvider } from './contexts/Auth';
 
+function RouteScroll() {
+  const { pathname, hash } = useLocation();
+  const navigationType = useNavigationType();
+  useEffect(() => {
+    if (!hash && navigationType !== 'POP') window.scrollTo(0, 0);
+  }, [pathname, hash, navigationType]);
+  return null;
+}
+
 const App = () => {
   return (
-    <div className="container">
+    <div className="app-shell">
+      <a className="skip-link" href="#main-content">Ir para o conteúdo</a>
       <Router>
+        <RouteScroll />
         <AuthProvider>
           <Header/>
-          <main className='main-container'>
+          <main className='main-container' id='main-content' tabIndex={-1}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/cadastrar" element={<CadastroPage />} />

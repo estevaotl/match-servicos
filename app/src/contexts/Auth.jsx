@@ -4,6 +4,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [signed, setSigned] = useState(false);
+  const [ready, setReady] = useState(false);
   const [idCliente, setIdCliente] = useState('');
   const [nomeCliente, setNomeCliente] = useState('');
   const [ehPrestadorServicos, setEhPrestadorServicos] = useState('');
@@ -36,6 +37,7 @@ export const AuthProvider = ({ children }) => {
     if (estado) {
       setEstado(estado);
     }
+    setReady(true);
   }, []);
 
   function saveUserSate(idCliente, nomeCliente, ehPrestadorServicos, estado, cidade) {
@@ -77,6 +79,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         signed,
+        ready,
         saveUserSate,
         signOut,
         idCliente,
