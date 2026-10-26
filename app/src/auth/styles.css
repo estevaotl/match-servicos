@@ -31,7 +31,7 @@
 .auth-field input:focus, .auth-field select:focus { background: #fff; border-color: #254ce0; }
 .auth-field input[aria-invalid="true"], .auth-field select[aria-invalid="true"] { border-color: #aa2137; }
 .auth-field input:disabled, .auth-field select:disabled { background: #f1f3f8; color: #596579; cursor: wait; }
-.auth-field-hint { display: block; color: #596579; font-size: 11px; line-height: 1.6; }
+.auth-field-hint { display: block; color: #596579; font-size: 12px; line-height: 1.6; }
 .auth-field-error { color: #aa2137; font-size: 12px; line-height: 1.6; }
 .auth-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 17px; align-items: start; }
 .auth-field-grid--address { grid-template-columns: 2fr 1fr; }

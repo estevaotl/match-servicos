@@ -9,6 +9,12 @@ Esta pasta mantém decisões relevantes de arquitetura, produto, segurança, dad
 - Atualize `PROJECT_MEMORY.md` com um resumo da decisão vigente e um link para o registro.
 - Use registros para escolhas com impacto futuro; não registre cada detalhe de implementação nem copie conversas, segredos ou resultados de testes.
 
+## Índice
+
+- [ADR-0001: Registros de decisão](0001-manter-registros-de-decisao.md)
+- [ADR-0002: Identidade visual de oficina](0002-identidade-visual-oficina.md)
+- [ADR-0003: Demonstrações e operação real](0003-separar-demonstracao-e-operacao-real.md)
+
 ## Modelo
 
 ```markdown

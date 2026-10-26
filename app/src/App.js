@@ -7,6 +7,7 @@ import MinhaContaPage from './pages/MinhaConta';
 import BuscaPage from './pages/Busca';
 import ProfilePage from './pages/Profile';
 import ContatoPage from './pages/Contato';
+import NaoEncontradaPage from './pages/NaoEncontrada';
 import Footer from './componentes/Footer'
 import "./App.css";
 import Header from './componentes/Header';
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/busca" element={<BuscaPage />} />
             <Route path="/profile/:id" element={<ProfilePage />} />
             <Route path="/contato" element={<ContatoPage />} />
+            <Route path="*" element={<NaoEncontradaPage />} />
           </Routes>
           </main>
           <Footer/>

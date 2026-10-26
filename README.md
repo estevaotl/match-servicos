@@ -18,3 +18,24 @@
   - Banco de Dados:
     - MySql na versão 8
   - Para importar os pacotes, utilizei o Composer.
+
+
+### Interface atual e execução local
+
+A interface foi atualizada em outubro de 2026: início, busca, perfil, autenticação, área da conta, contato e página não encontrada. A descrição original acima expressa a proposta do projeto; avaliações reais e recuperação automática de senha ainda não são fornecidas pela API atual.
+
+Para executar o frontend, com Node.js e npm disponíveis:
+
+```bash
+cd app
+npm ci
+npm start
+```
+
+A aplicação abre em `http://localhost:3000`. As variáveis `REACT_APP_API_URL_DEV` e `REACT_APP_API_URL_PROD` definem a API usada em cada ambiente. O arquivo de produção é gerado por `npm run build`; os testes podem ser executados com `CI=true npm test -- --watchAll=false --runInBand`.
+
+A operação real também requer a API PHP, as dependências do Composer, o banco MySQL e o serviço de e-mail configurados. Validar os fluxos reais nesse ambiente antes da publicação. Os testes de interface usam respostas simuladas e não enviam e-mails.
+
+Em localhost, é possível explorar `/minha-conta?preview=cliente` e `/minha-conta?preview=profissional`. Essas prévias não criam sessão e não gravam alterações; não estão disponíveis em produção.
+
+Para manutenção e continuidade, consultar [PROJECT_MEMORY.md](PROJECT_MEMORY.md), [a direção visual](docs/direcao-visual.md) e [os registros de decisão](docs/decisions/README.md).

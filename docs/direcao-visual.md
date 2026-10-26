@@ -36,7 +36,7 @@ A recomendação inicial de visual corporativo verde foi descartada: não respon
 
 ## Escopo desta proposta
 
-Página inicial, navegação, rodapé, busca, perfil, login, cadastro e área da conta redesenhados. Busca usa os parâmetros da rota `/busca`; os perfis reais usam os dados da API. Com a API indisponível em localhost, a vitrine apresenta exemplos identificados como fictícios e permite filtrar e abrir esses exemplos, inclusive por cidade e estado. Fora do ambiente local, falhas mostram uma mensagem sem perfis fictícios.
+Página inicial, navegação, rodapé, busca, perfil, login, cadastro, área da conta, contato e página não encontrada redesenhados. Busca usa os parâmetros da rota `/busca`; os perfis reais usam os dados da API. Com a API indisponível em localhost, a vitrine apresenta exemplos identificados como fictícios e permite filtrar e abrir esses exemplos, inclusive por cidade e estado. Fora do ambiente local, falhas mostram uma mensagem sem perfis fictícios.
 
 A área da conta reúne perfil, fotos e acompanhamento de serviços. A operação real de contas, profissionais e solicitações depende da API e do banco de dados.
 
@@ -84,3 +84,14 @@ Fotos de perfil e portfólio têm seleção, prévia, validação de JPG/PNG/GIF
 As prévias explícitas `/minha-conta?preview=cliente` e `/minha-conta?preview=profissional` funcionam apenas em localhost. Não criam sessão nem enviam dados. Pessoas, serviços, valores e ilustrações são identificados como fictícios; gravações e envio de fotos ficam desativados. Uma conta real indisponível mostra um erro, sem substituição por exemplos.
 
 A conferência inclui testes com respostas simuladas e revisão visual no computador e em 390 px. A consulta SQL do nome foi exercitada isoladamente antes e depois da alteração. O ambiente não oferece PHP nem o banco configurado; a validação da operação real continua pendente dessas dependências.
+
+
+## Fechamento visual — 26/10/2026
+
+Contato adota uma composição de correspondência: título azul, envelope e papel em colagem, selo amarelo e formulário branco. As dúvidas frequentes usam elementos nativos expansíveis e levam à busca, ao login e à conta. No celular, a ilustração decorativa dá lugar ao formulário em uma coluna. A confirmação exige `resposta: true`; falhas mantêm os dados e permitem nova tentativa. O servidor inclui o e-mail informado no conteúdo enviado à equipe, com o texto escapado para HTML.
+
+Endereços desconhecidos recebem uma página 404 com placa de oficina e caminhos para o início, a busca e o contato. Esse tratamento acontece no roteador do frontend; o status HTTP de hospedagem depende da configuração do servidor.
+
+A navegação da conta passa a ocupar uma faixa horizontal no celular, com links de pelo menos 44 px e rolagem restrita à faixa. O item ativo fica visível; a troca de seção coloca o foco no título do conteúdo. Textos secundários e campos da busca tiveram ajustes de legibilidade.
+
+O fechamento da interface não confirma operação de banco ou entrega real de e-mail. As restrições e decisões duradouras estão em `PROJECT_MEMORY.md` e nos ADRs 0002 e 0003.

@@ -466,8 +466,18 @@ try {
             try{
                 $body = $request->getBody()->getContents();
                 $data = json_decode($body, true);
-
-                $resultado = (new EmailSender())->enviarEmail("estevaotlnf@gmail.com", "Duvida vinda do site do cliente " . $data['name'], $data['message']);
+                if (!is_array($data)) {
+                    throw new InvalidArgumentException('Confira os dados da mensagem.');
+                }
+                $nome = is_string($data['name'] ?? null) ? trim($data['name']) : '';
+                $email = is_string($data['email'] ?? null) ? trim($data['email']) : '';
+                $mensagem = is_string($data['message'] ?? null) ? trim($data['message']) : '';
+                if ($nome === '' || mb_strlen($nome) > 120 || !filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 254 || $mensagem === '' || mb_strlen($mensagem) > 4000) {
+                    throw new InvalidArgumentException('Confira seu nome, e-mail e mensagem.');
+                }
+                $conteudo = "Nome: " . $nome . "\nE-mail para retorno: " . $email . "\n\nMensagem:\n" . $mensagem;
+                $conteudo = nl2br(htmlspecialchars($conteudo, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
+                $resultado = (new EmailSender())->enviarEmail("estevaotlnf@gmail.com", "Contato pelo site do Match Servicos", $conteudo);
 
                 $responseData = [
                     'resposta' => $resultado

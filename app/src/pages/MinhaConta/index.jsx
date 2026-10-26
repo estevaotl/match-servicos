@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FiArrowRight, FiArrowUpRight, FiCamera, FiCheck, FiClipboard, FiHeart, FiHome, FiMapPin, FiTool, FiUser } from 'react-icons/fi';
 import { useAuth } from '../../contexts/Auth';
@@ -20,6 +20,9 @@ function AccountWorkspace({ initialProfile, preview }) {
   const filter = ['0','1','2','3'].includes(params.get('situacao')) ? params.get('situacao') : 'todos';
   const [retry, setRetry] = useState(0);
   const [updates, setUpdates] = useState({});
+  const navigation = useRef(null);
+  const content = useRef(null);
+  const previousSection = useRef(section);
   const { favorites } = useFavorites();
   const accountId = profile.id;
   const professional = profile.professional;
@@ -28,6 +31,21 @@ function AccountWorkspace({ initialProfile, preview }) {
   const orders = resource.value?.map(order => updates[order.id] || order) || [];
   const orderResource = { ...resource, value: orders };
   useEffect(() => setUpdates({}), [profile.professional]);
+  useEffect(() => {
+    const active = navigation.current?.querySelector('[aria-current="page"]');
+    if (active && window.matchMedia?.('(max-width: 800px)')?.matches) {
+      navigation.current.scrollTo?.({ left: Math.max(0, active.offsetLeft - 8), behavior: 'auto' });
+    }
+    if (previousSection.current !== section) {
+      const heading = content.current?.querySelector('section:not([hidden]) h2');
+      if (heading) {
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+        heading.scrollIntoView?.({ block: 'start', behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ? 'auto' : 'smooth' });
+      }
+    }
+    previousSection.current = section;
+  }, [section]);
   function navigateSection(next, status) {
     const nextParams = new URLSearchParams(params); nextParams.set('secao', next);
     if (status && status !== 'todos') nextParams.set('situacao', status); else nextParams.delete('situacao');
@@ -41,8 +59,8 @@ function AccountWorkspace({ initialProfile, preview }) {
   return <div className="account-page">
     <div className="account-page-top"><h1>Minha conta</h1><Link to="/busca">Encontrar profissionais <FiArrowUpRight aria-hidden="true" /></Link></div>
     {profile.demo && <div className="account-preview-banner"><div><FiTool aria-hidden="true" /><p><strong>Prévia da área de {profile.professional ? 'profissional' : 'cliente'}.</strong> Pessoas, serviços e valores são fictícios. Nenhum dado será enviado ou alterado.</p></div><div><Link aria-current={!profile.professional ? 'page' : undefined} to="/minha-conta?preview=cliente">Cliente</Link><Link aria-current={profile.professional ? 'page' : undefined} to="/minha-conta?preview=profissional">Profissional</Link></div></div>}
-    <div className="account-layout"><aside className="account-sidebar"><div className="account-identity"><AccountAvatar profile={profile} /><div><strong>{profile.nome}</strong><span>{profile.professional ? 'Profissional' : 'Cliente'}</span></div></div><nav className="account-navigation" aria-label="Área da conta">{sections.map(({ id, name, Icon }) => <Link key={id} to={`?${new URLSearchParams({ ...(preview ? { preview } : {}), secao: id })}`} aria-current={section === id ? 'page' : undefined}><Icon aria-hidden="true" /><span>{id === 'fotos' && !profile.professional ? 'Foto do perfil' : name}</span>{id === 'servicos' && activeCount !== null && activeCount > 0 && <span className="account-nav-count" aria-label={`${activeCount} serviços ativos`}>{activeCount}</span>}</Link>)}<Link to="/busca?favoritos=1"><FiHeart aria-hidden="true" /><span>Meus favoritos</span>{favorites.length > 0 && <span className="account-nav-count">{favorites.length}</span>}</Link></nav><div className="account-location"><FiMapPin aria-hidden="true" /><span>{profile.cidade ? `${profile.cidade}${profile.estado ? `, ${profile.estado}` : ''}` : 'Complete seu endereço no perfil'}</span></div>{profile.professional && <Link className="account-public-link" to={publicProfile}>Ver meu perfil público <FiArrowUpRight aria-hidden="true" /></Link>}</aside>
-    <div className="account-main"><section className="account-section" hidden={section !== 'inicio'} aria-label="Visão geral">
+    <div className="account-layout"><aside className="account-sidebar"><div className="account-identity"><AccountAvatar profile={profile} /><div><strong>{profile.nome}</strong><span>{profile.professional ? 'Profissional' : 'Cliente'}</span></div></div><nav ref={navigation} className="account-navigation" aria-label="Área da conta">{sections.map(({ id, name, Icon }) => <Link key={id} to={`?${new URLSearchParams({ ...(preview ? { preview } : {}), secao: id })}`} aria-current={section === id ? 'page' : undefined}><Icon aria-hidden="true" /><span>{id === 'fotos' && !profile.professional ? 'Foto do perfil' : name}</span>{id === 'servicos' && activeCount !== null && activeCount > 0 && <span className="account-nav-count" aria-label={`${activeCount} serviços ativos`}>{activeCount}</span>}</Link>)}<Link to="/busca?favoritos=1"><FiHeart aria-hidden="true" /><span>Meus favoritos</span>{favorites.length > 0 && <span className="account-nav-count">{favorites.length}</span>}</Link></nav><div className="account-location"><FiMapPin aria-hidden="true" /><span>{profile.cidade ? `${profile.cidade}${profile.estado ? `, ${profile.estado}` : ''}` : 'Complete seu endereço no perfil'}</span></div>{profile.professional && <Link className="account-public-link" to={publicProfile}>Ver meu perfil público <FiArrowUpRight aria-hidden="true" /></Link>}</aside>
+    <div ref={content} className="account-main"><section className="account-section" hidden={section !== 'inicio'} aria-label="Visão geral">
       <div className="account-hero"><div><span className="account-greeting">Olá, {profile.nome.split(' ')[0]}.</span><h2>{profile.professional ? <>Seu talento,<br />em movimento.</> : <>Vamos tirar<br />ideias do papel.</>}</h2><p>{profile.professional ? 'Acompanhe seus trabalhos e cuide dos próximos bons encontros.' : 'Seus contatos e projetos ficam reunidos aqui, do primeiro encontro ao serviço feito.'}</p><button onClick={() => navigateSection('servicos')} className="market-primary">{profile.professional ? 'Acompanhar meus trabalhos' : 'Acompanhar meus serviços'}<FiArrowUpRight aria-hidden="true" /></button></div><div className="account-hero-art" aria-hidden="true"><div className="account-paper"><FiClipboard /><span>Coisas boas<br />pela frente.</span><span className="account-paper-lines"><i /><i /><i /></span></div><span className="account-paper-sticker"><FiCheck />Bora fazer.</span><FiTool className="account-hero-tool" /></div></div>
       <div className="account-overview-status" aria-label="Resumo dos serviços">{statusOptions.map(option => <button key={option.value} onClick={() => navigateSection('servicos', String(option.value))} aria-label={`Ver serviços: ${option.label}`}><strong>{resource.state === 'ready' ? orders.filter(order => order.status === option.value).length : '—'}</strong><span><i className={`status-dot status-dot--${option.tone}`} aria-hidden="true" />{option.label}</span></button>)}</div>
       <div className="account-section-heading"><div><h2>{profile.professional ? 'Seus encontros mais recentes' : 'Seus serviços mais recentes'}</h2><p>{profile.professional ? 'Cada conversa pode virar um trabalho bem feito.' : 'Veja como estão as suas últimas solicitações.'}</p></div><button onClick={() => navigateSection('servicos')} className="account-text-button">Ver todos <FiArrowRight aria-hidden="true" /></button></div>
